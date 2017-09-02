@@ -20,6 +20,13 @@ namespace Engine
 
 		class StringParser
 			{
+			public:
+				enum class DelimiterMode
+					{
+					EACH, // 1..2 dzielone po kropce podzieli na 3 elementy
+					COMBINED, // 1..2 dzielone po kropce podzieli na 2 elementy
+					};
+
 			protected:
 				struct Element
 					{
@@ -52,13 +59,15 @@ namespace Engine
 				String text;
 				String delimiters;
 
+				DelimiterMode dmode;
+
 				void parse();
 				bool isDelimiter(String::value_type c) const;
 
 			public:
-				StringParser();
+				StringParser(DelimiterMode dmode=DelimiterMode::COMBINED);
 				StringParser(const StringParser& sp);
-				StringParser(const String& text, const String& delimiters=DEFAULT_DELIMITER);
+				StringParser(const String& text, const String& delimiters=DEFAULT_DELIMITER, DelimiterMode dmode=DelimiterMode::COMBINED);
 
 				StringParser& operator=(const String& s) {set(s); return *this;}
 				String operator[](unsigned position) {return get(position);}

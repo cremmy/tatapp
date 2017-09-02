@@ -12,21 +12,21 @@
 
 using namespace Engine::Utils;
 
-StringParser::StringParser():
-	elements(), text(""), delimiters(DEFAULT_DELIMITER)
+StringParser::StringParser(DelimiterMode dmode):
+	elements(), text(""), delimiters(DEFAULT_DELIMITER), dmode(dmode)
 	{
 	//
 	}
 
 StringParser::StringParser(const StringParser& sp):
-	elements(sp.elements), text(sp.text), delimiters(sp.delimiters)
+	elements(sp.elements), text(sp.text), delimiters(sp.delimiters), dmode(sp.dmode)
 	{
 	if(this->delimiters.size()<1)
 		this->delimiters=DEFAULT_DELIMITER;
 	}
 
-StringParser::StringParser(const String& text, const String& delimiters):
-	elements(), text(text), delimiters(delimiters)
+StringParser::StringParser(const String& text, const String& delimiters, DelimiterMode dmode):
+	elements(), text(text), delimiters(delimiters), dmode(dmode)
 	{
 	if(this->delimiters.size()<1)
 		this->delimiters=DEFAULT_DELIMITER;
@@ -50,6 +50,7 @@ void StringParser::parse()
 	//for(unsigned i=0; i<size; ++i)
 	register const String::value_type *start=text.c_str();
 	register const String::value_type *ptr=start;
+
 	for(/**/; *ptr; ++ptr)
 		{
 		//bool delim=isDelimiter(text[i]);
@@ -71,6 +72,12 @@ void StringParser::parse()
 			cur.start=ptr-start;
 			cur.length=1;
 			gotelement=true;
+			}
+		else if(dmode==DelimiterMode::EACH)
+			{
+			cur.start=ptr-start;
+			cur.length=0;
+			elements.push_back(cur);
 			}
 		}
 
