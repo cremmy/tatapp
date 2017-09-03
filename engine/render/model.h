@@ -7,7 +7,11 @@
 
 #pragma once
 
+#include <string>
+
 #include "../math/amath.h"
+#include "vertexbuffer.h"
+#include "textureptr.h"
 
 namespace Engine
 	{
@@ -15,29 +19,30 @@ namespace Engine
 		{
 		class Model
 			{
-			public:
-				// Ka - ambient
-				// Kd - diffuse
-				// Ks - specular
-				// Ns - specular exponent (0-1000)
-				// Ke - emission (odbijanie swiatla)
-				// Ni - optical density (zaginanie swiatla; szklo: 1.5)
-				// d  - przezroczystosc
-				// illum - algorytm oswietlania
+			protected:
 				struct Material
 					{
-					Math::AVector ambient;
-					Math::AVector diffuse;
-					Math::AVector specular;
-					float specularexp;
-					float transparency;
+					float ambient[3]; // Ka
+					float diffuse[3]; // Kd
+					float specular[3]; // Ks
+					float specularexp; // Ns
+					float transparency; // d
 					};
 
-				// todo obiekt -> material + VBO
+				GLuint uboid;
+				VertexBuffer vbo;
+				TexturePtr diffuse; // Tekstura koloru
+				TexturePtr normal;  // Normal mapa
+				Material material;
+
+				bool loadMaterial(const std::string& path);
 
 			public:
 				Model();
-				virtual ~Model();
+				~Model();
+
+				bool load(const std::string& path);
+				void clear();
 			};
 
 		} /* namespace Render */

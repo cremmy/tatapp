@@ -27,7 +27,28 @@ namespace Engine
 		class Texture;
 		class TexturePtr;
 
-		class VertexBuffer
+		class BaseVertexBuffer
+			{
+			protected:
+				GLuint vboid; // Tablica werteksów
+
+			public:
+				BaseVertexBuffer(): vboid(0u) {}
+				virtual ~BaseVertexBuffer() {}
+
+				bool finalize(); // Przesłanie werteksów z RAMu do grafiki
+				void flush();    // Wyczyszczenie buforów
+				void clear();    // Zwolnienie całej pamięci
+
+				virtual bool bind() const=0;
+
+				//GLuint getVAO() const {return vaoid;}
+				GLuint getVBO() const {return vboid;}
+				virtual unsigned getSize() const=0;
+			};
+
+		template <typename T>
+		class VertexBuffer: public BaseVertexBuffer
 			{
 			public:
 				//GLuint vaoid; // Tablica VBO
@@ -35,12 +56,12 @@ namespace Engine
 
 				unsigned size;
 
-				std::vector<Vertex> vertices;
+				std::vector<T> vertices;
 
 				bool isFinalized() const {return vertices.empty() && size>0u;}
 
 			public:
-				VertexBuffer(): /*vaoid(0u),*/ vboid(0u), size(0u) {}
+				VertexBuffer(): vboid(0u), size(0u) {}
 				~VertexBuffer() {}
 
 				bool init(Vertex *vertices, unsigned size); // add(vertex)*size + finalize (bardzo możliwe, że będą tam liczne optymalizacje, bo po co wrzucać do vectora)
@@ -52,11 +73,13 @@ namespace Engine
 				GLuint getVBO() const {return vboid;}
 				unsigned getSize() const {return vertices.empty()?size:vertices.size();}
 
-				bool add(const Vertex& vertex);
-				bool draw(const Math::Orientation& orientation, const TexturePtr& tptr);
+				bool add(const T& vertex);
+				/*bool draw(const Math::Orientation& orientation, const TexturePtr& tptr);
 				bool draw(const Math::Orientation& orientation, const TexturePtr& tptr, float x, float y, float w, float h);
 				bool draw(const Math::Orientation& orientation, const Graphics::ImagePtr& iptr);
-				bool draw(const Math::Orientation& orientation, const Graphics::SpritePtr& sptr);
+				bool draw(const Math::Orientation& orientation, const Graphics::SpritePtr& sptr);*/
 			};
+
+		class VertexBuffer
 		} /* namespace Graphics */
 	} /* namespace Engine */
