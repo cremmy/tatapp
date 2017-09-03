@@ -11,13 +11,22 @@ namespace Engine
 	{
 	namespace Render
 		{
-		struct Vertex
+		struct VertexPT
 			{
 			float x, y, z;
-			//float nx, ny, nz; // Normale?
 			float tx, ty;
 			};
-		} /* namespace Graphics */
+
+		struct VertexPNT
+			{
+			float x, y, z;
+			float nx, ny, nz;
+			float tx, ty;
+			};
+
+		typedef VertexPT Vertex;
+
+		} /* namespace Render */
 	} /* namespace Engine */
 
 

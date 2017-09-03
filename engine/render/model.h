@@ -30,7 +30,7 @@ namespace Engine
 					};
 
 				GLuint uboid;
-				VertexBuffer vbo;
+				VertexBufferPNT vbo;
 				TexturePtr diffuse; // Tekstura koloru
 				TexturePtr normal;  // Normal mapa
 				Material material;

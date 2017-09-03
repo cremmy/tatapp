@@ -14,7 +14,8 @@
 
 using namespace Engine::Render;
 
-bool VertexBuffer::init(Vertex *vertices, unsigned size)
+template <typename T>
+bool BaseVertexBuffer<T>::init(T* vertices, unsigned size)
 	{
 	GLenum err;
 	glGetError(); // Wyzeruj bledy OpenGL
@@ -46,7 +47,7 @@ bool VertexBuffer::init(Vertex *vertices, unsigned size)
 	LOG_DEBUG("VertexBuffer.init: Wgrywanie danych do VBO [GLid: %u]", vboid);
 
 	this->size=size;
-	glBufferData(GL_ARRAY_BUFFER, size*sizeof(Vertex), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, size*sizeof(T), vertices, GL_STATIC_DRAW);
 
 	err=glGetError();
 	if(err!=GL_NO_ERROR)
@@ -61,7 +62,8 @@ bool VertexBuffer::init(Vertex *vertices, unsigned size)
 	return true;
 	}
 
-bool VertexBuffer::finalize()
+template <typename T>
+bool BaseVertexBuffer<T>::finalize()
 	{
 	if(isFinalized())
 		return true;
@@ -110,12 +112,14 @@ bool VertexBuffer::finalize()
 	return true;
 	}
 
-void VertexBuffer::flush()
+template <typename T>
+void BaseVertexBuffer<T>::flush()
 	{
 	size=0u;
 	}
 
-void VertexBuffer::clear()
+template <typename T>
+void BaseVertexBuffer<T>::clear()
 	{
 	LOG_INFO("VertexBuffer.finalize: Czyszczenie bufora [GLid: %u][size: %u]", vboid, vertices.size());
 
@@ -130,14 +134,32 @@ void VertexBuffer::clear()
 	}
 
 
-bool VertexBuffer::add(const Vertex& vertex)
+template <typename T>
+bool BaseVertexBuffer<T>::add(const T& vertex)
 	{
 	vertices.push_back(vertex);
 
 	return true;
 	}
 
-bool VertexBuffer::draw(const Math::Orientation& orientation, const TexturePtr& tptr)
+/*****************************************************************************/
+/*****************************************************************************/
+/*****************************************************************************/
+void VertexBufferPT::bind() const
+	{
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexPT), (void*)offsetof(VertexPT, x));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(VertexPT), (void*)offsetof(VertexPT, tx));
+	}
+
+void VertexBufferPT::unbind() const
+	{
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	}
+
+bool VertexBufferPT::draw(const Math::Orientation& orientation, const TexturePtr& tptr)
 	{
 	using namespace Engine::Math;
 
@@ -159,7 +181,7 @@ bool VertexBuffer::draw(const Math::Orientation& orientation, const TexturePtr& 
 	return true;
 	}
 
-bool VertexBuffer::draw(const Math::Orientation& orientation, const TexturePtr& tptr, float x, float y, float w, float h)
+bool VertexBufferPT::draw(const Math::Orientation& orientation, const TexturePtr& tptr, float x, float y, float w, float h)
 	{
 	using namespace Engine::Math;
 
@@ -184,13 +206,35 @@ bool VertexBuffer::draw(const Math::Orientation& orientation, const TexturePtr& 
 	return true;
 	}
 
-bool VertexBuffer::draw(const Math::Orientation& orientation, const Graphics::ImagePtr& iptr)
+bool VertexBufferPT::draw(const Math::Orientation& orientation, const Graphics::ImagePtr& iptr)
 	{
 	return draw(orientation, iptr->getTexture(), iptr->getX(), iptr->getY(), iptr->getW(), iptr->getH());
 	}
 
-bool VertexBuffer::draw(const Math::Orientation& orientation, const Graphics::SpritePtr& sptr)
+bool VertexBufferPT::draw(const Math::Orientation& orientation, const Graphics::SpritePtr& sptr)
 	{
 	return draw(orientation/*-sptr.getCurrentFrame().getOffset()*/, sptr.getCurrentFrame().getImage());
 	}
+
+/*****************************************************************************/
+/*****************************************************************************/
+/*****************************************************************************/
+void VertexBufferPNT::bind() const
+	{
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexPNT), (void*)offsetof(VertexPNT, x));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexPNT), (void*)offsetof(VertexPNT, nx));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexPNT), (void*)offsetof(VertexPNT, tx));
+	}
+
+void VertexBufferPNT::unbind() const
+	{
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
+	}
+
+
 

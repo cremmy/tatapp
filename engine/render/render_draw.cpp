@@ -94,8 +94,8 @@ void Render::drawPolygon(const std::vector<Math::AVector>& vertices, const Math:
 	statePop();
 	}
 
-
-void Render::draw(const Math::Orientation& orientation, const VertexBuffer& vbo)
+template <typename T>
+void Render::draw(const Math::Orientation& orientation, const BaseVertexBuffer<T>& vbo)
 	{
 	using namespace Engine::Math;
 
@@ -103,21 +103,18 @@ void Render::draw(const Math::Orientation& orientation, const VertexBuffer& vbo)
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo.getVBO());
 
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, x));
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tx));
+	vbo.bind();
 
 	const AMatrix mmodel=orientation.getMatrix();
 	glUniformMatrix4fv(state.shader->getUniform(SHADER_UNIFORM_MODEL_MATRIX), 1, GL_TRUE, &mmodel.row[0].x);
 
 	glDrawArrays(GL_QUADS, 0, vbo.getSize());
 
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
+	vbo.unbind();
 	}
 
-void Render::draw(const Math::Orientation& orientation, const VertexBuffer& vbo, unsigned first, unsigned last)
+template <typename T>
+void Render::draw(const Math::Orientation& orientation, const BaseVertexBuffer<T>& vbo, unsigned first, unsigned last)
 	{
 	using namespace Engine::Math;
 
@@ -128,18 +125,14 @@ void Render::draw(const Math::Orientation& orientation, const VertexBuffer& vbo,
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo.getVBO());
 
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, x));
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tx));
+	vbo.bind();
 
 	const AMatrix mmodel=orientation.getMatrix();
 	glUniformMatrix4fv(state.shader->getUniform(SHADER_UNIFORM_MODEL_MATRIX), 1, GL_TRUE, &mmodel.row[0].x);
 
 	glDrawArrays(GL_QUADS, first, last-first);
 
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
+	vbo.unbind();
 	}
 
 
