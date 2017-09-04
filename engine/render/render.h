@@ -44,9 +44,8 @@ namespace Engine
 		class Shader;
 		class Texture;
 		class TexturePtr;
-
-		template <typename T>
-		class BaseVertexBuffer;
+		class VertexBuffer;
+		class Model;
 
 		class Render
 			{
@@ -156,10 +155,9 @@ namespace Engine
 				//void drawGrid(const Math::AVector& center, const Math::AVector& normal, unsigned sx, unsigned sy, const Math::AVector& color=Math::AVector(1, 1, 1, 1));
 				void drawPolygon(const std::vector<Math::AVector>& vertices, const Math::AVector& color=Math::AVector(1, 1, 1, 1), const Math::AVector& fill=Math::AVector(0, 0, 0, 0));
 
-				template <typename T>
-				void draw(const Math::Orientation& orientation, const BaseVertexBuffer<T>& vbo);
-				template <typename T>
-				void draw(const Math::Orientation& orientation, const BaseVertexBuffer<T>& vbo, unsigned first, unsigned last);
+				void draw(const Math::Orientation& orientation, const VertexBuffer& vbo);
+				void draw(const Math::Orientation& orientation, const VertexBuffer& vbo, unsigned first, unsigned last);
+				void draw(const Math::Orientation& orientation, const Model& mdl);
 				void draw(const Math::Orientation& orientation, const Texture& tex);
 				void draw(const Math::Orientation& orientation, const Texture& tex, float x, float y, float w, float h);
 				void draw(const Math::Orientation& orientation, const TexturePtr& tptr);

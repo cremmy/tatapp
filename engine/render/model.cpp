@@ -18,7 +18,7 @@
 
 using namespace Engine::Render;
 
-Model::Model(): uboid(0u)
+Model::Model()/*: uboid(0u)*/
 	{
 	//
 	}
@@ -31,20 +31,137 @@ Model::~Model()
 
 bool Model::load(const std::string& path)
 	{
-	GLuint err;
-
 	clear();
-	glGetError(); // Wyzeruj bledy OpenGL
 
 	LOG_INFO("Model.load: Wczytywanie \"%s\"", path.c_str());
 
+	shader=ShaderPtr(RENDER_DEFAULT_SHADER_MODEL);
+
+	if(!shader)
+		{
+		LOG_ERROR("Model.load: Nie udalo sie wczytac shadera modelu");
+		return false;
+		}
+
 	auto loadMtl=[this](const std::string& path)->bool
 		{
-		//
+		LOG_INFO("Model.loadMtl: Wczytywanie materialow \"%s\"", path.c_str());
+
+		char* data=IO::Resource::load(path);
+
+		if(!data)
+			{
+			LOG_ERROR("Model.loadMtl: Nie udalo sie wczytac \"%s\"", path.c_str());
+			return false;
+			}
+
+		Utils::StringParser pfile(data, "\n\r");
+		Utils::StringParser pline("", " \t");
+
+		bool mtlfound=false;
+
+		for(unsigned i=0u; i<pfile.count(); ++i)
+			{
+			if(pfile[i].size()<=1u || pfile[i][0]=='#')
+				continue;
+
+			pline=pfile[i];
+
+			if(!mtlfound)
+				{
+				if(pline[0]=="newmtl")
+					{
+					LOG_INFO("Model.loadMtl: Znaleziono material \"%s\"", pline.get().c_str());
+					mtlfound=true;
+					}
+				else
+					{
+					continue;
+					}
+				}
+			else if(pline[0]=="newmtl")
+				{
+				LOG_WARNING("Model.loadMtl: Znaleziono kolejny material \"%s\", przerywanie wczytywania", pline.get().c_str());
+				break;
+				}
+			else if(pline[0]=="Ka")
+				{
+				if(pline.count()<4)
+					{
+					LOG_WARNING("Model.loadMtl: Za malo parametrow [\"%s\":%u]", path.c_str(), i);
+					LOG_WARNING("Model.loadMtl: \"%s\"", pline.get().c_str());
+					continue;
+					}
+
+				material.ambient[0]=pline.toFloat(1);
+				material.ambient[1]=pline.toFloat(2);
+				material.ambient[2]=pline.toFloat(3);
+				}
+			else if(pline[0]=="Kd")
+				{
+				if(pline.count()<4)
+					{
+					LOG_WARNING("Model.loadMtl: Za malo parametrow [\"%s\":%u]", path.c_str(), i);
+					LOG_WARNING("Model.loadMtl: \"%s\"", pline.get().c_str());
+					continue;
+					}
+
+				material.diffuse[0]=pline.toFloat(1);
+				material.diffuse[1]=pline.toFloat(2);
+				material.diffuse[2]=pline.toFloat(3);
+				}
+			else if(pline[0]=="Ks")
+				{
+				if(pline.count()<4)
+					{
+					LOG_WARNING("Model.loadMtl: Za malo parametrow [\"%s\":%u]", path.c_str(), i);
+					LOG_WARNING("Model.loadMtl: \"%s\"", pline.get().c_str());
+					continue;
+					}
+
+				material.specular[0]=pline.toFloat(1);
+				material.specular[1]=pline.toFloat(2);
+				material.specular[2]=pline.toFloat(3);
+				}
+			else if(pline[0]=="Ns")
+				{
+				if(pline.count()<2)
+					{
+					LOG_WARNING("Model.loadMtl: Za malo parametrow [\"%s\":%u]", path.c_str(), i);
+					LOG_WARNING("Model.loadMtl: \"%s\"", pline.get().c_str());
+					continue;
+					}
+
+				material.specularexp=pline.toFloat(1);
+				}
+			else if(pline[0]=="d")
+				{
+				if(pline.count()<2)
+					{
+					LOG_WARNING("Model.loadMtl: Za malo parametrow [\"%s\":%u]", path.c_str(), i);
+					LOG_WARNING("Model.loadMtl: \"%s\"", pline.get().c_str());
+					continue;
+					}
+
+				material.transparency=pline.toFloat(1);
+				}
+			}
+
+		LOG_DEBUG("[ambient %.2f %.2f %.2f][diffuse %.2f %.2f %.2f][specular %.2f %.2f %.2f][specular exp %f][transparency %f]",
+				material.ambient[0], material.ambient[1], material.ambient[2],
+				material.diffuse[0], material.diffuse[1], material.diffuse[2],
+				material.specular[0], material.specular[1], material.specular[2],
+				material.specularexp,
+				material.transparency
+				);
+
+		return true;
 		};
 
 	auto loadObj=[this, loadMtl](const std::string& path)->bool
 		{
+		LOG_INFO("Model.loadObj: Wczytywanie modelu \"%s\"", path.c_str());
+
 		char* data=IO::Resource::load(path);
 
 		if(!data)
@@ -67,6 +184,9 @@ bool Model::load(const std::string& path)
 
 		std::vector<Math::AVector> normals;
 		normals.reserve(1024);
+
+		bool onceft=false;
+		bool oncefn=false;
 
 		for(unsigned i=0u; i<pfile.count(); ++i)
 			{
@@ -109,6 +229,7 @@ bool Model::load(const std::string& path)
 				if(pline.count()<4)
 					{
 					LOG_ERROR("Model.loadObj: Za malo wspolrzednych wierzcholka [\"%s\":%u]", path.c_str(), i);
+					LOG_ERROR("Model.loadObj: \"%s\"", pline.get().c_str());
 					return false;
 					}
 
@@ -120,6 +241,7 @@ bool Model::load(const std::string& path)
 				if(pline.count()<3)
 					{
 					LOG_ERROR("Model.loadObj: Za malo wspolrzednych wierzcholka (tekstura) [\"%s\":%u]", path.c_str(), i);
+					LOG_ERROR("Model.loadObj: \"%s\"", pline.get().c_str());
 					return false;
 					}
 
@@ -131,6 +253,7 @@ bool Model::load(const std::string& path)
 				if(pline.count()<4)
 					{
 					LOG_ERROR("Model.loadObj: Za malo wspolrzednych wierzcholka (normalny) [\"%s\":%u]", path.c_str(), i);
+					LOG_ERROR("Model.loadObj: \"%s\"", pline.get().c_str());
 					return false;
 					}
 
@@ -142,51 +265,133 @@ bool Model::load(const std::string& path)
 				if(pline.count()<4)
 					{
 					LOG_ERROR("Model.loadObj: Wymagane trzy wierzcholki do face'a [\"%s\":%u]", path.c_str(), i);
+					LOG_ERROR("Model.loadObj: \"%s\"", pline.get().c_str());
 					return false;
 					}
 
 				pface=pline[1];
-				unsigned fav=pface.toInt(0);
-				unsigned fat=pface.toInt(1);
-				unsigned fan=pface.toInt(2);
+				unsigned fav=pface.toInt(0)-1;
+				unsigned fat=pface.toInt(1)-1;
+				unsigned fan=pface.toInt(2)-1;
 
 				pface=pline[2];
-				unsigned fbv=pface.toInt(0);
-				unsigned fbt=pface.toInt(1);
-				unsigned fbn=pface.toInt(2);
+				unsigned fbv=pface.toInt(0)-1;
+				unsigned fbt=pface.toInt(1)-1;
+				unsigned fbn=pface.toInt(2)-1;
 
 				pface=pline[3];
-				unsigned fcv=pface.toInt(0);
-				unsigned fct=pface.toInt(1);
-				unsigned fcn=pface.toInt(2);
+				unsigned fcv=pface.toInt(0)-1;
+				unsigned fct=pface.toInt(1)-1;
+				unsigned fcn=pface.toInt(2)-1;
 
-				if(fav>=verts.size() || fat>=uvs.size() || fan>=normals.size() ||
-				   fbv>=verts.size() || fbt>=uvs.size() || fbn>=normals.size() ||
-				   fcv>=verts.size() || fct>=uvs.size() || fcn>=normals.size())
+				Vertex a;
+				Vertex b;
+				Vertex c;
+
+				if(fav>=verts.size() || fbv>=verts.size() || fcv>=verts.size())
 					{
-					LOG_ERROR("Model.loadObj: Nieprawidlowy indeks wierzcholka/tekstury/normala [\"%s\":%u]", path.c_str(), i);
+					LOG_ERROR("Model.loadObj: Bledny lub niezdefiniowany indeks wierzcholka [\"%s\":%u]", path.c_str(), i);
+					LOG_ERROR("Model.loadObj: \"%s\"", pline.get().c_str());
 					LOG_DEBUG("Model.loadObj: [verts %u][uvs %u][normals %u]", verts.size(), uvs.size(), normals.size());
 					return false;
 					}
 
-				vbo.add({verts[fav].x, verts[fav].y, verts[fav].z, uvs[fat].x, uvs[fat].y, normals[fan].x, normals[fan].y, normals[fan].z});
-				vbo.add({verts[fbv].x, verts[fbv].y, verts[fbv].z, uvs[fbt].x, uvs[fbt].y, normals[fbn].x, normals[fbn].y, normals[fbn].z});
-				vbo.add({verts[fcv].x, verts[fcv].y, verts[fcv].z, uvs[fct].x, uvs[fct].y, normals[fcn].x, normals[fcn].y, normals[fcn].z});
+				a={verts[fav].x, verts[fav].y, verts[fav].z, 0, 0, 0, 0, 0};
+				b={verts[fbv].x, verts[fbv].y, verts[fbv].z, 0, 0, 0, 0, 0};
+				c={verts[fcv].x, verts[fcv].y, verts[fcv].z, 0, 0, 0, 0, 0};
+
+				if(fat>=uvs.size() || fbt>=uvs.size() || fct>=uvs.size())
+					{
+					if(!onceft)
+						{
+						onceft=true;
+						LOG_WARNING("Model.loadObj: Bledne lub niezdefiniowane wspolrzedne tekstury [\"%s\":%u]", path.c_str(), i);
+						LOG_WARNING("Model.loadObj: \"%s\"", pline.get().c_str());
+						LOG_DEBUG("Model.loadObj: [verts %u][uvs %u][normals %u]", verts.size(), uvs.size(), normals.size());
+						}
+					}
+				else
+					{
+					a.tx=uvs[fat].x;
+					a.ty=uvs[fat].y;
+					b.tx=uvs[fbt].x;
+					b.ty=uvs[fbt].y;
+					c.tx=uvs[fct].x;
+					c.ty=uvs[fct].y;
+					}
+
+				if(fan>=normals.size() || fbn>=normals.size() || fcn>=normals.size())
+					{
+					if(!oncefn)
+						{
+						oncefn=true;
+						LOG_WARNING("Model.loadObj: Bledny lub niezdefiniowany indeks wektora normalnego [\"%s\":%u]", path.c_str(), i);
+						LOG_WARNING("Model.loadObj: \"%s\"", pline.get().c_str());
+						LOG_DEBUG("Model.loadObj: [verts %u][uvs %u][normals %u]", verts.size(), uvs.size(), normals.size());
+						}
+					}
+				else
+					{
+					a.nx=uvs[fan].x;
+					a.ny=uvs[fan].y;
+					a.nz=uvs[fan].z;
+					b.nx=uvs[fbn].x;
+					b.ny=uvs[fbn].y;
+					b.nz=uvs[fbn].z;
+					c.nx=uvs[fcn].x;
+					c.ny=uvs[fcn].y;
+					c.nz=uvs[fcn].z;
+					}
+
+				vbo.add(a);
+				vbo.add(b);
+				vbo.add(c);
 				}
 			}
+
+
+		LOG_DEBUG("Model.loadObj: Zwalnianie pamieci");
+		delete [] data;
+
+		return true;
 		};
 
+	if(!loadObj(path))
+		{
+		LOG_ERROR("Model.load: Nie udalo sie wczytac modelu \"%s\"", path.c_str());
+		return false;
+		}
 
-	}
+	if(!vbo.finalize())
+		{
+		return false;
+		}
 
-bool Model::loadMaterial(const std::string& path)
-	{
-	//
+	LOG_INFO("Model.load: Inicjalizacja bufora materialu...");
+
+	//GLenum err;
+
+	glGenBuffers(1, &uboid);
+
+	if(!uboid)
+		{
+		LOG_ERROR("Model.load: Nie udalo sie zainicjowac UBO [GLid: %u]", uboid);
+		LOG_ERROR("Model.load: Blad: %s", gluErrorString(glGetError()));
+		return false;
+		}
+
+	glBindBuffer(GL_UNIFORM_BUFFER, uboid);
+	glBufferData(GL_UNIFORM_BUFFER, sizeof(Material), &material, GL_DYNAMIC_DRAW);
+
+	LOG_SUCCESS("Model.load: Wczytano model \"%s\"", path.c_str());
+
+	return true;
 	}
 
 void Model::clear()
 	{
 	vbo.clear();
+	shader=nullptr;
 	diffuse=nullptr;
 	normal=nullptr;
 	}

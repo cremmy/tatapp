@@ -9,9 +9,10 @@
 
 #include <string>
 
-#include "../math/amath.h"
-#include "vertexbuffer.h"
+#include "shaderptr.h"
 #include "textureptr.h"
+#include "vertexbuffer.h"
+#include "../math/amath.h"
 
 namespace Engine
 	{
@@ -29,13 +30,13 @@ namespace Engine
 					float transparency; // d
 					};
 
+				VertexBuffer vbo;
+				ShaderPtr shader;
 				GLuint uboid;
-				VertexBufferPNT vbo;
+
 				TexturePtr diffuse; // Tekstura koloru
 				TexturePtr normal;  // Normal mapa
 				Material material;
-
-				bool loadMaterial(const std::string& path);
 
 			public:
 				Model();
@@ -43,6 +44,12 @@ namespace Engine
 
 				bool load(const std::string& path);
 				void clear();
+
+				GLuint getUBO() const {return uboid;}
+				const VertexBuffer& getVBO() const {return vbo;}
+				const ShaderPtr& getShader() const {return shader;}
+				const TexturePtr& getTextureDiffuse() const {return diffuse;}
+				const TexturePtr& getTextureNormal() const {return normal;}
 			};
 
 		} /* namespace Render */

@@ -7,6 +7,7 @@
 
 #include "render.h"
 
+#include "model.h"
 #include "texture.h"
 #include "vertex.h"
 #include "vertexbuffer.h"
@@ -49,7 +50,7 @@ void Render::drawLine(const AVector& a, const AVector& b, const Math::AVector& c
 	statePop();
 	}
 
-void Render::drawPolygon(const std::vector<Math::AVector>& vertices, const Math::AVector& color, const Math::AVector& fill)
+void Render::drawPolygon(const std::vector<AVector>& vertices, const AVector& color, const AVector& fill)
 	{
 	statePush();
 
@@ -94,11 +95,8 @@ void Render::drawPolygon(const std::vector<Math::AVector>& vertices, const Math:
 	statePop();
 	}
 
-template <typename T>
-void Render::draw(const Math::Orientation& orientation, const BaseVertexBuffer<T>& vbo)
+void Render::draw(const Orientation& orientation, const VertexBuffer& vbo)
 	{
-	using namespace Engine::Math;
-
 	State& state=states.back();
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo.getVBO());
@@ -113,11 +111,8 @@ void Render::draw(const Math::Orientation& orientation, const BaseVertexBuffer<T
 	vbo.unbind();
 	}
 
-template <typename T>
-void Render::draw(const Math::Orientation& orientation, const BaseVertexBuffer<T>& vbo, unsigned first, unsigned last)
+void Render::draw(const Orientation& orientation, const VertexBuffer& vbo, unsigned first, unsigned last)
 	{
-	using namespace Engine::Math;
-
 	assert(first<last);
 	assert(last<vbo.getSize());
 
@@ -135,6 +130,32 @@ void Render::draw(const Math::Orientation& orientation, const BaseVertexBuffer<T
 	vbo.unbind();
 	}
 
+void Render::draw(const Orientation& orientation, const Model& mdl)
+	{
+	State& state=states.back();
+
+	setShader(mdl.getShader());
+
+	const VertexBuffer& vbo=mdl.getVBO();
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo.getVBO());
+
+	vbo.bind();
+
+	const AMatrix mmodel=orientation.getMatrix();
+	glUniformMatrix4fv(state.shader->getUniform(SHADER_UNIFORM_MODEL_MATRIX), 1, GL_TRUE, &mmodel.row[0].x);
+
+	GLuint ubidx=mdl.getShader()->getUniformBlock("Material");
+	if(ubidx!=GL_INVALID_INDEX)
+		{
+		glBindBufferBase(GL_UNIFORM_BUFFER, 1u, uboid); // 1u -> indeks na którym bindowane jest UBO
+		glUniformBlockBinding(mdl.getShader()->getProgramID(), ubidx, 1u); // 1u -> jak wyżej
+		}
+
+	glDrawArrays(GL_TRIANGLES, 0, vbo.getSize());
+
+	vbo.unbind();
+	}
 
 void Render::draw(const Orientation& orientation, const Texture& tex)
 	{
@@ -143,8 +164,6 @@ void Render::draw(const Orientation& orientation, const Texture& tex)
 
 void Render::draw(const Orientation& orientation, const Texture& tex, float x, float y, float w, float h)
 	{
-	using namespace Engine::Math;
-
 	assert(tex.getTextureID());
 
 	State& state=states.back();

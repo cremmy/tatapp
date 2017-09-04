@@ -89,7 +89,7 @@ bool Shader::load(const std::string& path)
 		{
 		if(!load(path, ssvert, ssfrag))
 			{
-			LOG_ERROR("Shader.load: Nie udalo sie wczytac kodu shadera \"%s\"", path.c_str());
+			//LOG_ERROR("Shader.load: Nie udalo sie wczytac kodu shadera \"%s\"", path.c_str());
 			return false;
 			}
 		}
@@ -98,7 +98,7 @@ bool Shader::load(const std::string& path)
 		if(!load(pathV, ssvert, ssfrag, true) ||
 		   !load(pathF, ssvert, ssfrag, false))
 			{
-			LOG_ERROR("Shader.load: Nie udalo sie wczytac kodu shadera \"%s\"/\"%s\"", pathV.c_str(), pathF.c_str());
+			//LOG_ERROR("Shader.load: Nie udalo sie wczytac kodu shadera \"%s\"/\"%s\"", pathV.c_str(), pathF.c_str());
 			return false;
 			}
 		}
