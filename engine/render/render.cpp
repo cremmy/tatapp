@@ -580,7 +580,7 @@ void Render::setCamera(Camera& camera)
 	state.caminfo.projection[15]=mp[3][3];
 
 	glBindBuffer(GL_UNIFORM_BUFFER, uboid);
-	glBufferData(GL_UNIFORM_BUFFER, sizeof(CameraInfo), &states.back().caminfo, GL_DYNAMIC_DRAW);
+	glBufferData(GL_UNIFORM_BUFFER, sizeof(CameraInfo), &state.caminfo, GL_DYNAMIC_DRAW);
 //	GLvoid* p=glMapBuffer(GL_UNIFORM_BUFFER, GL_WRITE_ONLY);
 //	memcpy(p, &states.back().caminfo, sizeof(CameraInfo));
 //	glUnmapBuffer(GL_UNIFORM_BUFFER);
@@ -650,8 +650,8 @@ void Render::setShader(const Shader* shader)
 
 	if(ubidx!=GL_INVALID_INDEX)
 		{
-		glBindBufferBase(GL_UNIFORM_BUFFER, 0u, uboid); // 0u -> indeks na którym bindowane jest UBO
 		glUniformBlockBinding(shader->getProgramID(), ubidx, 0u); // 0u -> jak wyżej
+		glBindBufferBase(GL_UNIFORM_BUFFER, 0u, uboid); // 0u -> indeks na którym bindowane jest UBO
 		}
 	}
 

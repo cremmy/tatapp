@@ -20,7 +20,7 @@ namespace Engine
 		{
 		class Model
 			{
-			protected:
+			public:
 				struct Material
 					{
 					float ambient[3]; // Ka
@@ -30,6 +30,7 @@ namespace Engine
 					float transparency; // d
 					};
 
+			protected:
 				VertexBuffer vbo;
 				ShaderPtr shader;
 				GLuint uboid;
@@ -50,6 +51,7 @@ namespace Engine
 				const ShaderPtr& getShader() const {return shader;}
 				const TexturePtr& getTextureDiffuse() const {return diffuse;}
 				const TexturePtr& getTextureNormal() const {return normal;}
+				const Material& getMaterial() const {return material;}
 			};
 
 		} /* namespace Render */

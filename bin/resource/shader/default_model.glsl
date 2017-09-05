@@ -26,6 +26,7 @@ uniform Material
 out VertexData
 	{
 	vec2 uv;
+	vec3 position;
 	vec3 normal;
 	} o;
 
@@ -34,7 +35,8 @@ void main()
 	gl_Position=u.projection*u.view*u_model*vec4(in_position, 1.0f);
 	
 	o.uv=in_uv;
-	o.normal=in_normal;
+	o.position=vec3(u.view*u_model*vec4(in_position, 1.0f));
+	o.normal=vec3(normalize(transpose((u.view*u_model))*vec4(in_normal, 0.0f)));
 	}
 
 /**** Fragment shader ****/
@@ -44,6 +46,7 @@ void main()
 in VertexData
 	{
 	vec2 uv;
+	vec3 position;
 	vec3 normal;
 	} i;
 	
@@ -62,10 +65,24 @@ out vec4 out_color;
 
 void main()
 	{
-	out_color=vec4(m.diffuse, 1.0);//texture(u_texture, i.uv);
+	vec3 LPOS=vec3(-128, -128, 128);
+	vec3 L=normalize(LPOS-i.position);//vec3(2.0f, 1.0f, -0.5f));
+	vec3 E=normalize(-i.position);
+	vec3 R=normalize(-reflect(L, i.normal));
 	
-	if(out_color.a<1.0f/256.f)
-		discard;
+	// Ambient
+	vec4 Iamb=vec4(0.1f, 0.1f, 0.1f, 0.1f);
+	// Diffuse
+	vec4 Idiff=clamp(vec4(0.0f, 1.0f, 0.0f, 0.5f)*max(dot(i.normal, L), 0.0f), 0.0f, 1.0f);
+	// Specular
+	vec4 Ispec=clamp(vec4(0.0f, 0.0f, 1.0f, 0.5f)*pow(max(dot(R, E), 0.0f), 0.3f/*shininess*/), 0.0f, 1.0f);
+	
+	out_color=vec4(m.diffuse, 1.0f)+Iamb+Idiff+Ispec;//texture(u_texture, i.uv);
+
+	//out_color.r=0.0f;
+	
+	//if(out_color.a<1.0f/256.f)
+	//	discard;
 	
 	gl_FragDepth=gl_FragCoord.z;
 	}

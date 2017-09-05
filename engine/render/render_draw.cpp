@@ -134,7 +134,8 @@ void Render::draw(const Orientation& orientation, const Model& mdl)
 	{
 	State& state=states.back();
 
-	setShader(mdl.getShader());
+	if(!!mdl.getShader())
+		setShader(mdl.getShader());
 
 	const VertexBuffer& vbo=mdl.getVBO();
 
@@ -145,11 +146,11 @@ void Render::draw(const Orientation& orientation, const Model& mdl)
 	const AMatrix mmodel=orientation.getMatrix();
 	glUniformMatrix4fv(state.shader->getUniform(SHADER_UNIFORM_MODEL_MATRIX), 1, GL_TRUE, &mmodel.row[0].x);
 
-	GLuint ubidx=mdl.getShader()->getUniformBlock("Material");
+	GLuint ubidx=state.shader->getUniformBlock("Material");
 	if(ubidx!=GL_INVALID_INDEX)
 		{
-		glBindBufferBase(GL_UNIFORM_BUFFER, 1u, uboid); // 1u -> indeks na którym bindowane jest UBO
-		glUniformBlockBinding(mdl.getShader()->getProgramID(), ubidx, 1u); // 1u -> jak wyżej
+		glUniformBlockBinding(state.shader->getProgramID(), ubidx, 1u); // 1u -> jak wyżej
+		glBindBufferBase(GL_UNIFORM_BUFFER, 1u, mdl.getUBO()); // 1u -> indeks na którym bindowane jest UBO
 		}
 
 	glDrawArrays(GL_TRIANGLES, 0, vbo.getSize());
