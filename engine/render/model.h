@@ -28,15 +28,15 @@ namespace Engine
 					float specular[3]; // Ks
 					float specularexp; // Ns
 					float transparency; // d
+
+					TexturePtr texDiffuse; // Tekstura koloru
+					TexturePtr texNormal;  // Normal mapa
 					};
 
 			protected:
 				VertexBuffer vbo;
 				ShaderPtr shader;
 				GLuint uboid;
-
-				TexturePtr diffuse; // Tekstura koloru
-				TexturePtr normal;  // Normal mapa
 				Material material;
 
 			public:
@@ -49,8 +49,6 @@ namespace Engine
 				GLuint getUBO() const {return uboid;}
 				const VertexBuffer& getVBO() const {return vbo;}
 				const ShaderPtr& getShader() const {return shader;}
-				const TexturePtr& getTextureDiffuse() const {return diffuse;}
-				const TexturePtr& getTextureNormal() const {return normal;}
 				const Material& getMaterial() const {return material;}
 			};
 

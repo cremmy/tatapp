@@ -95,6 +95,7 @@ void Render::drawPolygon(const std::vector<AVector>& vertices, const AVector& co
 	statePop();
 	}
 
+
 void Render::draw(const Orientation& orientation, const VertexBuffer& vbo)
 	{
 	State& state=states.back();
@@ -158,9 +159,12 @@ void Render::draw(const Orientation& orientation, const Model& mdl)
 	vbo.unbind();
 	}
 
+
 void Render::draw(const Orientation& orientation, const Texture& tex)
 	{
-	//
+	assert(tex.getTextureID());
+
+	draw(orientation, tex, 0, 0, tex.getW(), tex.getH());
 	}
 
 void Render::draw(const Orientation& orientation, const Texture& tex, float x, float y, float w, float h)

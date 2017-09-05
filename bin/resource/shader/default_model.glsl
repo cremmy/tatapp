@@ -26,7 +26,6 @@ uniform Material
 out VertexData
 	{
 	vec2 uv;
-	vec3 position;
 	vec3 normal;
 	} o;
 
@@ -35,20 +34,24 @@ void main()
 	gl_Position=u.projection*u.view*u_model*vec4(in_position, 1.0f);
 	
 	o.uv=in_uv;
-	o.position=vec3(u.view*u_model*vec4(in_position, 1.0f));
-	o.normal=vec3(normalize(transpose((u.view*u_model))*vec4(in_normal, 0.0f)));
+	//o.position=(u.view*u_model*vec4(in_position, 1.0f)).xyz;
+	o.normal=(u.view*u_model*vec4(in_normal, 0.0f)).xyz;
 	}
 
 /**** Fragment shader ****/
 #pragma wtsngine fragment
 #version 330 core
+	
+uniform sampler2D u_texture;
+uniform sampler2D u_normal;
 
-in VertexData
+//uniform mat4 u_model;
+
+uniform Uniforms
 	{
-	vec2 uv;
-	vec3 position;
-	vec3 normal;
-	} i;
+	mat4 view;
+	mat4 projection;
+	} u;
 	
 uniform Material
 	{
@@ -59,27 +62,21 @@ uniform Material
 	float transparency;
 	} m;
 	
-uniform sampler2D u_texture;
+in VertexData
+	{
+	vec2 uv;
+	vec3 normal;
+	} i;
 	
 out vec4 out_color;
 
 void main()
 	{
-	vec3 LPOS=vec3(-128, -128, 128);
-	vec3 L=normalize(LPOS-i.position);//vec3(2.0f, 1.0f, -0.5f));
-	vec3 E=normalize(-i.position);
-	vec3 R=normalize(-reflect(L, i.normal));
+	vec3 LDIR=-normalize(u.view*vec4(2, 1, -0.5, 0)).xyz;
+	out_color=texture(u_texture, i.uv)*vec4(m.diffuse, 1.0f);
+	out_color.xyz*=max(dot(LDIR, i.normal), 0.0f);
 	
-	// Ambient
-	vec4 Iamb=vec4(0.1f, 0.1f, 0.1f, 0.1f);
-	// Diffuse
-	vec4 Idiff=clamp(vec4(0.0f, 1.0f, 0.0f, 0.5f)*max(dot(i.normal, L), 0.0f), 0.0f, 1.0f);
-	// Specular
-	vec4 Ispec=clamp(vec4(0.0f, 0.0f, 1.0f, 0.5f)*pow(max(dot(R, E), 0.0f), 0.3f/*shininess*/), 0.0f, 1.0f);
-	
-	out_color=vec4(m.diffuse, 1.0f)+Iamb+Idiff+Ispec;//texture(u_texture, i.uv);
-
-	//out_color.r=0.0f;
+	//out_color.a=1;
 	
 	//if(out_color.a<1.0f/256.f)
 	//	discard;

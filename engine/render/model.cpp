@@ -145,6 +145,53 @@ bool Model::load(const std::string& path)
 
 				material.transparency=pline.toFloat(1);
 				}
+			else if(pline[0]=="map_Kd")
+				{
+				if(pline.count()<2)
+					{
+					LOG_WARNING("Model.loadMtl: Za malo parametrow [\"%s\":%u]", path.c_str(), i);
+					LOG_WARNING("Model.loadMtl: \"%s\"", pline.get().c_str());
+					continue;
+					}
+
+				std::string tpath;
+
+				auto slpos=path.rfind('/');
+				if(slpos==path.npos)
+					{
+					tpath=pline[1];
+					}
+				else
+					{
+					tpath=path.substr(0, slpos+1)+pline[1];
+					}
+
+				material.texDiffuse=TexturePtr(tpath);
+				}
+			else if(pline[0]=="map_bump")
+				{
+				if(pline.count()<2)
+					{
+					LOG_WARNING("Model.loadMtl: Za malo parametrow [\"%s\":%u]", path.c_str(), i);
+					LOG_WARNING("Model.loadMtl: \"%s\"", pline.get().c_str());
+					continue;
+					}
+
+
+				std::string tpath;
+
+				auto slpos=path.rfind('/');
+				if(slpos==path.npos)
+					{
+					tpath=pline[1];
+					}
+				else
+					{
+					tpath=path.substr(0, slpos+1)+pline[1];
+					}
+
+				material.texNormal=TexturePtr(tpath);
+				}
 			}
 
 		LOG_DEBUG("[ambient %.2f %.2f %.2f][diffuse %.2f %.2f %.2f][specular %.2f %.2f %.2f][specular exp %f][transparency %f]",
@@ -332,15 +379,15 @@ bool Model::load(const std::string& path)
 					}
 				else
 					{
-					a.nx=uvs[fan].x;
-					a.ny=uvs[fan].y;
-					a.nz=uvs[fan].z;
-					b.nx=uvs[fbn].x;
-					b.ny=uvs[fbn].y;
-					b.nz=uvs[fbn].z;
-					c.nx=uvs[fcn].x;
-					c.ny=uvs[fcn].y;
-					c.nz=uvs[fcn].z;
+					a.nx=normals[fan].x;
+					a.ny=normals[fan].y;
+					a.nz=normals[fan].z;
+					b.nx=normals[fbn].x;
+					b.ny=normals[fbn].y;
+					b.nz=normals[fbn].z;
+					c.nx=normals[fcn].x;
+					c.ny=normals[fcn].y;
+					c.nz=normals[fcn].z;
 					}
 
 				vbo.add(a);
@@ -383,6 +430,11 @@ bool Model::load(const std::string& path)
 	glBindBuffer(GL_UNIFORM_BUFFER, uboid);
 	glBufferData(GL_UNIFORM_BUFFER, sizeof(Material), &material, GL_DYNAMIC_DRAW);
 
+	if(material.texDiffuse)
+		shader.uniform("u_texture", material.texDiffuse);
+	if(material.texNormal)
+		shader.uniform("u_normal", material.texNormal);
+
 	LOG_SUCCESS("Model.load: Wczytano model \"%s\"", path.c_str());
 
 	return true;
@@ -392,6 +444,6 @@ void Model::clear()
 	{
 	vbo.clear();
 	shader=nullptr;
-	diffuse=nullptr;
-	normal=nullptr;
+	material.texDiffuse=nullptr;
+	material.texNormal=nullptr;
 	}

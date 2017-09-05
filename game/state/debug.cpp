@@ -57,7 +57,7 @@ bool Debug::init(Engine::Core::Application *application)
 	spr=Graphics::SpritePtr("resource/sprite/test/testator.xml");
 	img=Graphics::ImagePtr("megumeme.png");
 
-	if(!mdl.load("resource/model/sample.obj"))
+	if(!mdl.load("resource/model/sample_cube.obj"))
 		return false;
 
 	return true;

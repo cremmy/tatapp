@@ -28,6 +28,8 @@ bool NPCSprite::NPCSprite::init(const Engine::Graphics::SpritePtr& sprite)
 	assert(!!sprite);
 
 	this->sprite=sprite;
+
+	return true;
 	}
 
 void NPCSprite::update(float dt)
