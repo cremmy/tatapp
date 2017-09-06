@@ -5,20 +5,40 @@
  *      Author: crm
  */
 
-#include <game/level.h>
+#include "level.h"
 
-namespace Game
+#include "npcfactory.h"
+
+using namespace Game;
+
+
+Level::Level()
 	{
+	//
+	}
 
-	Level::Level()
-		{
-		// TODO Auto-generated constructor stub
+Level::~Level()
+	{
+	//
+	}
 
-		}
 
-	Level::~Level()
-		{
-		// TODO Auto-generated destructor stub
-		}
+bool Level::init(const std::string& path)
+	{
+	return true;
+	}
 
-	} /* namespace Game */
+void Level::update()
+	{
+	//
+	}
+
+void Level::print()
+	{
+	//
+	}
+
+void Level::clear()
+	{
+	//
+	}

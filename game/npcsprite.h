@@ -18,13 +18,15 @@ namespace Game
 		protected:
 			Engine::Graphics::SpritePtr sprite;
 
+			virtual bool load(const std::string& definition);
+
 		public:
 			NPCSprite();
 			virtual ~NPCSprite();
 
-			bool init(const Engine::Graphics::SpritePtr& sprite);
 			virtual void update(float dt);
 			virtual void print(float tinterp);
+			virtual void clear();
 
 			Engine::Graphics::SpritePtr getSprite() {return sprite;}
 			const Engine::Graphics::SpritePtr getSprite() const {return sprite;}

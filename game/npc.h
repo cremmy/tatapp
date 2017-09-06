@@ -34,13 +34,16 @@ namespace Game
 			bool collidable;
 			Engine::Math::Geometry::AABB collider;
 
+			virtual bool load(const std::string& definition)=0;
+
 		public:
 			NPC();
 			virtual ~NPC();
 
-			//virtual bool init();
+			bool init(const std::string& path);
 			virtual void update(float dt);
 			virtual void print(float tinterp)=0;
+			virtual void clear()=0;
 
 			Engine::Math::Orientation& getOrientation() {return orientation;}
 			const Engine::Math::Orientation& getOrientation() const {return orientation;}

@@ -7,14 +7,27 @@
 
 #pragma once
 
+#include <map>
+#include <string>
+#include <vector>
+
 namespace Game
 	{
+	class NPC;
 
 	class Level
 		{
+		protected:
+			std::vector<NPC*> npcs;
+
 		public:
 			Level();
-			virtual ~Level();
+			~Level();
+
+			bool init(const std::string& path);
+			void update();
+			void print();
+			void clear();
 		};
 
 	} /* namespace Game */

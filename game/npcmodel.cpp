@@ -5,20 +5,42 @@
  *      Author: crm
  */
 
-#include <game/npcmodel.h>
+#include "npcmodel.h"
 
-namespace Game
+#include "engine/render/render.h"
+
+using namespace Game;
+
+
+NPCModel::NPCModel()
 	{
+	//
 
-	NPCModel::NPCModel()
-		{
-		// TODO Auto-generated constructor stub
+	}
 
-		}
+NPCModel::~NPCModel()
+	{
+	//
+	}
 
-	NPCModel::~NPCModel()
-		{
-		// TODO Auto-generated destructor stub
-		}
 
-	} /* namespace Game */
+bool NPCModel::load(const std::string& definition)
+	{
+	return false;
+	}
+
+
+void NPCModel::update(float dt)
+	{
+	NPC::update(dt);
+	}
+
+void NPCModel::print(float)
+	{
+	//
+	}
+
+void NPCModel::clear()
+	{
+	//
+	}
