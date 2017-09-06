@@ -21,8 +21,6 @@ namespace Local
 	{
 	Engine::Render::Camera cam;
 
-	Engine::Graphics::SpritePtr spr;
-	Engine::Graphics::ImagePtr img;
 	Engine::Render::Model mdl;
 	}
 
@@ -39,6 +37,7 @@ Debug::~Debug()
 bool Debug::init(Engine::Core::Application *application)
 	{
 	using namespace Engine;
+	using namespace Engine::Math;
 	using namespace Local;
 
 	LOG_DEBUG("State.Debug.init");
@@ -49,13 +48,10 @@ bool Debug::init(Engine::Core::Application *application)
 	this->application->addListener(Core::AppEvent::Type::MOUSE_KEY_DOWN, *this);
 	this->application->addListener(Core::AppEvent::Type::MOUSE_KEY_UP, *this);
 
-	cam.ortho(Engine::Render::getInstance().getWindowWidth(), Engine::Render::getInstance().getWindowHeight(), 1.0f, 1000.0f);
-	//cam.perspective(Render::getInstance().getWindowWidth(), Render::getInstance().getWindowHeight());
-	cam.lookAt(Engine::Math::AVector(0, 0, 0), Engine::Math::AVector(0, 0, 500), Engine::Math::AVector(0, 1, 0));
-	//cam.lookAt(AVector(0, 0, 0), 45.0f, 45.0f, 600.0f);
-
-	spr=Graphics::SpritePtr("resource/sprite/test/testator.xml");
-	img=Graphics::ImagePtr("megumeme.png");
+	//cam.ortho(Engine::Render::getInstance().getWindowWidth(), Engine::Render::getInstance().getWindowHeight(), 1.0f, 1000.0f);
+	cam.perspective(Render::getInstance().getWindowWidth(), Render::getInstance().getWindowHeight());
+	//cam.lookAt(Engine::Math::AVector(0, 0, 0), Engine::Math::AVector(0, 0, 500), Engine::Math::AVector(0, 1, 0));
+	cam.lookAt(AVector(0, 0, 1.7), AVector(-2, -2, 1.7));
 
 	if(!mdl.load("resource/model/sample_cube.obj"))
 		return false;
@@ -77,6 +73,8 @@ bool Debug::update(float dt)
 	if(key[SDL_SCANCODE_A]) cam.moveRight(-dt*CAM_SPEED*(1.0f+1.5f*key[SDL_SCANCODE_LSHIFT]));
 	if(key[SDL_SCANCODE_SPACE]) cam.moveUp( dt*CAM_SPEED*(1.0f+1.5f*key[SDL_SCANCODE_LSHIFT]));
 	if(key[SDL_SCANCODE_LCTRL]) cam.moveUp(-dt*CAM_SPEED*(1.0f+1.5f*key[SDL_SCANCODE_LSHIFT]));
+
+	LOG_DEBUG(LOG_STR_VECTOR(cam.getPosition()));
 
 	Engine::Core::AppEvent e;
 
@@ -112,8 +110,6 @@ bool Debug::update(float dt)
 			}
 		}
 
-	spr.update(dt);
-
 	return false; // nie, nie aktualizuj stanów poniżej
 	}
 
@@ -128,10 +124,7 @@ bool Debug::print(float tinterp)
 	Engine::Render::getInstance().drawLine(AVector(0, 0, 0), AVector(0, 200, 0), AVector(0, 1, 0, 1));
 	Engine::Render::getInstance().drawLine(AVector(0, 0, 0), AVector(0, 0, 200), AVector(0, 0, 1, 1));
 
-	//Engine::Render::getInstance().draw(cam.getBillboard(AVector(32, 32, 0)), spr);
-	Engine::Render::getInstance().draw(Orientation::FLAT_XZ, spr);
-	Engine::Render::getInstance().draw(Orientation::FLAT_XZ, img);
-	Engine::Render::getInstance().draw(Orientation::FLAT_XY+AVector(256, 256, 0), mdl);
+	Engine::Render::getInstance().draw(Orientation(AVector(2, 2, 0), Orientation::FLAT_XY.getRotated(AVector(0, 0, 1), SDL_GetTicks()*0.03f), 1.0f/64.0f), mdl);
 
 	return true; // Tak, wyświetlaj stany poniżej
 	}
@@ -142,8 +135,6 @@ void Debug::clear()
 
 	LOG_DEBUG("State.Debug.clear");
 
-	spr=nullptr;
-	img=nullptr;
 	mdl.clear();
 	}
 
