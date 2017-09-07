@@ -25,8 +25,8 @@ namespace Game
 			~Level();
 
 			bool init(const std::string& path);
-			void update();
-			void print();
+			void update(float dt);
+			void print(float tinterp);
 			void clear();
 		};
 

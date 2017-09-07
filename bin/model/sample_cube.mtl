@@ -1,0 +1,8 @@
+newmtl Material
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ns 1
+d 1.000000
+map_Kd sample_cube_diffuse.png
+map_bump sample_cube_normal.png

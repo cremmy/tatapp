@@ -45,7 +45,8 @@ void NPCSprite::update(float dt)
 
 void NPCSprite::print(float)
 	{
-	Engine::Render::getInstance().draw(Engine::Render::getInstance().getCurrentCamera()->getBillboard(orientation.getPosition()), sprite);
+	//Engine::Render::getInstance().draw(Engine::Render::getInstance().getCurrentCamera()->getBillboard(orientation.getPosition()), sprite);
+	Engine::Render::getInstance().draw(orientation, sprite);
 	}
 
 void NPCSprite::clear()

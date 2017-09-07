@@ -234,6 +234,10 @@ void Render::draw(const Orientation& orientation, const Graphics::SpritePtr& spt
 		{
 		setShader(sptr.getShader());
 		}
+	else
+		{
+		setShader(baseShaderImage);
+		}
 
 	const Graphics::Sprite::Frame& frame=sptr.getCurrentFrame();
 

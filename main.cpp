@@ -14,6 +14,10 @@
 #include "engine/sound/soundplayer.h"
 #include "game/state/debug.h"
 
+/* XXX Problemy z silnikiem:
+ *  - Model przestawia shadera na swojego, ale tekstura juz tego nie robi - po wyrysowaniu modelu tekstura rysuje sie z shaderem modelowym
+ */
+
 int main(int argc, char *argv[])
 	{
 	if(!Engine::Debug::Log::init())

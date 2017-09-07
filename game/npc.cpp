@@ -127,6 +127,8 @@ bool NPC::init(const std::string& path)
 
 	delete [] data;
 
+	LOG_SUCCESS("NPC.init: Wczytano NPC \"%s\"", path.c_str());
+
 	return true;
 	}
 

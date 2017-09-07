@@ -124,6 +124,8 @@ bool Debug::update(float dt)
 			}
 		}
 
+	lvl->update(dt);
+
 	return false; // nie, nie aktualizuj stanów poniżej
 	}
 
@@ -141,6 +143,8 @@ bool Debug::print(float tinterp)
 
 	Engine::Render::getInstance().draw(Orientation(AVector(2, 2, 1), Orientation::FLAT_XY.getRotated(AVector(0, 0, 1), SDL_GetTicks()*0.01f), 1.0f/64.0f), mdl);
 
+	lvl->print(tinterp);
+
 	return true; // Tak, wyświetlaj stany poniżej
 	}
 
@@ -153,6 +157,7 @@ void Debug::clear()
 	grid=nullptr;
 	mdl.clear();
 
+	lvl->clear();
 	delete lvl;
 	}
 
