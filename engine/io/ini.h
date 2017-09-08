@@ -17,6 +17,8 @@ namespace Engine
 		class INI
 			{
 			protected:
+				std::string path;
+				std::string group;
 				std::map<std::string, std::string> values;
 
 			public:

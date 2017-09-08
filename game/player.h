@@ -7,11 +7,15 @@
 
 #pragma once
 
+//#include "engine/core/appeventlistener.h"
+
 namespace Game
 	{
-
-	class Player
+	class Player//: public Engine::Core::AppEventListener
 		{
+		protected:
+			//
+
 		public:
 			Player();
 			virtual ~Player();

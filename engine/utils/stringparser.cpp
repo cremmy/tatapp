@@ -155,13 +155,21 @@ void StringParser::remove(unsigned position)
 		{
 		return;
 		}
+	if(position==count()-1u)
+		{
+		elements.pop_back();
+		return;
+		}
 
 	const Element& e=elements[position];
+	const Element& ne=elements[position+1u];
 
-	text=text.substr(0, e.start) + text.substr(e.start+e.length, text.length()-e.start-e.length);
+	const unsigned length=ne.start-e.start;
+
+	text=text.substr(0, e.start) + text.substr(e.start+length, text.length()-e.start-length);
 
 	for(unsigned i=position+1; i<count(); ++i)
-		elements[i].start-=e.length;
+		elements[i].start-=length;
 
 	elements.erase(elements.begin()+position);
 	//parse();

@@ -15,6 +15,7 @@
 #include "engine/render/model.h"
 
 #include "../level.h"
+#include "../dialog.h"
 
 using namespace Game;
 using namespace Game::State;
@@ -27,6 +28,7 @@ namespace Local
 	Engine::Render::Model mdl;
 
 	Level* lvl;
+	Dialog dialog;
 	}
 
 Debug::Debug(): ApplicationState()
@@ -71,6 +73,8 @@ bool Debug::init(Engine::Core::Application *application)
 		return false;
 		}
 
+	dialog.init("npc/testator.ini");
+
 	return true;
 	}
 
@@ -108,6 +112,17 @@ bool Debug::update(float dt)
 				{
 				cam.lookAt(Engine::Math::AVector(0, 0, 0), Engine::Math::AVector(0, 0, 500), Engine::Math::AVector(0, 1, 0));
 				}
+			else if(e.data.keyboard.key==SDLK_RETURN)
+				{
+				if(dialog.getMode()==Dialog::Mode::NONE)
+					{
+					dialog.start();
+					}
+				else
+					{
+					dialog.next();
+					}
+				}
 			}
 		else if(e.getType()==Engine::Core::AppEvent::Type::MOUSE_MOVE && (e.data.mouse.key&SDL_BUTTON(3)))
 			{
@@ -125,6 +140,7 @@ bool Debug::update(float dt)
 		}
 
 	lvl->update(dt);
+	dialog.update(dt);
 
 	return false; // nie, nie aktualizuj stanów poniżej
 	}

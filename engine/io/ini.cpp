@@ -14,9 +14,15 @@ using namespace Engine::IO;
 
 bool INI::init(const std::string& path, const std::string& group)
 	{
+	if(path==this->path && group==this->group)
+		{
+		LOG_INFO("INI.init: Plik \"%s\", grupa \"%s\" juz wczytany", path.c_str(), group.c_str());
+		return true;
+		}
+
 	LOG_INFO("INI.init: Wczytywanie pliku \"%s\"", path.c_str());
 
-	char* data=Resource::load("path");
+	char* data=Resource::load(path);
 
 	if(!data)
 		{
@@ -28,16 +34,24 @@ bool INI::init(const std::string& path, const std::string& group)
 	Utils::StringParser lines(data, "\r\n");
 	Utils::StringParser keyvalue("", "=");
 
-	LOG_DEBUG("INI.init: %p %p", data, lines.get().c_str());
+	LOG_DEBUG("INI.init: Linii: %u", lines.count());
 
-	//delete [] data;
+	delete [] data;
 
 	bool groupfound=false;
 
-	for(auto line: lines)
+	//for(auto line: lines)
+	for(unsigned i=0u; i<lines.count(); ++i)
 		{
+		const std::string& line=lines[i];
+
+		//LOG_DEBUG("INI.init: \"%s\"", line.c_str());
+
 		if(line.length()<2 || line[0]==';')
+			{
+			//LOG_DEBUG("INI.init: Komentarz");
 			continue;
+			}
 
 		// Grupa
 		if(line[0]=='[')
@@ -47,7 +61,7 @@ bool INI::init(const std::string& path, const std::string& group)
 			if(sqrbrackete==line.npos)
 				{
 				LOG_ERROR("INI.init: Nieprawidlowe oznaczenie grupy: \"%s\" w pliku \"%s\"", line.c_str(), path.c_str());
-				delete [] data;
+				//delete [] data;
 				return false;
 				}
 
@@ -57,13 +71,21 @@ bool INI::init(const std::string& path, const std::string& group)
 				break;
 				}
 
-			const std::string cgroup=line.substr(0, sqrbrackete);
+			const std::string cgroup=line.substr(1, sqrbrackete-1);
 
 			if(cgroup==group)
 				{
+				LOG_DEBUG("INI.init: Znaleziono poszukiwana grupe \"%s\"", group.c_str());
+
 				groupfound=true;
 				continue;
 				}
+			else
+				{
+				LOG_DEBUG("INI.init: Znaleziono grupe \"%s\", ale chcemy \"%s\", poszukiwania trwaja...", cgroup.c_str(), group.c_str());
+				}
+
+			continue;
 			}
 
 		keyvalue=line;
@@ -84,10 +106,13 @@ bool INI::init(const std::string& path, const std::string& group)
 		while(key.length()>0 && key[key.length()-1]<=' ')
 			key=key.substr(0, key.size()-1);
 
-		LOG_DEBUG("INI.init: [%s][%s]", key.c_str(), value.c_str());
+		//LOG_DEBUG("INI.init: [%s][%s]", key.c_str(), value.c_str());
 
 		values[key]=value;
 		}
+
+	this->path=path;
+	this->group=group;
 
 	LOG_SUCCESS("INI.init: Wczytano plik \"%s\"", path.c_str());
 	LOG_DEBUG("INI.init: Wczytano %u wpisow", values.size());
@@ -97,7 +122,7 @@ bool INI::init(const std::string& path, const std::string& group)
 
 std::string INI::get(const std::string& key) const
 	{
-	auto it=values.find("key");
+	auto it=values.find(key);
 
 	if(it==values.end())
 		return std::string();
