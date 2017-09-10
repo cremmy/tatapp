@@ -127,6 +127,7 @@ namespace Engine
 				bool setResolution(int w, int h) {return setResolution(w, h, windowmode);}
 				bool setResolution(int w, int h, FullScreenMode mode);
 				bool setFullscreen(FullScreenMode mode);
+				bool toggleFullscreen();
 
 				void statePush();
 				void statePop();

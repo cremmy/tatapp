@@ -11,6 +11,7 @@
 
 #include "engine/math/orientation.h"
 #include "engine/math/geometry/aabb.h"
+#include "engine/math/geometry/box.h"
 
 namespace Game
 	{
@@ -50,7 +51,8 @@ namespace Game
 			Engine::Math::AVector getPosition() const {return orientation.getPosition();}
 			const std::string& getName() const {return name;}
 			const std::string& getScriptPath() const {return scriptPath;}
-			Engine::Math::Geometry::AABB getCollider() const {return Engine::Math::Geometry::AABB(orientation.getPosition(), collider.getSize());}
+			//Engine::Math::Geometry::AABB getCollider() const {return Engine::Math::Geometry::AABB(orientation.getPosition(), collider.getSize());}
+			Engine::Math::Geometry::Box getCollider() const {return Engine::Math::Geometry::Box(orientation, collider.getSize());}
 
 			bool isMovementFinished() const;
 			bool isScriptEnabled() const {return scriptEnabled;}

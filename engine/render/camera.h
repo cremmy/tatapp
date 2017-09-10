@@ -72,6 +72,7 @@ namespace Engine
 				void setFOV(float s) {fov=s; updateProjectionMatrix();}
 
 				void setPosition(const Math::AVector& pos) {orientation.setPosition(pos); needupdate=true;}
+				void setOrientation(const Math::Orientation& ori) {orientation=ori; needupdate=true;}
 				void move(const Math::AVector& path) {orientation.move(path); needupdate=true;}
 				void moveRight(float dist) {orientation.moveRight(dist); needupdate=true;}
 				void moveForward(float dist) {orientation.moveForward(dist); needupdate=true;}

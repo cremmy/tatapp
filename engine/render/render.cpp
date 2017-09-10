@@ -227,7 +227,7 @@ bool Render::init(int w, int h, const std::string& title, const std::string& ico
 	LOG_SUCCESS("Render.init: Udalo sie zainicjowac UBO");
 
 	/**** Bazowe ****/
-	if(!baseFBO.init(w, h, FrameBuffer::FBO_RENDERBUFFER))
+	if(!baseFBO.init(dm.w, dm.h, FrameBuffer::FBO_RENDERBUFFER))
 		{
 		LOG_ERROR("Render.init: Nie udalo sie zainicjowac buforu ekranu");
 		return false;
@@ -465,6 +465,22 @@ bool Render::setFullscreen(FullScreenMode mode)
 		}
 
 	return true;
+	}
+
+bool Render::toggleFullscreen()
+	{
+	if(windowmode==FullScreenMode::FULLSCREEN)
+		{
+		return setFullscreen(FullScreenMode::WINDOWED);
+		}
+	else if(windowmode==FullScreenMode::WINDOWED)
+		{
+		return setFullscreen(FullScreenMode::WINDOWED_FULLSCREEN);
+		}
+	else //if(windowmode==FullScreenMode::WINDOWED_FULLSCREEN)
+		{
+		return setFullscreen(FullScreenMode::WINDOWED);
+		}
 	}
 
 

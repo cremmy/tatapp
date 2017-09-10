@@ -103,12 +103,15 @@ void Application::run()
 				break;
 
 				case SDL_KEYDOWN:
-//#ifdef BUILD_DEBUG
+#ifdef BUILD_DEBUG
 					if(event.key.keysym.sym==SDLK_ESCAPE)
 						stop();
-//#endif
+#endif
 					if(event.key.keysym.sym==SDLK_F4 && event.key.keysym.mod==KMOD_LALT)
 						stop();
+
+//					if(event.key.keysym.sym==SDLK_RETURN && event.key.keysym.mod==KMOD_LALT)
+//						Render::getInstance().toggleFullscreen();
 
 					pushEvent(AppEvent().initKeyDown(event.key.keysym.sym, event.key.keysym.mod));
 				break;

@@ -13,6 +13,8 @@
 #include "npcfactory.h"
 #include "engine/debug/log.h"
 #include "engine/io/resource.h"
+#include "engine/math/geometry/point.h"
+#include "engine/math/collision/test.h"
 
 using namespace Game;
 
@@ -198,4 +200,36 @@ void Level::clear()
 		}
 
 	npcs.clear();
+	}
+
+
+NPC* Level::findByRay(const Engine::Math::Geometry::Ray& ray)
+	{
+	using namespace Engine::Math;
+
+	const float MAX_RANGE=1.0f;
+	const int STEPS=100;
+
+	const float STEP=MAX_RANGE/STEPS;
+
+	for(int i=0; i<STEPS; ++i)
+		{
+		AVector point=ray.getPosition()+ray.getDirection()*(i*STEP);
+
+		for(auto npc: npcs)
+			{
+			if(!npc->isScriptEnabled() || !npc->isVisible())
+				continue;
+
+			LOG_INFO("Level.findByRay: [%.2f %.2f %.2f] in [%.2f %.2f %.2f]:[%.2f %.2f %.2f]",
+				point.x, point.y, point.z,
+				npc->getCollider().getMinExtent().x, npc->getCollider().getMinExtent().y, npc->getCollider().getMinExtent().z,
+				npc->getCollider().getMaxExtent().x, npc->getCollider().getMaxExtent().y, npc->getCollider().getMaxExtent().z);
+
+			if(Collision::test(npc->getCollider(), Geometry::Point(point)))
+				return npc;
+			}
+		}
+
+	return nullptr;
 	}

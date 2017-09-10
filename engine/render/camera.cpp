@@ -165,8 +165,9 @@ Engine::Math::Orientation Camera::getBillboard(const Engine::Math::AVector& objp
 			{
 			const AVector dist=objpos-getPosition();
 			const AVector f=AVectorNormalize(AVector(dist.x, dist.y, 0.0f));
+			const AVector r=AVector(f.y, -f.x, 0.0f);
 
-			return Orientation(objpos, AVector(0, 0, 1), -f);//, AVector(1, 1, 1)); // TODO skala do orientacji
+			return Orientation(objpos, r, AVector(0, 0, 1));//, AVector(1, 1, 1)); // TODO skala do orientacji
 			}
 		break;
 

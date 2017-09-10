@@ -11,6 +11,8 @@
 #include <string>
 #include <vector>
 
+#include "engine/math/geometry/ray.h"
+
 namespace Game
 	{
 	class NPC;
@@ -28,6 +30,8 @@ namespace Game
 			void update(float dt);
 			void print(float tinterp);
 			void clear();
+
+			NPC* findByRay(const Engine::Math::Geometry::Ray& ray);
 		};
 
 	} /* namespace Game */

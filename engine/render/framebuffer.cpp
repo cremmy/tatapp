@@ -27,7 +27,14 @@ bool FrameBuffer::init(int w, int h, Buffers flag)
 	else
 		{
 		GLint boundrbid;
-		glGetIntegerv(GL_TEXTURE_BINDING_2D, &boundrbid);
+		glGetIntegerv(GL_RENDERBUFFER_BINDING, &boundrbid);
+
+		if((err=glGetError())!=GL_NO_ERROR)
+			{
+			LOG_ERROR("FrameBuffer.init: %d", __LINE__);
+			LOG_ERROR("FrameBuffer.init: Blad: %s", gluErrorString(err));
+			return false;
+			}
 
 		glGenRenderbuffers(1, &rbid);
 
@@ -39,16 +46,17 @@ bool FrameBuffer::init(int w, int h, Buffers flag)
 			}
 
 		glBindRenderbuffer(GL_RENDERBUFFER, rbid);
+
 		if(flag&FBO_STENCIL_BUFFER)
 			{
+			LOG_DEBUG("FrameBuffer.init: GL_DEPTH24_STENCIL8");
 			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, w, h);
 			}
 		else
 			{
+			LOG_DEBUG("FrameBuffer.init: GL_DEPTH_COMPONENT");
 			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, w, h); // GL_DEPTH_COMPONENT powoduje automatyczny wybor precyzji depth buffera
 			}
-
-		glBindRenderbuffer(GL_RENDERBUFFER, boundrbid);
 
 		if((err=glGetError())!=GL_NO_ERROR)
 			{
@@ -60,6 +68,8 @@ bool FrameBuffer::init(int w, int h, Buffers flag)
 			{
 			LOG_DEBUG("FrameBuffer.init: RenderBuffer zrobiony");
 			}
+
+		glBindRenderbuffer(GL_RENDERBUFFER, boundrbid);
 		}
 
 	// Tekstura

@@ -5,6 +5,7 @@
  *      Author: crm
  */
 
+#include <game/state/tatapp.h>
 #include <SDL2/SDL.h>
 
 #include "engine/debug/log.h"
@@ -12,6 +13,7 @@
 #include "engine/core/application.h"
 #include "engine/render/render.h"
 #include "engine/sound/soundplayer.h"
+
 #include "game/state/debug.h"
 
 /* XXX Problemy z silnikiem:
@@ -38,7 +40,7 @@ int main(int argc, char *argv[])
 		return __LINE__;
 		}
 
-	if(!Engine::Render::getInstance().init(800, 600, "Tragedia Antyczna w Trzech Aktach Prozą Pisana", "image/icon.png", Engine::Render::FullScreenMode::WINDOWED))
+	if(!Engine::Render::getInstance().init(1024, 768, "Tragedia Antyczna w Trzech Aktach Prozą Pisana", "image/icon.png", Engine::Render::FullScreenMode::WINDOWED))
 		{
 		return __LINE__;
 		}
@@ -48,7 +50,7 @@ int main(int argc, char *argv[])
 		return __LINE__;
 		}
 
-	if(app.pushState(new Game::State::Debug()))
+	if(app.pushState(new Game::State::TATAPP()))
 		{
 		app.run();
 		}

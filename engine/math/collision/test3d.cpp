@@ -74,8 +74,19 @@ bool Engine::Math::Collision::test(const AABB& a, const Mesh& b)
 
 bool Engine::Math::Collision::test(const AABB& a, const Point& b)
 	{
-	assert(false);
-	return false;
+	const AVector ap=a.getPosition();
+	const AVector ahs=a.getHalfSize();
+	const AVector bp=b.getPosition();
+
+	if(ap.x+ahs.x<bp.x ||
+	   ap.x-ahs.x>bp.x ||
+	   ap.y+ahs.y<bp.y ||
+	   ap.y-ahs.y>bp.y ||
+	   ap.z+ahs.z<bp.z ||
+	   ap.z-ahs.z>bp.z)
+		return false;
+
+	return true;
 	}
 
 //bool Engine::Math::Collision::test(const AABB& a, const Polygon& b)
@@ -201,8 +212,19 @@ bool Engine::Math::Collision::test(const Box& a, const Mesh& b)
 
 bool Engine::Math::Collision::test(const Box& a, const Point& b)
 	{
-	assert(false);
-	return false;
+	//const AVector ap=a.getPosition();
+	const AVector ahs=a.getHalfSize();
+	const AVector bp=(b.getPosition()-a.getPosition());
+
+	if( ahs.x<bp.x ||
+	   -ahs.x>bp.x ||
+	    ahs.y<bp.y ||
+	   -ahs.y>bp.y ||
+	    ahs.z<bp.z ||
+	   -ahs.z>bp.z)
+		return false;
+
+	return true;
 	}
 
 //bool Engine::Math::Collision::test(const Box& a, const Polygon& b)

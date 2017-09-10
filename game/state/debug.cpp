@@ -11,11 +11,9 @@
 #include "engine/render/camera.h"
 #include "engine/render/render.h"
 
-#include "engine/graphics/spriteptr.h"
-#include "engine/render/model.h"
+#include "engine/graphics/imageptr.h"
 
 #include "../level.h"
-#include "../dialog.h"
 
 using namespace Game;
 using namespace Game::State;
@@ -25,10 +23,8 @@ namespace Local
 	Engine::Render::Camera cam;
 
 	Engine::Graphics::ImagePtr grid;
-	Engine::Render::Model mdl;
 
 	Level* lvl;
-	Dialog dialog;
 	}
 
 Debug::Debug(): ApplicationState()
@@ -63,17 +59,12 @@ bool Debug::init(Engine::Core::Application *application)
 	if(!(grid=Graphics::ImagePtr("image/grid_gray.png")))
 		return false;
 
-	if(!mdl.load("model/sample_cube.obj"))
-		return false;
-
 	lvl=new Level();
 
 	if(!lvl->init("level/first.xml"))
 		{
 		return false;
 		}
-
-	dialog.init("npc/testator.ini");
 
 	return true;
 	}
@@ -112,17 +103,6 @@ bool Debug::update(float dt)
 				{
 				cam.lookAt(Engine::Math::AVector(0, 0, 0), Engine::Math::AVector(0, 0, 500), Engine::Math::AVector(0, 1, 0));
 				}
-			else if(e.data.keyboard.key==SDLK_RETURN)
-				{
-				if(dialog.getMode()==Dialog::Mode::NONE)
-					{
-					dialog.start();
-					}
-				else
-					{
-					dialog.next();
-					}
-				}
 			}
 		else if(e.getType()==Engine::Core::AppEvent::Type::MOUSE_MOVE && (e.data.mouse.key&SDL_BUTTON(3)))
 			{
@@ -140,7 +120,6 @@ bool Debug::update(float dt)
 		}
 
 	lvl->update(dt);
-	dialog.update(dt);
 
 	return false; // nie, nie aktualizuj stanów poniżej
 	}
@@ -157,11 +136,9 @@ bool Debug::print(float tinterp)
 	Engine::Render::getInstance().drawLine(AVector(0, 0, 0), AVector(0, 0, 2), AVector(0, 0, 1, 1));
 	Engine::Render::getInstance().draw(Orientation::FLAT_XY+AVector(-grid->getW()*0.5f, grid->getH()*0.5f, -0.125f), grid);
 
-	Engine::Render::getInstance().draw(Orientation(AVector(2, 2, 1), Orientation::FLAT_XY.getRotated(AVector(0, 0, 1), SDL_GetTicks()*0.01f), 1.0f/64.0f), mdl);
-
 	lvl->print(tinterp);
 
-	return true; // Tak, wyświetlaj stany poniżej
+	return false; // Tak, wyświetlaj stany poniżej
 	}
 
 void Debug::clear()
@@ -171,7 +148,6 @@ void Debug::clear()
 	LOG_DEBUG("State.Debug.clear");
 
 	grid=nullptr;
-	mdl.clear();
 
 	lvl->clear();
 	delete lvl;

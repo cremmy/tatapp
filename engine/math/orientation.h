@@ -41,17 +41,20 @@ namespace Engine
 				AVector getForward() const {return forward;}
 				AVector getUp() const {return up;}
 				float getScale() const {return scale;}
-				AMatrix getMatrix() const {return AMatrix(
-						AVector(right*scale, position.x),
-						AVector(up*scale, position.y),
-						AVector(-forward*scale, position.z),
-						AVector(0, 0, 0, 1))/**
+				AMatrix getMatrix() const
+					{
+					return AMatrixTranspose(AMatrix(
+						right*scale,
+						up*scale,
+						-forward*scale,
+						AVector(position, 1)));/**
 					AMatrix(
 						AVector(1, 0, 0, position.x),
 						AVector(0, 1, 0, position.y),
 						AVector(0, 0, 1, position.z),
 						AVector(0, 0, 0, 1)
-						)*/;}
+						)*/
+					}
 				//AQuaternion getRotation() const {return rotation;}
 
 				void setPosition(const AVector& pos) {position=pos;}
