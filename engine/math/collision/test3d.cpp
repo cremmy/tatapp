@@ -212,9 +212,11 @@ bool Engine::Math::Collision::test(const Box& a, const Mesh& b)
 
 bool Engine::Math::Collision::test(const Box& a, const Point& b)
 	{
-	//const AVector ap=a.getPosition();
-	const AVector ahs=a.getHalfSize();
-	const AVector bp=(b.getPosition()-a.getPosition());
+	const AVector ap=a.getPosition();
+	const AVector ahs=a.getHalfSize()*a.getOrientation().getScale();
+	const AVector bp=AMatrixTranspose(a.getOrientation().getMatrix())*(b.getPosition()-ap);
+
+	LOG_DEBUG("[%.2f %.2f %.2f] vs [%.2f %.2f %.2f]", bp.x, bp.y, bp.z, ahs.x, ahs.y, ahs.z);
 
 	if( ahs.x<bp.x ||
 	   -ahs.x>bp.x ||
@@ -505,5 +507,18 @@ bool Engine::Math::Collision::test(const Triangle& a, const Triangle& b)
 /*****************************************************************************/
 bool Engine::Math::Collision::_check3D()
 	{
-	return false;
+	//	bool test(const Box& a, const Point& b);
+	{
+	LOG_DEBUG("Geometry.check2D: bool test(const Box& a, const Point& b);");
+	Box a(Orientation(AVector(3, 1, 2), AVector(0, 0, 1), AVector(-1, 2, 0)), AVector(2, 1, 3));
+
+	assert(test(a, AVector(3, 1, 1)));
+
+	assert(test(a, AVector(3, 1, 0))==false);
+	assert(test(a, AVector(2.75, 1.25, 4))==false);
+	}
+
+	// Koniec
+	LOG_SUCCESS("Geometry.check2D: Testy zaliczone");
+	return true;
 	}

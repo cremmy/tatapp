@@ -16,6 +16,8 @@
 #include "engine/math/geometry/point.h"
 #include "engine/math/collision/test.h"
 
+#include "engine/render/render.h"
+
 using namespace Game;
 
 
@@ -185,9 +187,62 @@ void Level::update(float dt)
 
 void Level::print(float tinterp)
 	{
+	using namespace Engine::Math;
+
 	for(auto npc: npcs)
 		{
 		npc->print(tinterp);
+
+		auto col=npc->getCollider();
+
+		const AVector cpos=col.getPosition();
+		const AVector csize=col.getHalfSize();
+		const AVector cu=col.getOrientation().getUp()*csize.y;
+		const AVector cr=col.getOrientation().getRight()*csize.x;
+		const AVector cf=col.getOrientation().getForward()*csize.z;
+
+		Engine::Render::getInstance().drawPolygon(
+			{
+			cpos-cu-cr-cf,
+			cpos-cu+cr-cf,
+			cpos-cu+cr+cf,
+			cpos-cu-cr+cf,
+			}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));
+		Engine::Render::getInstance().drawPolygon(
+			{
+			cpos+cu-cr-cf,
+			cpos+cu+cr-cf,
+			cpos+cu+cr+cf,
+			cpos+cu-cr+cf,
+			}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));
+		Engine::Render::getInstance().drawPolygon(
+			{
+			cpos+cu-cr-cf,
+			cpos+cu+cr-cf,
+			cpos-cu+cr-cf,
+			cpos-cu-cr-cf,
+			}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));
+		Engine::Render::getInstance().drawPolygon(
+			{
+			cpos+cu-cr+cf,
+			cpos+cu+cr+cf,
+			cpos-cu+cr+cf,
+			cpos-cu-cr+cf,
+			}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));
+		Engine::Render::getInstance().drawPolygon(
+			{
+			cpos+cu-cr-cf,
+			cpos+cu-cr+cf,
+			cpos-cu-cr+cf,
+			cpos-cu-cr-cf,
+			}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));
+		Engine::Render::getInstance().drawPolygon(
+			{
+			cpos+cu+cr-cf,
+			cpos+cu+cr+cf,
+			cpos-cu+cr+cf,
+			cpos-cu+cr-cf,
+			}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));
 		}
 	}
 
@@ -207,7 +262,7 @@ NPC* Level::findByRay(const Engine::Math::Geometry::Ray& ray)
 	{
 	using namespace Engine::Math;
 
-	const float MAX_RANGE=1.0f;
+	const float MAX_RANGE=2.0f;
 	const int STEPS=100;
 
 	const float STEP=MAX_RANGE/STEPS;
@@ -220,11 +275,6 @@ NPC* Level::findByRay(const Engine::Math::Geometry::Ray& ray)
 			{
 			if(!npc->isScriptEnabled() || !npc->isVisible())
 				continue;
-
-			LOG_INFO("Level.findByRay: [%.2f %.2f %.2f] in [%.2f %.2f %.2f]:[%.2f %.2f %.2f]",
-				point.x, point.y, point.z,
-				npc->getCollider().getMinExtent().x, npc->getCollider().getMinExtent().y, npc->getCollider().getMinExtent().z,
-				npc->getCollider().getMaxExtent().x, npc->getCollider().getMaxExtent().y, npc->getCollider().getMaxExtent().z);
 
 			if(Collision::test(npc->getCollider(), Geometry::Point(point)))
 				return npc;

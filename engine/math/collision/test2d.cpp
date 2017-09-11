@@ -336,12 +336,12 @@ bool Engine::Math::Collision::test2D(const Box& a, const Point& b)
 	{
 	const AVector ap=a.getPosition();
 	const AVector ahs=a.getHalfSize();
-	const AVector bp=a.getOrientation().getMatrix()*b.getPosition();
+	const AVector bp=AMatrixTranspose(a.getOrientation().getMatrix())*(b.getPosition()-ap);
 
-	if(ap.x+ahs.x<bp.x ||
-	   ap.x-ahs.x>bp.x ||
-	   ap.y+ahs.y<bp.y ||
-	   ap.y-ahs.y>bp.y)
+	if( ahs.x<bp.x ||
+	   -ahs.x>bp.x ||
+	    ahs.y<bp.y ||
+	   -ahs.y>bp.y)
 		return false;
 
 	return true;
@@ -933,6 +933,18 @@ bool Engine::Math::Collision::_check2D()
 //	bool test2D(const Box& a, const Capsule& b);
 //	bool test2D(const Box& a, const Line& b);
 //	bool test2D(const Box& a, const Point& b);
+	{
+	LOG_DEBUG("Geometry.check2D: bool test2D(const Box& a, const Point& b);");
+	Box a(Orientation(AVector(3, 1), AVector(2, 1), AVector(-1, 2)), AVector(2, 1));
+
+	assert(test2D(a, AVector(3, 1)));
+	assert(test2D(a, AVector(2.5, 1.2)));
+
+	assert(test2D(a, AVector(3.5, 0.25))==false);
+	assert(test2D(a, AVector(2, 2))==false);
+	assert(test2D(a, AVector(4, 2))==false);
+	assert(test2D(a, AVector(1, 0.75))==false);
+	}
 //	bool test2D(const Box& a, const Polygon& b);
 //	bool test2D(const Box& a, const Ray& b);
 //	bool test2D(const Box& a, const Sphere& b);

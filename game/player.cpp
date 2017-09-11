@@ -84,15 +84,28 @@ void Player::handleEvents()
 			}
 		else if(e.getType()==Engine::Core::AppEvent::Type::MOUSE_KEY_UP)
 			{
-			NPC* target=lvl->findByRay(Engine::Math::Geometry::Ray(getEyeOrientation().getPosition(), orientation.getForward()));
+			if(dialog.getMode()==Dialog::Mode::NONE)
+				{
+				NPC* target=lvl->findByRay(Engine::Math::Geometry::Ray(getEyeOrientation().getPosition(), orientation.getForward()));
 
-			if(target)
-				{
-				LOG_INFO("Player.handleEvents: HIT: \"%s\"", target->getName().c_str());
-				}
-			else
-				{
-				LOG_INFO("Player.handleEvents: MISS");
+				if(target)
+					{
+					LOG_INFO("Player.handleEvents: HIT: \"%s\"", target->getName().c_str());
+
+					if(!dialog.init(target->getScriptPath()))
+						{
+						LOG_ERROR("Player.handleEvents: Nie udalo sie wczytac skryptu \"%s\" NPC \"%s\"", target->getScriptPath().c_str(), target->getName().c_str());
+						}
+					else
+						{
+						LOG_INFO("Player.handleEvents: Startowanie dialogu \"%s\"", target->getScriptPath().c_str());
+						dialog.start();
+						}
+					}
+				else
+					{
+					LOG_INFO("Player.handleEvents: MISS");
+					}
 				}
 			}
 		}

@@ -14,7 +14,9 @@
 #include "engine/render/render.h"
 #include "engine/sound/soundplayer.h"
 
-#include "game/state/debug.h"
+#include "game/state/tatapp.h"
+
+#include "engine/math/collision/test.h"
 
 /* XXX Problemy z silnikiem:
  *  - Model przestawia shadera na swojego, ale tekstura juz tego nie robi - po wyrysowaniu modelu tekstura rysuje sie z shaderem modelowym
@@ -32,6 +34,9 @@ int main(int argc, char *argv[])
 
 	LOG_INFO("Start");
 	LOG_INFO("Build %s %s", __DATE__, __TIME__);
+
+	Engine::Math::Collision::_check2D();
+	Engine::Math::Collision::_check3D();
 
 	Engine::Core::Application app;
 

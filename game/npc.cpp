@@ -112,17 +112,24 @@ bool NPC::init(const std::string& path)
 		}
 	else
 		{
+		double x=0.0;
+		double y=0.0;
+		double z=0.0;
 		double w=0.0;
 		double d=0.0;
 		double h=0.0;
+
+		ecol->Attribute("x", &x);
+		ecol->Attribute("y", &y);
+		ecol->Attribute("z", &z);
 
 		ecol->Attribute("w", &w);
 		ecol->Attribute("d", &d);
 		ecol->Attribute("h", &h);
 
-		LOG_DEBUG("NPC.init: [%s][%.2f %.2f %.2f]", path.c_str(), w, d, h);
+		LOG_DEBUG("NPC.init: [%s][%.2f %.2f %.2f][%.2f %.2f %.2f]", path.c_str(), x, y, z, w, d, h);
 
-		setCollider(Engine::Math::Geometry::AABB(AVector(0, 0, 0), AVector(w, d, h)));
+		setCollider(Engine::Math::Geometry::AABB(AVector(x, y, z), AVector(w, d, h)));
 		}
 
 	delete [] data;
