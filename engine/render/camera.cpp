@@ -125,7 +125,11 @@ void Camera::updateViewMatrix() const
 
 	if(type==Type::GUI)
 		{
-		this->view=AMatrix(orientation.getRight(), orientation.getUp(), -orientation.getForward(), AVector(0, 0, 0, 1));
+		this->view=AMatrix(
+				AVector(1, 0, 0, 0),
+				AVector(0, 1, 0, 0),
+				AVector(0, 0, 1, 0),
+				AVector(0, 0, 0, 1));
 		}
 	else
 		{

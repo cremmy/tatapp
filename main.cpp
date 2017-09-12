@@ -35,8 +35,8 @@ int main(int argc, char *argv[])
 	LOG_INFO("Start");
 	LOG_INFO("Build %s %s", __DATE__, __TIME__);
 
-	Engine::Math::Collision::_check2D();
-	Engine::Math::Collision::_check3D();
+	//Engine::Math::Collision::_check2D();
+	//Engine::Math::Collision::_check3D();
 
 	Engine::Core::Application app;
 

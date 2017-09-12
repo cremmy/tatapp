@@ -45,12 +45,12 @@ bool SpriteManager::isValid(Sprite& spr)
 
 	for(unsigned il=0u; il<spr.getLayerCount(); ++il)
 		{
-		LOG_DEBUG("SpriteManager.isValid: - Texture: %s", spr.getLayer(il)->getName().c_str());
+//		LOG_DEBUG("SpriteManager.isValid: - Texture: %s", spr.getLayer(il)->getName().c_str());
 		}
 
 	for(unsigned ia=0u; ia<spr.getAnimationCount(); ++ia)
 		{
-		LOG_DEBUG("SpriteManager.isValid: - Animation %u: %s", ia, spr.getAnimationNameByIDX(ia).c_str());
+//		LOG_DEBUG("SpriteManager.isValid: - Animation %u: %s", ia, spr.getAnimationNameByIDX(ia).c_str());
 
 		bool atleastone=false;
 
@@ -59,8 +59,8 @@ bool SpriteManager::isValid(Sprite& spr)
 			Sprite::DirectionName dn=(Sprite::DirectionName)id;
 			Sprite::DirectionName dnclosest=spr[ia].getDirectionClosestExisting(dn);
 
-			LOG_DEBUG("SpriteManager.isValid:   | - Direction: %s (%s); FPS: %.2f; Loop: %u",
-					Sprite::getDirectionName(dn).c_str(), Sprite::getDirectionName(dnclosest).c_str(), spr[ia][dn].getFramesPerSecond(), spr[ia][dn].getLoopFrameIndex());
+//			LOG_DEBUG("SpriteManager.isValid:   | - Direction: %s (%s); FPS: %.2f; Loop: %u",
+//					Sprite::getDirectionName(dn).c_str(), Sprite::getDirectionName(dnclosest).c_str(), spr[ia][dn].getFramesPerSecond(), spr[ia][dn].getLoopFrameIndex());
 
 			if(spr[ia][dn].getFrameCount()>0u)
 				{
@@ -71,8 +71,8 @@ bool SpriteManager::isValid(Sprite& spr)
 				{
 				const Sprite::Frame& f=spr[ia][dn][i];
 
-				LOG_DEBUG("SpriteManager.isValid:   |   | - Frame: %u; [pos %u %u][size %u %u]",
-					i, f.getImage()->getX(), f.getImage()->getY(), f.getImage()->getW(), f.getImage()->getH());
+//				LOG_DEBUG("SpriteManager.isValid:   |   | - Frame: %u; [pos %u %u][size %u %u]",
+//					i, f.getImage()->getX(), f.getImage()->getY(), f.getImage()->getW(), f.getImage()->getH());
 				}
 			}
 

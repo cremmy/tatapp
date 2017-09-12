@@ -11,6 +11,7 @@
 
 #include "engine/debug/log.h"
 #include "engine/render/render.h"
+#include "engine/graphics/ui/text.h"
 
 #include "engine/math/orientation.h" // XXX Debug, wywalic
 #include "engine/graphics/imageptr.h" // XXX Debug, wywalic
@@ -19,6 +20,7 @@ using namespace Game;
 using namespace Game::State;
 
 Engine::Graphics::ImagePtr grid;
+Engine::Graphics::UI::Text text;
 
 TATAPP::TATAPP(): Engine::Base::ApplicationState(), lvl(nullptr), player(nullptr)
 	{
@@ -28,11 +30,14 @@ TATAPP::TATAPP(): Engine::Base::ApplicationState(), lvl(nullptr), player(nullptr
 		0.25f, 1000.0f);
 
 	grid=Engine::Graphics::ImagePtr("image/grid_gray.png"); // XXX Debug, wywalic
+	text.init("font/font_00a.xml", "Kasztanowa artyleria!\nBAM BAM BAM!\n\n\t...i nie ostal sie nikt.\n\t\t\t~Paulo Coelho", 800, 100);
+	text.setAlignBottom();
 	}
 
 TATAPP::~TATAPP()
 	{
 	grid=nullptr; // XXX Debug, wywalic
+	text.clear(); // XXX Debug, wywalic
 	}
 
 bool TATAPP::init(Engine::Core::Application *application)
@@ -67,6 +72,7 @@ bool TATAPP::update(float dt)
 	player->update(dt);
 
 	cam.setOrientation(player->getEyeOrientation());
+	text.update();
 
 	return false;
 	}
@@ -77,13 +83,15 @@ bool TATAPP::print(float tinterp)
 
 	Engine::Render::getInstance().setCamera(cam);
 
-	Engine::Render::getInstance().drawLine(AVector(0, 0, 0), AVector(2, 0, 0), AVector(1, 0, 0, 1)); // XXx Debug, wywalic
-	Engine::Render::getInstance().drawLine(AVector(0, 0, 0), AVector(0, 2, 0), AVector(0, 1, 0, 1)); // XXx Debug, wywalic
-	Engine::Render::getInstance().drawLine(AVector(0, 0, 0), AVector(0, 0, 2), AVector(0, 0, 1, 1)); // XXx Debug, wywalic
-	Engine::Render::getInstance().draw(Orientation::FLAT_XY+AVector(-grid->getW()*0.5f, grid->getH()*0.5f, -0.125f), grid); // XXx Debug, wywalic
+	Engine::Render::getInstance().drawLine(AVector(0, 0, 0), AVector(2, 0, 0), AVector(1, 0, 0, 1)); // XXX Debug, wywalic
+	Engine::Render::getInstance().drawLine(AVector(0, 0, 0), AVector(0, 2, 0), AVector(0, 1, 0, 1)); // XXX Debug, wywalic
+	Engine::Render::getInstance().drawLine(AVector(0, 0, 0), AVector(0, 0, 2), AVector(0, 0, 1, 1)); // XXX Debug, wywalic
+	Engine::Render::getInstance().draw(Orientation::FLAT_XY+AVector(-grid->getW()*0.5f, grid->getH()*0.5f, -0.125f), grid); // XXX Debug, wywalic
 
 	lvl->print(tinterp);
 	player->print(tinterp);
+
+	text.print(Orientation(AVector(0, 0, 2), Orientation::FLAT_YZ, 0.01f));
 
 	return false;
 	}

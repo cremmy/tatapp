@@ -1,0 +1,1124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sprite name="testator">
+<image name="default">font_00.png</image>
+	<animation name="0">
+		<direction>
+			<frame x="0" y="0" w="12" h="16" />
+		</direction>
+	</animation>
+	<animation name="1">
+		<direction>
+			<frame x="13" y="0" w="3" h="16" />
+		</direction>
+	</animation>
+	<animation name="2">
+		<direction>
+			<frame x="24" y="0" w="5" h="16" />
+		</direction>
+	</animation>
+	<animation name="3">
+		<direction>
+			<frame x="36" y="0" w="9" h="16" />
+		</direction>
+	</animation>
+	<animation name="4">
+		<direction>
+			<frame x="48" y="0" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="5">
+		<direction>
+			<frame x="60" y="0" w="12" h="16" />
+		</direction>
+	</animation>
+	<animation name="6">
+		<direction>
+			<frame x="73" y="0" w="9" h="16" />
+		</direction>
+	</animation>
+	<animation name="7">
+		<direction>
+			<frame x="85" y="0" w="3" h="16" />
+		</direction>
+	</animation>
+	<animation name="8">
+		<direction>
+			<frame x="96" y="0" w="5" h="16" />
+		</direction>
+	</animation>
+	<animation name="9">
+		<direction>
+			<frame x="108" y="0" w="5" h="16" />
+		</direction>
+	</animation>
+	<animation name="10">
+		<direction>
+			<frame x="120" y="0" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="11">
+		<direction>
+			<frame x="132" y="0" w="9" h="16" />
+		</direction>
+	</animation>
+	<animation name="12">
+		<direction>
+			<frame x="144" y="0" w="4" h="16" />
+		</direction>
+	</animation>
+	<animation name="13">
+		<direction>
+			<frame x="156" y="0" w="5" h="16" />
+		</direction>
+	</animation>
+	<animation name="14">
+		<direction>
+			<frame x="169" y="0" w="3" h="16" />
+		</direction>
+	</animation>
+	<animation name="15">
+		<direction>
+			<frame x="180" y="0" w="5" h="16" />
+		</direction>
+	</animation>
+	<animation name="16">
+		<direction>
+			<frame x="192" y="0" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="17">
+		<direction>
+			<frame x="205" y="0" w="5" h="16" />
+		</direction>
+	</animation>
+	<animation name="18">
+		<direction>
+			<frame x="216" y="0" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="19">
+		<direction>
+			<frame x="228" y="0" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="20">
+		<direction>
+			<frame x="240" y="0" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="21">
+		<direction>
+			<frame x="252" y="0" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="22">
+		<direction>
+			<frame x="264" y="0" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="23">
+		<direction>
+			<frame x="276" y="0" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="24">
+		<direction>
+			<frame x="288" y="0" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="25">
+		<direction>
+			<frame x="300" y="0" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="26">
+		<direction>
+			<frame x="313" y="0" w="3" h="16" />
+		</direction>
+	</animation>
+	<animation name="27">
+		<direction>
+			<frame x="324" y="0" w="4" h="16" />
+		</direction>
+	</animation>
+	<animation name="28">
+		<direction>
+			<frame x="337" y="0" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="29">
+		<direction>
+			<frame x="348" y="0" w="9" h="16" />
+		</direction>
+	</animation>
+	<animation name="30">
+		<direction>
+			<frame x="361" y="0" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="31">
+		<direction>
+			<frame x="372" y="0" w="6" h="16" />
+		</direction>
+	</animation>
+	<animation name="32">
+		<direction>
+			<frame x="1" y="16" w="11" h="16" />
+		</direction>
+	</animation>
+	<animation name="33">
+		<direction>
+			<frame x="15" y="16" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="34">
+		<direction>
+			<frame x="26" y="16" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="35">
+		<direction>
+			<frame x="36" y="16" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="36">
+		<direction>
+			<frame x="48" y="16" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="37">
+		<direction>
+			<frame x="60" y="16" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="38">
+		<direction>
+			<frame x="72" y="16" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="39">
+		<direction>
+			<frame x="84" y="16" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="40">
+		<direction>
+			<frame x="96" y="16" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="41">
+		<direction>
+			<frame x="108" y="16" w="5" h="16" />
+		</direction>
+	</animation>
+	<animation name="42">
+		<direction>
+			<frame x="120" y="16" w="6" h="16" />
+		</direction>
+	</animation>
+	<animation name="43">
+		<direction>
+			<frame x="132" y="16" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="44">
+		<direction>
+			<frame x="144" y="16" w="6" h="16" />
+		</direction>
+	</animation>
+	<animation name="45">
+		<direction>
+			<frame x="156" y="16" w="9" h="16" />
+		</direction>
+	</animation>
+	<animation name="46">
+		<direction>
+			<frame x="168" y="16" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="47">
+		<direction>
+			<frame x="180" y="16" w="9" h="16" />
+		</direction>
+	</animation>
+	<animation name="48">
+		<direction>
+			<frame x="192" y="16" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="49">
+		<direction>
+			<frame x="204" y="16" w="9" h="16" />
+		</direction>
+	</animation>
+	<animation name="50">
+		<direction>
+			<frame x="216" y="16" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="51">
+		<direction>
+			<frame x="228" y="16" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="52">
+		<direction>
+			<frame x="240" y="16" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="53">
+		<direction>
+			<frame x="252" y="16" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="54">
+		<direction>
+			<frame x="264" y="16" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="55">
+		<direction>
+			<frame x="276" y="16" w="10" h="16" />
+		</direction>
+	</animation>
+	<animation name="56">
+		<direction>
+			<frame x="289" y="16" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="57">
+		<direction>
+			<frame x="300" y="16" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="58">
+		<direction>
+			<frame x="312" y="16" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="59">
+		<direction>
+			<frame x="324" y="16" w="5" h="16" />
+		</direction>
+	</animation>
+	<animation name="60">
+		<direction>
+			<frame x="336" y="16" w="5" h="16" />
+		</direction>
+	</animation>
+	<animation name="61">
+		<direction>
+			<frame x="348" y="16" w="5" h="16" />
+		</direction>
+	</animation>
+	<animation name="62">
+		<direction>
+			<frame x="360" y="16" w="9" h="16" />
+		</direction>
+	</animation>
+	<animation name="63">
+		<direction>
+			<frame x="372" y="16" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="64">
+		<direction>
+			<frame x="1" y="32" w="4" h="16" />
+		</direction>
+	</animation>
+	<animation name="65">
+		<direction>
+			<frame x="12" y="32" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="66">
+		<direction>
+			<frame x="24" y="32" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="67">
+		<direction>
+			<frame x="36" y="32" w="6" h="16" />
+		</direction>
+	</animation>
+	<animation name="68">
+		<direction>
+			<frame x="48" y="32" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="69">
+		<direction>
+			<frame x="60" y="32" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="70">
+		<direction>
+			<frame x="72" y="32" w="5" h="16" />
+		</direction>
+	</animation>
+	<animation name="71">
+		<direction>
+			<frame x="84" y="32" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="72">
+		<direction>
+			<frame x="96" y="32" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="73">
+		<direction>
+			<frame x="108" y="32" w="3" h="16" />
+		</direction>
+	</animation>
+	<animation name="74">
+		<direction>
+			<frame x="120" y="32" w="4" h="16" />
+		</direction>
+	</animation>
+	<animation name="75">
+		<direction>
+			<frame x="132" y="32" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="76">
+		<direction>
+			<frame x="144" y="32" w="3" h="16" />
+		</direction>
+	</animation>
+	<animation name="77">
+		<direction>
+			<frame x="156" y="32" w="9" h="16" />
+		</direction>
+	</animation>
+	<animation name="78">
+		<direction>
+			<frame x="168" y="32" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="79">
+		<direction>
+			<frame x="180" y="32" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="80">
+		<direction>
+			<frame x="192" y="32" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="81">
+		<direction>
+			<frame x="204" y="32" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="82">
+		<direction>
+			<frame x="216" y="32" w="5" h="16" />
+		</direction>
+	</animation>
+	<animation name="83">
+		<direction>
+			<frame x="228" y="32" w="6" h="16" />
+		</direction>
+	</animation>
+	<animation name="84">
+		<direction>
+			<frame x="240" y="32" w="5" h="16" />
+		</direction>
+	</animation>
+	<animation name="85">
+		<direction>
+			<frame x="252" y="32" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="86">
+		<direction>
+			<frame x="264" y="32" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="87">
+		<direction>
+			<frame x="276" y="32" w="9" h="16" />
+		</direction>
+	</animation>
+	<animation name="88">
+		<direction>
+			<frame x="288" y="32" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="89">
+		<direction>
+			<frame x="300" y="32" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="90">
+		<direction>
+			<frame x="312" y="32" w="6" h="16" />
+		</direction>
+	</animation>
+	<animation name="91">
+		<direction>
+			<frame x="324" y="32" w="6" h="16" />
+		</direction>
+	</animation>
+	<animation name="92">
+		<direction>
+			<frame x="337" y="32" w="3" h="16" />
+		</direction>
+	</animation>
+	<animation name="93">
+		<direction>
+			<frame x="348" y="32" w="6" h="16" />
+		</direction>
+	</animation>
+	<animation name="94">
+		<direction>
+			<frame x="360" y="32" w="9" h="16" />
+		</direction>
+	</animation>
+	<animation name="95">
+		<direction>
+			<frame x="373" y="32" w="6" h="16" />
+		</direction>
+	</animation>
+	<animation name="96">
+		<direction>
+			<frame x="0" y="48" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="97">
+		<direction>
+			<frame x="13" y="48" w="10" h="16" />
+		</direction>
+	</animation>
+	<animation name="98">
+		<direction>
+			<frame x="24" y="48" w="4" h="16" />
+		</direction>
+	</animation>
+	<animation name="99">
+		<direction>
+			<frame x="36" y="48" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="100">
+		<direction>
+			<frame x="48" y="48" w="6" h="16" />
+		</direction>
+	</animation>
+	<animation name="101">
+		<direction>
+			<frame x="61" y="48" w="9" h="16" />
+		</direction>
+	</animation>
+	<animation name="102">
+		<direction>
+			<frame x="72" y="48" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="103">
+		<direction>
+			<frame x="84" y="48" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="104">
+		<direction>
+			<frame x="97" y="48" w="6" h="16" />
+		</direction>
+	</animation>
+	<animation name="105">
+		<direction>
+			<frame x="108" y="48" w="12" h="16" />
+		</direction>
+	</animation>
+	<animation name="106">
+		<direction>
+			<frame x="120" y="48" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="107">
+		<direction>
+			<frame x="132" y="48" w="5" h="16" />
+		</direction>
+	</animation>
+	<animation name="108">
+		<direction>
+			<frame x="144" y="48" w="12" h="16" />
+		</direction>
+	</animation>
+	<animation name="109">
+		<direction>
+			<frame x="157" y="48" w="10" h="16" />
+		</direction>
+	</animation>
+	<animation name="110">
+		<direction>
+			<frame x="169" y="48" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="111">
+		<direction>
+			<frame x="181" y="48" w="10" h="16" />
+		</direction>
+	</animation>
+	<animation name="112">
+		<direction>
+			<frame x="193" y="48" w="10" h="16" />
+		</direction>
+	</animation>
+	<animation name="113">
+		<direction>
+			<frame x="204" y="48" w="4" h="16" />
+		</direction>
+	</animation>
+	<animation name="114">
+		<direction>
+			<frame x="216" y="48" w="4" h="16" />
+		</direction>
+	</animation>
+	<animation name="115">
+		<direction>
+			<frame x="228" y="48" w="6" h="16" />
+		</direction>
+	</animation>
+	<animation name="116">
+		<direction>
+			<frame x="240" y="48" w="6" h="16" />
+		</direction>
+	</animation>
+	<animation name="117">
+		<direction>
+			<frame x="252" y="48" w="6" h="16" />
+		</direction>
+	</animation>
+	<animation name="118">
+		<direction>
+			<frame x="264" y="48" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="119">
+		<direction>
+			<frame x="276" y="48" w="12" h="16" />
+		</direction>
+	</animation>
+	<animation name="120">
+		<direction>
+			<frame x="289" y="48" w="6" h="16" />
+		</direction>
+	</animation>
+	<animation name="121">
+		<direction>
+			<frame x="300" y="48" w="12" h="16" />
+		</direction>
+	</animation>
+	<animation name="122">
+		<direction>
+			<frame x="312" y="48" w="6" h="16" />
+		</direction>
+	</animation>
+	<animation name="123">
+		<direction>
+			<frame x="324" y="48" w="5" h="16" />
+		</direction>
+	</animation>
+	<animation name="124">
+		<direction>
+			<frame x="336" y="48" w="6" h="16" />
+		</direction>
+	</animation>
+	<animation name="125">
+		<direction>
+			<frame x="349" y="48" w="10" h="16" />
+		</direction>
+	</animation>
+	<animation name="126">
+		<direction>
+			<frame x="361" y="48" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="127">
+		<direction>
+			<frame x="372" y="48" w="6" h="16" />
+		</direction>
+	</animation>
+	<animation name="128">
+		<direction>
+			<frame x="0" y="64" w="13" h="16" />
+		</direction>
+	</animation>
+	<animation name="129">
+		<direction>
+			<frame x="13" y="64" w="3" h="16" />
+		</direction>
+	</animation>
+	<animation name="130">
+		<direction>
+			<frame x="24" y="64" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="131">
+		<direction>
+			<frame x="36" y="64" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="132">
+		<direction>
+			<frame x="48" y="64" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="133">
+		<direction>
+			<frame x="60" y="64" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="134">
+		<direction>
+			<frame x="73" y="64" w="3" h="16" />
+		</direction>
+	</animation>
+	<animation name="135">
+		<direction>
+			<frame x="84" y="64" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="136">
+		<direction>
+			<frame x="97" y="64" w="5" h="16" />
+		</direction>
+	</animation>
+	<animation name="137">
+		<direction>
+			<frame x="108" y="64" w="11" h="16" />
+		</direction>
+	</animation>
+	<animation name="138">
+		<direction>
+			<frame x="120" y="64" w="6" h="16" />
+		</direction>
+	</animation>
+	<animation name="139">
+		<direction>
+			<frame x="132" y="64" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="140">
+		<direction>
+			<frame x="145" y="64" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="141">
+		<direction>
+			<frame x="156" y="64" w="5" h="16" />
+		</direction>
+	</animation>
+	<animation name="142">
+		<direction>
+			<frame x="168" y="64" w="11" h="16" />
+		</direction>
+	</animation>
+	<animation name="143">
+		<direction>
+			<frame x="180" y="64" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="144">
+		<direction>
+			<frame x="192" y="64" w="6" h="16" />
+		</direction>
+	</animation>
+	<animation name="145">
+		<direction>
+			<frame x="204" y="64" w="9" h="16" />
+		</direction>
+	</animation>
+	<animation name="146">
+		<direction>
+			<frame x="217" y="64" w="5" h="16" />
+		</direction>
+	</animation>
+	<animation name="147">
+		<direction>
+			<frame x="228" y="64" w="5" h="16" />
+		</direction>
+	</animation>
+	<animation name="148">
+		<direction>
+			<frame x="242" y="64" w="4" h="16" />
+		</direction>
+	</animation>
+	<animation name="149">
+		<direction>
+			<frame x="252" y="64" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="150">
+		<direction>
+			<frame x="264" y="64" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="151">
+		<direction>
+			<frame x="277" y="64" w="3" h="16" />
+		</direction>
+	</animation>
+	<animation name="152">
+		<direction>
+			<frame x="290" y="64" w="5" h="16" />
+		</direction>
+	</animation>
+	<animation name="153">
+		<direction>
+			<frame x="300" y="64" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="154">
+		<direction>
+			<frame x="312" y="64" w="6" h="16" />
+		</direction>
+	</animation>
+	<animation name="155">
+		<direction>
+			<frame x="324" y="64" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="156">
+		<direction>
+			<frame x="337" y="64" w="11" h="16" />
+		</direction>
+	</animation>
+	<animation name="157">
+		<direction>
+			<frame x="349" y="64" w="11" h="16" />
+		</direction>
+	</animation>
+	<animation name="158">
+		<direction>
+			<frame x="361" y="64" w="11" h="16" />
+		</direction>
+	</animation>
+	<animation name="159">
+		<direction>
+			<frame x="373" y="64" w="6" h="16" />
+		</direction>
+	</animation>
+	<animation name="160">
+		<direction>
+			<frame x="0" y="80" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="161">
+		<direction>
+			<frame x="12" y="80" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="162">
+		<direction>
+			<frame x="24" y="80" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="163">
+		<direction>
+			<frame x="36" y="80" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="164">
+		<direction>
+			<frame x="48" y="80" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="165">
+		<direction>
+			<frame x="60" y="80" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="166">
+		<direction>
+			<frame x="72" y="80" w="12" h="16" />
+		</direction>
+	</animation>
+	<animation name="167">
+		<direction>
+			<frame x="84" y="80" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="168">
+		<direction>
+			<frame x="96" y="80" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="169">
+		<direction>
+			<frame x="108" y="80" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="170">
+		<direction>
+			<frame x="120" y="80" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="171">
+		<direction>
+			<frame x="132" y="80" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="172">
+		<direction>
+			<frame x="144" y="80" w="5" h="16" />
+		</direction>
+	</animation>
+	<animation name="173">
+		<direction>
+			<frame x="156" y="80" w="5" h="16" />
+		</direction>
+	</animation>
+	<animation name="174">
+		<direction>
+			<frame x="168" y="80" w="6" h="16" />
+		</direction>
+	</animation>
+	<animation name="175">
+		<direction>
+			<frame x="180" y="80" w="5" h="16" />
+		</direction>
+	</animation>
+	<animation name="176">
+		<direction>
+			<frame x="192" y="80" w="9" h="16" />
+		</direction>
+	</animation>
+	<animation name="177">
+		<direction>
+			<frame x="204" y="80" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="178">
+		<direction>
+			<frame x="216" y="80" w="9" h="16" />
+		</direction>
+	</animation>
+	<animation name="179">
+		<direction>
+			<frame x="228" y="80" w="9" h="16" />
+		</direction>
+	</animation>
+	<animation name="180">
+		<direction>
+			<frame x="240" y="80" w="9" h="16" />
+		</direction>
+	</animation>
+	<animation name="181">
+		<direction>
+			<frame x="252" y="80" w="9" h="16" />
+		</direction>
+	</animation>
+	<animation name="182">
+		<direction>
+			<frame x="264" y="80" w="9" h="16" />
+		</direction>
+	</animation>
+	<animation name="183">
+		<direction>
+			<frame x="278" y="80" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="184">
+		<direction>
+			<frame x="288" y="80" w="9" h="16" />
+		</direction>
+	</animation>
+	<animation name="185">
+		<direction>
+			<frame x="300" y="80" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="186">
+		<direction>
+			<frame x="312" y="80" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="187">
+		<direction>
+			<frame x="324" y="80" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="188">
+		<direction>
+			<frame x="336" y="80" w="8" h="16" />
+		</direction>
+	</animation>
+	<animation name="189">
+		<direction>
+			<frame x="348" y="80" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="190">
+		<direction>
+			<frame x="360" y="80" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="191">
+		<direction>
+			<frame x="372" y="80" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="192">
+		<direction>
+			<frame x="0" y="96" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="193">
+		<direction>
+			<frame x="12" y="96" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="194">
+		<direction>
+			<frame x="24" y="96" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="195">
+		<direction>
+			<frame x="36" y="96" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="196">
+		<direction>
+			<frame x="48" y="96" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="197">
+		<direction>
+			<frame x="60" y="96" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="198">
+		<direction>
+			<frame x="72" y="96" w="6" h="16" />
+		</direction>
+	</animation>
+	<animation name="199">
+		<direction>
+			<frame x="84" y="96" w="6" h="16" />
+		</direction>
+	</animation>
+	<animation name="200">
+		<direction>
+			<frame x="96" y="96" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="201">
+		<direction>
+			<frame x="108" y="96" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="202">
+		<direction>
+			<frame x="120" y="96" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="203">
+		<direction>
+			<frame x="132" y="96" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="204">
+		<direction>
+			<frame x="144" y="96" w="3" h="16" />
+		</direction>
+	</animation>
+	<animation name="205">
+		<direction>
+			<frame x="156" y="96" w="4" h="16" />
+		</direction>
+	</animation>
+	<animation name="206">
+		<direction>
+			<frame x="168" y="96" w="4" h="16" />
+		</direction>
+	</animation>
+	<animation name="207">
+		<direction>
+			<frame x="180" y="96" w="4" h="16" />
+		</direction>
+	</animation>
+	<animation name="208">
+		<direction>
+			<frame x="192" y="96" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="209">
+		<direction>
+			<frame x="204" y="96" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="210">
+		<direction>
+			<frame x="216" y="96" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="211">
+		<direction>
+			<frame x="228" y="96" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="212">
+		<direction>
+			<frame x="240" y="96" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="213">
+		<direction>
+			<frame x="252" y="96" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="214">
+		<direction>
+			<frame x="264" y="96" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="215">
+		<direction>
+			<frame x="276" y="96" w="9" h="16" />
+		</direction>
+	</animation>
+	<animation name="216">
+		<direction>
+			<frame x="288" y="96" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="217">
+		<direction>
+			<frame x="300" y="96" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="218">
+		<direction>
+			<frame x="312" y="96" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="219">
+		<direction>
+			<frame x="324" y="96" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="220">
+		<direction>
+			<frame x="336" y="96" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="221">
+		<direction>
+			<frame x="348" y="96" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="222">
+		<direction>
+			<frame x="360" y="96" w="7" h="16" />
+		</direction>
+	</animation>
+	<animation name="223">
+		<direction>
+			<frame x="372" y="96" w="7" h="16" />
+		</direction>
+	</animation>
+</sprite>

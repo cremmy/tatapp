@@ -158,6 +158,7 @@ namespace Engine
 
 				void draw(const Math::Orientation& orientation, const VertexBuffer& vbo);
 				void draw(const Math::Orientation& orientation, const VertexBuffer& vbo, unsigned first, unsigned last);
+				void draw(const Math::Orientation& orientation, const FrameBuffer& fbo);
 				void draw(const Math::Orientation& orientation, const Model& mdl);
 				void draw(const Math::Orientation& orientation, const Texture& tex);
 				void draw(const Math::Orientation& orientation, const Texture& tex, float x, float y, float w, float h);

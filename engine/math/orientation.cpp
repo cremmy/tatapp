@@ -12,7 +12,7 @@ using namespace Engine::Math;
 const Orientation Orientation::FLAT_XY=Orientation(AVector(), AVector(1, 0, 0), AVector(0, 1, 0));
 const Orientation Orientation::FLAT_XZ=Orientation(AVector(), AVector(1, 0, 0), AVector(0, 0, 1));
 const Orientation Orientation::FLAT_YZ=Orientation(AVector(), AVector(0, 1, 0), AVector(0, 0, 1));
-const Orientation Orientation::GUI=    Orientation(AVector(), AVector(1, 0, 0), AVector(0,-1, 0));
+const Orientation Orientation::GUI=    Orientation(AVector(), AVector(1, 0, 0), AVector(0, 1, 0));
 
 void Orientation::lookAt(const AVector& target, const AVector& from, const AVector& baseup)
 	{

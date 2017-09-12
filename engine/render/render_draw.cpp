@@ -131,6 +131,42 @@ void Render::draw(const Orientation& orientation, const VertexBuffer& vbo, unsig
 	vbo.unbind();
 	}
 
+void Render::draw(const Math::Orientation& orientation, const FrameBuffer& fbo)
+	{
+	//assert(fbo.getColorBuffer());
+
+	State& state=states.back();
+
+	const float iw=fbo.getWidth();
+	const float ih=fbo.getHeight();
+
+	Vertex data[]=
+		{
+		{ 0,  0, 0,  0, 0},
+		{iw,  0, 0,  1, 0},
+		{iw,-ih, 0,  1, 1},
+		{ 0,-ih, 0,  0, 1},
+		};
+
+	bind(0u, fbo.getColorBuffer());
+
+	glBindBuffer(GL_ARRAY_BUFFER, vboid);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STREAM_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, x));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tx));
+
+	const AMatrix mmodel=orientation.getMatrix();
+	glUniformMatrix4fv(state.shader->getUniform(SHADER_UNIFORM_MODEL_MATRIX), 1, GL_TRUE, &mmodel.row[0].x);
+
+	glDrawArrays(GL_QUADS, 0, 4);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	}
+
 void Render::draw(const Orientation& orientation, const Model& mdl)
 	{
 	State& state=states.back();
