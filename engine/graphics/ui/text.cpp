@@ -82,6 +82,9 @@ void Text::clear()
 
 void Text::setStr(const std::string& str)
 	{
+	if(str==this->str)
+		return;
+
 	upd=true;
 
 	this->str=str;
@@ -223,7 +226,7 @@ void Text::print()
 	int y;
 
 	if(opts&TOP)			y=h;
-	else if(opts&MIDDLE)	y=(h-rh)/2;
+	else if(opts&MIDDLE)	y=h-(h-rh)/2;
 	else if(opts&BOTTOM)	y=rh;
 	else					y=h;
 
@@ -234,7 +237,7 @@ void Text::print()
 	Render::getInstance().statePush();
 	Render::getInstance().setFrameBuffer(buff, true);
 	Render::getInstance().setCamera(cam);
-//	Render::getInstance()::setColor(AVector(1, 1, 1, alpha));
+	Render::getInstance().setColor(AVector(1, 1, 1, alpha));
 
 	for(std::list<LineInfo>::iterator it=lines.begin(); it!=lines.end(); ++it)
 		{
@@ -251,7 +254,7 @@ void Text::print()
 
 			if(c>' ')// && c<font->getAnims()+' ')
 				{
-				Render::getInstance().draw(Orientation(AVector(x, y, 0), Orientation::GUI), font->getAnimation(c-' ').getDirection(Sprite::DirectionName::DEFAULT).getFrame(0u).getImage());
+				Render::getInstance().draw(Orientation(AVector(x, y, 0), Orientation::FLAT_XY), font->getAnimation(c-' ').getDirection(Sprite::DirectionName::DEFAULT).getFrame(0u).getImage());
 				}
 
 			x+=getCharLen(c, x);

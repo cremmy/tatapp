@@ -216,7 +216,7 @@ bool Engine::Math::Collision::test(const Box& a, const Point& b)
 	const AVector ahs=a.getHalfSize()*a.getOrientation().getScale();
 	const AVector bp=AMatrixTranspose(a.getOrientation().getMatrix())*(b.getPosition()-ap);
 
-	LOG_DEBUG("[%.2f %.2f %.2f] vs [%.2f %.2f %.2f]", bp.x, bp.y, bp.z, ahs.x, ahs.y, ahs.z);
+	//LOG_DEBUG("[%.2f %.2f %.2f] vs [%.2f %.2f %.2f]", bp.x, bp.y, bp.z, ahs.x, ahs.y, ahs.z);
 
 	if( ahs.x<bp.x ||
 	   -ahs.x>bp.x ||

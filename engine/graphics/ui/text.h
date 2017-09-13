@@ -35,9 +35,9 @@ namespace Engine
 						CLIP=		0x1<<7,					// Przyciecie do max wymiarow
 						OVERFLOWH=	0x1<<8,					// Moze wyleciec w poziomie
 						OVERFLOWV=	0x1<<9,					// Moze wyleciec w pionie
-						OVERFLOW=	OVERFLOWH|OVERFLOWV,	// Moze wyleciec w dowolnym wymiarze
+						OVERFLOW=	(OVERFLOWH|OVERFLOWV),	// Moze wyleciec w dowolnym wymiarze
 
-						DEFAULT=LEFT|TOP|WRAP|OVERFLOW,		// Domyslne wartosci
+						DEFAULT=(LEFT|TOP|WRAP|OVERFLOW),		// Domyslne wartosci
 						};
 
 				private:

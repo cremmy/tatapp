@@ -68,13 +68,14 @@ namespace Engine
 
 				struct State
 					{
-					State(): caminfo(), fbo(nullptr), shader(nullptr), camera(nullptr) {}
-					State(const State& s): caminfo(s.caminfo), fbo(s.fbo), shader(s.shader), camera(s.camera) {}
+					State(): caminfo(), fbo(nullptr), shader(nullptr), camera(nullptr), color(1, 1, 1, 1) {}
+					State(const State& s): caminfo(s.caminfo), fbo(s.fbo), shader(s.shader), camera(s.camera), color(s.color) {}
 
 					CameraInfo caminfo;
 					FrameBuffer* fbo;
 					const Shader* shader;
 					const Camera* camera;
+					Math::AVector color;
 					};
 
 				// Okno
@@ -121,6 +122,9 @@ namespace Engine
 				void getWindowSize(int& w, int& h) const;
 				int getWindowWidth() const;
 				int getWindowHeight() const;
+				void getFrameBufferSize(int& w, int& h) const;
+				int getFrameBufferWidth() const;
+				int getFrameBufferHeight() const;
 				int getMaxTextureSize() const;
 				const Camera* getCurrentCamera() const;
 
@@ -144,6 +148,8 @@ namespace Engine
 				void unsetFrameBuffer();
 				void setShader(const ShaderPtr& shader);
 				void unsetShader();
+				void setColor(const Math::AVector& s) {states.back().color=s;}
+				void unsetColor() {states.back().color=Math::AVector(1, 1, 1, 1);}
 
 				void setShaderEffect(const ShaderPtr& shader);
 				void unsetShaderEffect();

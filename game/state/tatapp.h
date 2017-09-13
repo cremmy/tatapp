@@ -8,6 +8,8 @@
 #pragma once
 
 #include "engine/base/applicationstate.h"
+#include "engine/graphics/imageptr.h"
+#include "engine/graphics/ui/text.h"
 #include "engine/render/camera.h"
 
 namespace Game
@@ -24,6 +26,16 @@ namespace Game
 				Player *player;
 
 				Engine::Render::Camera cam;
+				Engine::Render::Camera camUI;
+
+				float uiDialogAlpha;
+				Engine::Graphics::ImagePtr uiDialogNone;
+				Engine::Graphics::ImagePtr uiDialogNormal;
+				Engine::Graphics::ImagePtr uiDialogChoice;
+				Engine::Graphics::ImagePtr uiDialog;
+				Engine::Graphics::UI::Text uiText;
+
+				bool initUI();
 
 			public:
 				TATAPP();

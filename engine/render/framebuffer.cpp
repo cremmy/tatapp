@@ -139,7 +139,7 @@ bool FrameBuffer::init(int w, int h, Buffers flag)
 		LOG_DEBUG("FrameBuffer.init: Bind depth/stencil");
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbid);
 		}
-	else
+	else if(flag&FBO_DEPTH_BUFFER)
 		{
 		LOG_DEBUG("FrameBuffer.init: Bind depth");
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbid);

@@ -47,6 +47,8 @@ void Dialog::update(float dt)
 		{
 		LOG_DEBUG("Dialog.update: Konczenie dialogu (b<=0)");
 		mode=Mode::NONE;
+
+		log.clear();
 		return;
 		}
 
@@ -137,10 +139,34 @@ void Dialog::update(float dt)
 			}
 		else if(cmdpars[0]=="str")
 			{
-			//CMD_PARAMS_REQ(1);
+			CMD_PARAMS_REQ(1);
 
 			cmdpars.remove(0);
 			message+=cmdpars.get();
+
+			continue;
+			}
+		else if(cmdpars[0]=="strnl")
+			{
+			CMD_PARAMS_REQ(1);
+
+			cmdpars.remove(0);
+			message+=cmdpars.get()+"\n";
+
+			continue;
+			}
+		else if(cmdpars[0]=="nlstr")
+			{
+			CMD_PARAMS_REQ(1);
+
+			cmdpars.remove(0);
+			message+=(std::string)"\n"+cmdpars.get();
+
+			continue;
+			}
+		else if(cmdpars[0]=="nl")
+			{
+			message+="\n";
 
 			continue;
 			}
@@ -148,6 +174,7 @@ void Dialog::update(float dt)
 
 	ready=true;
 
+	log.push_back(message);
 	LOG_DEBUG("Dialog.update: [%s]", message.c_str());
 
 #undef CMD_PARAMS_REQ
@@ -163,6 +190,7 @@ void Dialog::start()
 	ready=false;
 	b=1;
 	index=0;
+	log.clear();
 	}
 
 
@@ -171,14 +199,14 @@ void Dialog::next()
 	if(!ready)
 		return;
 
+	LOG_DEBUG("NEXT: %d", logIndex);
+
 	if(logIndex>0)
 		{
 		--logIndex;
 
-		if(logIndex>0)
-			{
-			message=log[log.size()-1-logIndex];
-			}
+		message=log[log.size()-logIndex];
+		LOG_DEBUG("Dialog.next: LOG: \"%s\"", message.c_str());
 		}
 	else
 		{
@@ -186,7 +214,6 @@ void Dialog::next()
 		--b;
 		index=0;
 
-		log.push_back(message);
 		message="";
 		}
 	}
@@ -196,14 +223,19 @@ void Dialog::previous()
 	if(!ready)
 		return;
 
+	LOG_DEBUG("PREVIOUS: %d", logIndex);
+
 	++logIndex;
 
 	if(logIndex>=(int)log.size())
 		{
-		logIndex=log.size()-1;
+		LOG_DEBUG("PREVIOUS: OVERFLOW");
+		logIndex=log.size();
+		return;
 		}
 
 	message=log[log.size()-1-logIndex];
+	LOG_DEBUG("Dialog.previous: LOG: \"%s\"", message.c_str());
 	}
 
 
@@ -211,6 +243,8 @@ void Dialog::selectPrevious()
 	{
 	if(!ready || mode!=Mode::SELECTION)
 		return;
+
+	LOG_DEBUG("SELECT PREVIOUS");
 
 	ready=false;
 
@@ -224,6 +258,8 @@ void Dialog::selectNext()
 	{
 	if(!ready || mode!=Mode::SELECTION)
 		return;
+
+	LOG_DEBUG("SELECT NEXT");
 
 	ready=false;
 

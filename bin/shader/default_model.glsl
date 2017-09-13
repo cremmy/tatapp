@@ -42,6 +42,7 @@ void main()
 #pragma wtsngine fragment
 #version 330 core
 	
+uniform vec4 u_color;
 uniform sampler2D u_texture;
 uniform sampler2D u_normal;
 
@@ -73,7 +74,7 @@ out vec4 out_color;
 void main()
 	{
 	vec3 LDIR=-normalize(u.view*vec4(2, 1, -0.5, 0)).xyz;
-	out_color=texture(u_texture, i.uv)*vec4(m.diffuse, 1.0f);//+vec4(m.ambient, 0.0f);
+	out_color=texture(u_texture, i.uv)*vec4(m.diffuse, 1.0f)*u_color;//+vec4(m.ambient, 0.0f);
 	//out_color.rgb*=max(dot(LDIR, i.normal), 0.0f);
 	//out_color.rgb*=max(dot(LDIR, texture(u_normal, i.uv).rgb), 0.0f);
 	

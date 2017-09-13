@@ -263,7 +263,7 @@ NPC* Level::findByRay(const Engine::Math::Geometry::Ray& ray)
 	using namespace Engine::Math;
 
 	const float MAX_RANGE=2.0f;
-	const int STEPS=100;
+	const int STEPS=10;
 
 	const float STEP=MAX_RANGE/STEPS;
 

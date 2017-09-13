@@ -37,13 +37,14 @@ in VertexData
 	vec2 uv;
 	} i;
 	
+uniform vec4 u_color;
 uniform sampler2D u_texture;
 	
 out vec4 out_color;
 
 void main()
 	{
-	out_color=texture(u_texture, i.uv);
+	out_color=texture(u_texture, i.uv)*u_color;
 	
 	if(out_color.a<1.0f/256.f)
 		discard;

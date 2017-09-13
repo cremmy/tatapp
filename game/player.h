@@ -24,12 +24,14 @@ namespace Game
 			Engine::Math::AVector speed;
 
 			Level* lvl;
+			NPC* npcTarget;
 
 			Engine::Math::Geometry::AABB collider;
 			float eyeHeight;
 
 			Engine::Math::AVector direction;
 
+			float dialogCooldown;
 			Dialog dialog;
 
 			Engine::Core::Application* application;
@@ -47,6 +49,9 @@ namespace Game
 
 			const Engine::Math::Orientation& getOrientation() const {return orientation;}
 			const Engine::Math::Orientation getEyeOrientation() const {return orientation+Engine::Math::AVector(0, 0, eyeHeight);}
+			const NPC* getNPCTarget() const {return npcTarget;}
+			Dialog getDialog() {return dialog;}
+			const Dialog& getDialog() const {return dialog;}
 
 		};
 

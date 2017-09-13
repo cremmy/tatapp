@@ -106,6 +106,7 @@ void Render::draw(const Orientation& orientation, const VertexBuffer& vbo)
 
 	const AMatrix mmodel=orientation.getMatrix();
 	glUniformMatrix4fv(state.shader->getUniform(SHADER_UNIFORM_MODEL_MATRIX), 1, GL_TRUE, &mmodel.row[0].x);
+	glUniform4fv(state.shader->getUniform(SHADER_UNIFORM_COLOR), 1, &state.color.x);
 
 	glDrawArrays(GL_QUADS, 0, vbo.getSize());
 
@@ -125,6 +126,7 @@ void Render::draw(const Orientation& orientation, const VertexBuffer& vbo, unsig
 
 	const AMatrix mmodel=orientation.getMatrix();
 	glUniformMatrix4fv(state.shader->getUniform(SHADER_UNIFORM_MODEL_MATRIX), 1, GL_TRUE, &mmodel.row[0].x);
+	glUniform4fv(state.shader->getUniform(SHADER_UNIFORM_COLOR), 1, &state.color.x);
 
 	glDrawArrays(GL_QUADS, first, last-first);
 
@@ -160,6 +162,7 @@ void Render::draw(const Math::Orientation& orientation, const FrameBuffer& fbo)
 
 	const AMatrix mmodel=orientation.getMatrix();
 	glUniformMatrix4fv(state.shader->getUniform(SHADER_UNIFORM_MODEL_MATRIX), 1, GL_TRUE, &mmodel.row[0].x);
+	glUniform4fv(state.shader->getUniform(SHADER_UNIFORM_COLOR), 1, &state.color.x);
 
 	glDrawArrays(GL_QUADS, 0, 4);
 
@@ -182,6 +185,7 @@ void Render::draw(const Orientation& orientation, const Model& mdl)
 
 	const AMatrix mmodel=orientation.getMatrix();
 	glUniformMatrix4fv(state.shader->getUniform(SHADER_UNIFORM_MODEL_MATRIX), 1, GL_TRUE, &mmodel.row[0].x);
+	glUniform4fv(state.shader->getUniform(SHADER_UNIFORM_COLOR), 1, &state.color.x);
 
 	GLuint ubidx=state.shader->getUniformBlock("Material");
 	if(ubidx!=GL_INVALID_INDEX)
@@ -232,6 +236,7 @@ void Render::draw(const Orientation& orientation, const Texture& tex, float x, f
 
 	const AMatrix mmodel=orientation.getMatrix();
 	glUniformMatrix4fv(state.shader->getUniform(SHADER_UNIFORM_MODEL_MATRIX), 1, GL_TRUE, &mmodel.row[0].x);
+	glUniform4fv(state.shader->getUniform(SHADER_UNIFORM_COLOR), 1, &state.color.x);
 
 	glDrawArrays(GL_QUADS, 0, 4);
 
@@ -290,6 +295,7 @@ void Render::draw(const Orientation& orientation, const Graphics::SpritePtr& spt
 
 	const AMatrix mmodel=orientation.getMatrix();
 	glUniformMatrix4fv(state.shader->getUniform(SHADER_UNIFORM_MODEL_MATRIX), 1, GL_TRUE, &mmodel.row[0].x);
+	glUniform4fv(state.shader->getUniform(SHADER_UNIFORM_COLOR), 1, &state.color.x);
 
 	glDrawArrays(GL_QUADS, frame.getVBOIndex(), 4);
 

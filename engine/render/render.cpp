@@ -227,7 +227,7 @@ bool Render::init(int w, int h, const std::string& title, const std::string& ico
 	LOG_SUCCESS("Render.init: Udalo sie zainicjowac UBO");
 
 	/**** Bazowe ****/
-	if(!baseFBO.init(dm.w, dm.h, FrameBuffer::FBO_RENDERBUFFER))
+	if(!baseFBO.init(w, h, FrameBuffer::FBO_RENDERBUFFER))
 		{
 		LOG_ERROR("Render.init: Nie udalo sie zainicjowac buforu ekranu");
 		return false;
@@ -328,10 +328,41 @@ void Render::update()
 		{
 		int bw, bh;
 		baseFBO.getSize(bw, bh);
+
+		int sx=0;
+		int sy=0;
 		int sw, sh;
 		getWindowSize(sw, sh);
 
-		glBlitFramebuffer(0, 0, sw, sh, 0, 0, sw, sh,  GL_COLOR_BUFFER_BIT, GL_NEAREST); // <- blitowanie depth buffera powoduje INVALID_OPERATION
+		const float ASPECT=bw/(float)bh;
+		const float SCALE_W=sw/bw;
+		const float SCALE_H=sh/bh;
+
+		// 1920x1200 vs 1024x768
+		// SCALE_W = 1.8750
+		// SCALE_H = 1.5625
+		if(SCALE_W>=SCALE_H)
+			{
+			// Czarne paski po bokach
+			//int nh=sh;              // 1200
+			const int nw=ceil(sh*ASPECT); // 1600
+			sx=(sw-nw)/2;
+			sy=0;
+			sw=nw;
+			//sh=nh;
+			}
+		else
+			{
+			// Czarne paski u gory i dolu
+			//int nw=sw;
+			const int nh=floor(sw/ASPECT);
+			sx=0;
+			sy=(sh-nh)/2;
+			//sw=nw;
+			sh=nh;
+			}
+
+		glBlitFramebuffer(0, 0, bw, bh, sx, sy, sw, sh,  GL_COLOR_BUFFER_BIT, GL_LINEAR); // <- blitowanie depth buffera powoduje INVALID_OPERATION
 		}
 
 //	const unsigned T1=SDL_GetTicks();
@@ -347,6 +378,7 @@ void Render::update()
 
 	unsetShader();
 	//unsetFrameBuffer();
+	unsetColor();
 	setFrameBuffer(baseFBO, true);
 	}
 
@@ -406,6 +438,22 @@ int Render::getWindowHeight() const
 	getWindowSize(w, h);
 
 	return h;
+	}
+
+void Render::getFrameBufferSize(int& w, int& h) const
+	{
+	w=baseFBO.getWidth();
+	h=baseFBO.getHeight();
+	}
+
+int Render::getFrameBufferWidth() const
+	{
+	return baseFBO.getWidth();
+	}
+
+int Render::getFrameBufferHeight() const
+	{
+	return baseFBO.getHeight();
 	}
 
 int Render::getMaxTextureSize() const
