@@ -50,8 +50,33 @@ bool Engine::Math::Collision::test(const AABB& a, const AABB& b)
 
 bool Engine::Math::Collision::test(const AABB& a, const Box& b)
 	{
-	assert(false);
-	return false;
+	// Zwyczajny SAT
+	AVector dirs[]=
+		{
+		AVector(-1, 0, 0),
+		AVector( 1, 0, 0),
+		AVector( 0,-1, 0),
+		AVector( 0, 1, 0),
+		AVector( 0, 0,-1),
+		AVector( 0, 0, 1),
+		 b.getOrientation().getRight(),
+		-b.getOrientation().getRight(),
+		 b.getOrientation().getForward(),
+		-b.getOrientation().getForward(),
+		 b.getOrientation().getUp(),
+		-b.getOrientation().getUp(),
+		};
+
+	const unsigned size=sizeof(dirs)/sizeof(dirs[0]);
+	for(unsigned i=0u; i<size; ++i)
+		{
+		float dot=(b.getSupport(-dirs[i])-a.getSupport(dirs[i]))|dirs[i];
+
+		if(dot>0.0f)
+			return false;
+		}
+
+	return true;
 	}
 
 bool Engine::Math::Collision::test(const AABB& a, const Capsule& b)

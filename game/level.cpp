@@ -193,7 +193,7 @@ void Level::print(float tinterp)
 		{
 		npc->print(tinterp);
 
-		auto col=npc->getCollider();
+		/*auto col=npc->getCollider();
 
 		const AVector cpos=col.getPosition();
 		const AVector csize=col.getHalfSize();
@@ -242,7 +242,7 @@ void Level::print(float tinterp)
 			cpos+cu+cr+cf,
 			cpos-cu+cr+cf,
 			cpos-cu+cr-cf,
-			}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));
+			}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));*/
 		}
 	}
 
@@ -258,7 +258,20 @@ void Level::clear()
 	}
 
 
-NPC* Level::findByRay(const Engine::Math::Geometry::Ray& ray)
+NPC* Level::findNPCByName(const std::string& name)
+	{
+	for(auto npc: npcs)
+		{
+		if(npc->getName()!=name)
+			continue;
+
+		return npc;
+		}
+
+	return nullptr;
+	}
+
+NPC* Level::findNPCByRay(const Engine::Math::Geometry::Ray& ray)
 	{
 	using namespace Engine::Math;
 
@@ -282,4 +295,20 @@ NPC* Level::findByRay(const Engine::Math::Geometry::Ray& ray)
 		}
 
 	return nullptr;
+	}
+
+bool Level::test(const Engine::Math::Geometry::AABB& box)
+	{
+	using namespace Engine::Math;
+
+	for(auto npc: npcs)
+		{
+		if(!npc->isCollidable() || !npc->isVisible())
+			continue;
+
+		if(Collision::test(npc->getCollider(), box))
+			return true;
+		}
+
+	return false;
 	}

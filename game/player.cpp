@@ -10,13 +10,15 @@
 #include <cmath>
 #include <SDL2/SDL.h>
 
+#include "engine/debug/log.h"
+#include "engine/render/render.h"
 #include "npc.h"
 
 using namespace Game;
 using namespace Engine::Math;
 using namespace Engine::Math::Geometry;
 
-const float DIALOG_COOLDOWN=1.0f;
+const float DIALOG_COOLDOWN=0.5f;
 
 Player::Player(Engine::Core::Application* application): Engine::Core::AppEventListener(), lvl(nullptr), npcTarget(nullptr), eyeHeight(0.0f), dialogCooldown(0.0f)
 	{
@@ -25,6 +27,7 @@ Player::Player(Engine::Core::Application* application): Engine::Core::AppEventLi
 	application->addListener(Engine::Core::AppEvent::Type::MOUSE_KEY_DOWN, *this);
 	application->addListener(Engine::Core::AppEvent::Type::MOUSE_KEY_UP, *this);
 	application->addListener(Engine::Core::AppEvent::Type::MOUSE_MOVE, *this);
+	application->addListener(Engine::Core::AppEvent::Type::MOUSE_WHEEL, *this);
 
 	this->application=application;
 	}
@@ -50,14 +53,14 @@ void Player::update(float dt)
 
 	handleEvents();
 
+	if(dialogCooldown>0.0f)
+		{
+		dialogCooldown-=dt;
+		}
+
 	if(dialog.getMode()==Dialog::Mode::NONE)
 		{
 		updateMove(speed*dt);
-
-		if(dialogCooldown>0.0f)
-			{
-			dialogCooldown-=dt;
-			}
 		}
 	else
 		{
@@ -81,11 +84,11 @@ void Player::handleEvents()
 				{
 				if(e.data.keyboard.key==SDLK_d)
 					{
-					//dialog.next();
+					dialog.next();
 					}
 				else if(e.data.keyboard.key==SDLK_a)
 					{
-					//dialog.previous();
+					dialog.previous();
 					}
 				else if(e.data.keyboard.key==SDLK_w)
 					{
@@ -116,7 +119,7 @@ void Player::handleEvents()
 					}
 
 				// Wykrywanie NPC
-				npcTarget=lvl->findByRay(Engine::Math::Geometry::Ray(getEyeOrientation().getPosition(), orientation.getForward()));
+				npcTarget=lvl->findNPCByRay(Engine::Math::Geometry::Ray(getEyeOrientation().getPosition(), orientation.getForward()));
 
 //				if(npcTarget)
 //					{
@@ -163,7 +166,6 @@ void Player::handleEvents()
 							{
 							LOG_INFO("Player.handleEvents: Startowanie dialogu \"%s\"", npcTarget->getScriptPath().c_str());
 							dialog.start();
-							dialogCooldown=DIALOG_COOLDOWN;
 							}
 						}
 					}
@@ -172,11 +174,41 @@ void Player::handleEvents()
 				{
 				if(e.data.mouse.key==1)
 					{
-					dialog.next();
+					if(dialog.getMode()==Dialog::Mode::SELECTION)
+						{
+						if(dialogCooldown>0.0f)
+							{
+							// Czekaj
+							}
+						else
+							{
+							dialog.next();
+							dialogCooldown=DIALOG_COOLDOWN;
+							}
+						}
+					else
+						{
+						dialog.next();
+						dialogCooldown=DIALOG_COOLDOWN;
+						}
 					}
 				else if(e.data.mouse.key==3)
 					{
 					dialog.previous();
+					}
+				}
+			}
+		else if(e.getType()==Engine::Core::AppEvent::Type::MOUSE_WHEEL)
+			{
+			if(dialog.getMode()==Dialog::Mode::SELECTION)
+				{
+				if(e.data.mouse.y>0)
+					{
+					dialog.selectPrevious();
+					}
+				else
+					{
+					dialog.selectNext();
 					}
 				}
 			}
@@ -202,11 +234,31 @@ void Player::updateMove(AVector spddt)
 	{
 	spddt.z=0.0f;
 
-	orientation.move(spddt);
+	if(lvl->test(collider+orientation.getPosition()+spddt))
+		{
+		//LOG_WARNING("Aah~");
+		}
+	else
+		{
+		orientation.move(spddt);
+		}
 	}
 
 
 void Player::print(float /*tinterp*/)
 	{
-	//
+	/*auto col=collider+orientation.getPosition();
+	const AVector cpos=col.getPosition();
+	const AVector csize=col.getHalfSize();
+	const AVector cu=AVector(0, 1, 0)*csize.y;
+	const AVector cr=AVector(1, 0, 0)*csize.x;
+	const AVector cf=AVector(0, 0, 1)*csize.z;
+
+	Engine::Render::getInstance().drawPolygon(
+		{
+		cpos+cu-cr+cf,
+		cpos+cu+cr+cf,
+		cpos-cu+cr+cf,
+		cpos-cu-cr+cf,
+		}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));*/
 	}

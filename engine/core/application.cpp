@@ -132,6 +132,10 @@ void Application::run()
 					pushEvent(AppEvent().initMouseKeyUp(event.button.x, event.button.y, event.button.button));
 				break;
 
+				case SDL_MOUSEWHEEL:
+					pushEvent(AppEvent().initMouseWheel(event.wheel.y));
+				break;
+
 				case SDL_WINDOWEVENT:
 					switch(event.window.event)
 						{

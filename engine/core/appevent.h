@@ -23,6 +23,7 @@ namespace Engine
 					MOUSE_MOVE,
 					MOUSE_KEY_DOWN,
 					MOUSE_KEY_UP,
+					MOUSE_WHEEL,
 					WINDOW_HIDE,
 					WINDOW_SHOW,
 					};
@@ -88,6 +89,14 @@ namespace Engine
 					data.mouse.x=x;
 					data.mouse.y=y;
 					data.mouse.key=key;
+					return *this;
+					}
+				const AppEvent& initMouseWheel(int direction)
+					{
+					type=Type::MOUSE_WHEEL;
+					data.mouse.x=0;
+					data.mouse.y=direction;
+					data.mouse.key=0;
 					return *this;
 					}
 				const AppEvent& initWindowHide()

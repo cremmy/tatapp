@@ -14,6 +14,9 @@
 
 namespace Game
 	{
+	class Level;
+	class Player;
+
 	class Dialog
 		{
 		public:
@@ -22,6 +25,7 @@ namespace Game
 				NONE,
 				DIALOG,
 				SELECTION,
+				BACKLOG,
 				};
 
 		protected:
@@ -36,13 +40,17 @@ namespace Game
 
 			float waitTimer;
 
-			std::vector<int> selection;
+			std::vector<int> selectionTarget;
+			std::vector<std::string> selectionOption;
 			int selectionIndex;
 
 			std::string message;
 
 			std::vector<std::string> log;
 			int logIndex;
+
+			Level* lvl;
+			Player* player;
 
 		public:
 			Dialog();
@@ -60,8 +68,11 @@ namespace Game
 			void selectNext();
 
 			bool isReady() const {return ready;}
-			Mode getMode() const {return mode;}
+			Mode getMode() const {return (logIndex>0)?Mode::BACKLOG:mode;}
 			std::string getMessage() const {return message;}
+
+			void setLevel(Level* s) {lvl=s;}
+			void setPlayer(Player* s) {player=s;}
 		};
 
 	} /* namespace Game */

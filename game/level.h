@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 
+#include "engine/math/geometry/aabb.h"
 #include "engine/math/geometry/ray.h"
 
 namespace Game
@@ -31,7 +32,9 @@ namespace Game
 			void print(float tinterp);
 			void clear();
 
-			NPC* findByRay(const Engine::Math::Geometry::Ray& ray);
+			NPC* findNPCByName(const std::string& name);
+			NPC* findNPCByRay(const Engine::Math::Geometry::Ray& ray);
+			bool test(const Engine::Math::Geometry::AABB& box);
 		};
 
 	} /* namespace Game */

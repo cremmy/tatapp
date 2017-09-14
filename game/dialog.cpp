@@ -21,7 +21,8 @@ Dialog::Dialog(): mode(Mode::NONE), ready(true), b(0), index(0), waitTimer(0.0f)
 
 Dialog::~Dialog()
 	{
-	selection.clear();
+	selectionTarget.clear();
+	selectionOption.clear();
 	log.clear();
 	}
 
@@ -170,12 +171,35 @@ void Dialog::update(float dt)
 
 			continue;
 			}
+		else if(cmdpars[0]=="wyb")
+			{
+			CMD_PARAMS_REQ(2);
+
+			if(mode!=Mode::SELECTION)
+				{
+				mode=Mode::SELECTION;
+				}
+
+			selectionTarget.push_back(cmdpars.toInt(1));
+			cmdpars.remove(1u);
+			cmdpars.remove(0u);
+			selectionOption.push_back(cmdpars.get());
+			}
 		}
 
 	ready=true;
 
-	log.push_back(std::string("[")+message+std::string("]"));
-	LOG_DEBUG("Dialog.update: [%s]", message.c_str());
+	if(mode==Mode::SELECTION)
+		{
+		selectionIndex=1;
+		selectPrevious();
+		log.push_back("<<temp>>");
+		}
+	else
+		{
+		log.push_back(message);
+		LOG_DEBUG("Dialog.update: [%s]", message.c_str());
+		}
 
 #undef CMD_PARAMS_REQ
 	}
@@ -203,8 +227,30 @@ void Dialog::next()
 		{
 		--logIndex;
 
-		message=log[log.size()-1-logIndex];
-		LOG_DEBUG("Dialog.next: NEXT: %d -> %d / %d; LOG: \"%s\"", logIndex+1, logIndex, log.size(), message.c_str());
+		if(logIndex>0 || mode!=Mode::SELECTION)
+			{
+			message=log[log.size()-1-logIndex];
+			LOG_DEBUG("Dialog.next: NEXT: %d -> %d / %d; LOG: \"%s\"", logIndex+1, logIndex, log.size(), message.c_str());
+			}
+		else
+			{
+			++selectionIndex;
+			selectPrevious();
+			}
+		}
+	else if(mode==Mode::SELECTION)
+		{
+		ready=false;
+		mode=Mode::DIALOG;
+		b=selectionTarget[selectionIndex];
+		index=0;
+
+		log.back()=message;
+
+		selectionTarget.clear();
+		selectionOption.clear();
+
+		message="";
 		}
 	else
 		{
@@ -233,7 +279,7 @@ void Dialog::previous()
 		}
 
 	message=log[log.size()-1-logIndex];
-	LOG_DEBUG("Dialog.next: PREV: %d -> %d / %d; LOG: \"%s\"", logIndex-1, logIndex, log.size(), message.c_str());
+	LOG_DEBUG("Dialog.previous: PREV: %d -> %d / %d; LOG: \"%s\"", logIndex-1, logIndex, log.size(), message.c_str());
 	}
 
 
@@ -244,12 +290,27 @@ void Dialog::selectPrevious()
 
 	LOG_DEBUG("SELECT PREVIOUS");
 
-	ready=false;
-
 	selectionIndex--;
 
 	if(selectionIndex<0)
-		selectionIndex=selection.size()-1;
+		selectionIndex=selectionOption.size()-1;
+
+	message="";
+
+	for(int i=0; i<(int)selectionOption.size(); ++i)
+		{
+		if(i==selectionIndex)
+			{
+			message+="[";
+			message+=selectionOption[i];
+			message+="]\n";
+			}
+		else
+			{
+			message+=selectionOption[i];
+			message+="\n";
+			}
+		}
 	}
 
 void Dialog::selectNext()
@@ -259,11 +320,26 @@ void Dialog::selectNext()
 
 	LOG_DEBUG("SELECT NEXT");
 
-	ready=false;
-
 	selectionIndex++;
 
-	if(selectionIndex>=(int)selection.size())
+	if(selectionIndex>=(int)selectionOption.size())
 		selectionIndex=0;
+
+	message="";
+
+	for(int i=0; i<(int)selectionOption.size(); ++i)
+		{
+		if(i==selectionIndex)
+			{
+			message+="[";
+			message+=selectionOption[i];
+			message+="]\n";
+			}
+		else
+			{
+			message+=selectionOption[i];
+			message+="\n";
+			}
+		}
 	}
 

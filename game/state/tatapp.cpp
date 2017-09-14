@@ -42,6 +42,7 @@ TATAPP::~TATAPP()
 	grid=nullptr; // XXX Debug, wywalic
 	uiDialogNormal=nullptr;
 	uiDialogChoice=nullptr;
+	uiDialogBacklog=nullptr;
 	uiDialog=nullptr;
 	}
 
@@ -61,7 +62,17 @@ bool TATAPP::init(Engine::Core::Application *application)
 	// Gracz
 	player=new Player(application);
 
-	player->init(lvl, Engine::Math::Geometry::AABB(Engine::Math::AVector(0, 0, 0), Engine::Math::AVector(0.5f, 0.5f, 1.8f)), 1.7f);
+	const float PLAYER_COLLIDER_SIZE=0.5;
+	const float PLAYER_COLLIDER_HEIGHT=1.8;
+	const float PLAYER_EYE_HEIGHT=1.7;
+	player->init(lvl,
+			Engine::Math::Geometry::AABB(
+				Engine::Math::AVector(0, 0, PLAYER_COLLIDER_HEIGHT*0.5f),
+				Engine::Math::AVector(PLAYER_COLLIDER_SIZE, PLAYER_COLLIDER_SIZE, PLAYER_COLLIDER_HEIGHT)),
+			PLAYER_EYE_HEIGHT);
+
+	player->getDialog().setLevel(lvl);
+	player->getDialog().setPlayer(player);
 
 	// Przechwytywanie myszy
 	application->setGrabMouse(true);
@@ -98,7 +109,8 @@ bool TATAPP::initUI()
 
 	if(!atlas.addImage(BitmapPtr("image/ui_dialog_none.png")) ||
 	   !atlas.addImage(BitmapPtr("image/ui_dialog_normal.png")) ||
-	   !atlas.addImage(BitmapPtr("image/ui_dialog_choice.png")))
+	   !atlas.addImage(BitmapPtr("image/ui_dialog_choice.png")) ||
+	   !atlas.addImage(BitmapPtr("image/ui_dialog_backlog.png")))
 		{
 		LOG_ERROR("TATAPP.initUI: Nie udalo sie dodac rysunkow do atlasu");
 		return false;
@@ -112,6 +124,7 @@ bool TATAPP::initUI()
 	uiDialogNone=atlas.getImage(0u);
 	uiDialogNormal=atlas.getImage(1u);
 	uiDialogChoice=atlas.getImage(2u);
+	uiDialogBacklog=atlas.getImage(3u);
 
 	return true;
 	}
@@ -137,6 +150,10 @@ bool TATAPP::update(float dt)
 		else if(player->getDialog().getMode()==Dialog::Mode::DIALOG)
 			{
 			uiDialog=uiDialogNormal;
+			}
+		else if(player->getDialog().getMode()==Dialog::Mode::BACKLOG)
+			{
+			uiDialog=uiDialogBacklog;
 			}
 		else
 			{

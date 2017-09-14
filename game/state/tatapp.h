@@ -32,6 +32,7 @@ namespace Game
 				Engine::Graphics::ImagePtr uiDialogNone;
 				Engine::Graphics::ImagePtr uiDialogNormal;
 				Engine::Graphics::ImagePtr uiDialogChoice;
+				Engine::Graphics::ImagePtr uiDialogBacklog;
 				Engine::Graphics::ImagePtr uiDialog;
 				Engine::Graphics::UI::Text uiText;
 
