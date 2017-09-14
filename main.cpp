@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 		return __LINE__;
 		}
 
-	if(!Engine::Render::getInstance().init(1024, 768, "Tragedia Antyczna w Trzech Aktach Prozą Pisana", "image/icon.png", Engine::Render::FullScreenMode::WINDOWED))
+	if(!Engine::Render::getInstance().init(1024, 768, "Tragedia Antyczna w Trzech Aktach Prozą Pisana", "image/icon.png", Engine::Render::FullScreenMode::WINDOWED_FULLSCREEN))
 		{
 		return __LINE__;
 		}

@@ -174,7 +174,7 @@ void Dialog::update(float dt)
 
 	ready=true;
 
-	log.push_back(message);
+	log.push_back(std::string("[")+message+std::string("]"));
 	LOG_DEBUG("Dialog.update: [%s]", message.c_str());
 
 #undef CMD_PARAMS_REQ
@@ -199,14 +199,12 @@ void Dialog::next()
 	if(!ready)
 		return;
 
-	LOG_DEBUG("NEXT: %d", logIndex);
-
 	if(logIndex>0)
 		{
 		--logIndex;
 
-		message=log[log.size()-logIndex];
-		LOG_DEBUG("Dialog.next: LOG: \"%s\"", message.c_str());
+		message=log[log.size()-1-logIndex];
+		LOG_DEBUG("Dialog.next: NEXT: %d -> %d / %d; LOG: \"%s\"", logIndex+1, logIndex, log.size(), message.c_str());
 		}
 	else
 		{
@@ -230,12 +228,12 @@ void Dialog::previous()
 	if(logIndex>=(int)log.size())
 		{
 		LOG_DEBUG("PREVIOUS: OVERFLOW");
-		logIndex=log.size();
+		logIndex=log.size()-1;
 		return;
 		}
 
 	message=log[log.size()-1-logIndex];
-	LOG_DEBUG("Dialog.previous: LOG: \"%s\"", message.c_str());
+	LOG_DEBUG("Dialog.next: PREV: %d -> %d / %d; LOG: \"%s\"", logIndex-1, logIndex, log.size(), message.c_str());
 	}
 
 
