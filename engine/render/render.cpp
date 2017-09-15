@@ -324,7 +324,7 @@ void Render::update()
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 		}
-	else
+	else if(windowmode!=FullScreenMode::WINDOWED)
 		{
 		int bw, bh;
 		baseFBO.getSize(bw, bh);
@@ -363,6 +363,16 @@ void Render::update()
 			}
 
 		glBlitFramebuffer(0, 0, bw, bh, sx, sy, sw, sh,  GL_COLOR_BUFFER_BIT, GL_LINEAR); // <- blitowanie depth buffera powoduje INVALID_OPERATION
+		}
+	else
+		{
+		int bw, bh;
+		baseFBO.getSize(bw, bh);
+
+		int sw, sh;
+		getWindowSize(sw, sh);
+
+		glBlitFramebuffer(0, 0, bw, bh, 0, 0, bw, bh,  GL_COLOR_BUFFER_BIT, GL_NEAREST);
 		}
 
 //	const unsigned T1=SDL_GetTicks();
