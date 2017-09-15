@@ -9,11 +9,15 @@
 
 #include "npc.h"
 
+#include "engine/render/model.h"
+
 namespace Game
 	{
 	class NPCModel: public NPC
 		{
 		protected:
+			Engine::Render::Model model;
+
 			virtual bool load(const std::string& definition);
 
 		public:

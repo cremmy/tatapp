@@ -49,21 +49,21 @@ namespace Engine
 
 					virtual AVector getSupport(const AVector& gdir) const
 						{
-						const AVector dir=orientation.getMatrix()*gdir;
+						const AVector dir=AMatrixTranspose(orientation.getMatrix())*gdir;
 
 						if(dir.z>=0.0f)
 							{
 							if(dir.y>=0.0f)
 								{
 								if(dir.x>=0.0f)
-									return orientation.getPosition()+AMatrixTranspose(orientation.getMatrix())*AVector(hsize.x, hsize.y, hsize.z);
-								return orientation.getPosition()+AMatrixTranspose(orientation.getMatrix())*AVector(-hsize.x, hsize.y, hsize.z);
+									return orientation.getPosition()+(orientation.getMatrix())*AVector(hsize.x, hsize.y, hsize.z);
+								return orientation.getPosition()+(orientation.getMatrix())*AVector(-hsize.x, hsize.y, hsize.z);
 								}
 							else
 								{
 								if(dir.x>=0.0f)
-									return orientation.getPosition()+AMatrixTranspose(orientation.getMatrix())*AVector(hsize.x, -hsize.y, hsize.z);
-								return orientation.getPosition()+AMatrixTranspose(orientation.getMatrix())*AVector(-hsize.x, -hsize.y, hsize.z);
+									return orientation.getPosition()+(orientation.getMatrix())*AVector(hsize.x, -hsize.y, hsize.z);
+								return orientation.getPosition()+(orientation.getMatrix())*AVector(-hsize.x, -hsize.y, hsize.z);
 								}
 							}
 						else
@@ -71,14 +71,14 @@ namespace Engine
 							if(dir.y>=0.0f)
 								{
 								if(dir.x>=0.0f)
-									return orientation.getPosition()+AMatrixTranspose(orientation.getMatrix())*AVector(hsize.x, hsize.y, -hsize.z);
-								return orientation.getPosition()+AMatrixTranspose(orientation.getMatrix())*AVector(-hsize.x, hsize.y, -hsize.z);
+									return orientation.getPosition()+(orientation.getMatrix())*AVector(hsize.x, hsize.y, -hsize.z);
+								return orientation.getPosition()+(orientation.getMatrix())*AVector(-hsize.x, hsize.y, -hsize.z);
 								}
 							else
 								{
 								if(dir.x>=0.0f)
-									return orientation.getPosition()+AMatrixTranspose(orientation.getMatrix())*AVector(hsize.x, -hsize.y, -hsize.z);
-								return orientation.getPosition()+AMatrixTranspose(orientation.getMatrix())*AVector(-hsize.x, -hsize.y, -hsize.z);
+									return orientation.getPosition()+(orientation.getMatrix())*AVector(hsize.x, -hsize.y, -hsize.z);
+								return orientation.getPosition()+(orientation.getMatrix())*AVector(-hsize.x, -hsize.y, -hsize.z);
 								}
 							}
 						}

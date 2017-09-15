@@ -62,7 +62,7 @@ bool TATAPP::init(Engine::Core::Application *application)
 	// Gracz
 	player=new Player(application);
 
-	const float PLAYER_COLLIDER_SIZE=0.5;
+	const float PLAYER_COLLIDER_SIZE=0.6;
 	const float PLAYER_COLLIDER_HEIGHT=1.8;
 	const float PLAYER_EYE_HEIGHT=1.7;
 	player->init(lvl,

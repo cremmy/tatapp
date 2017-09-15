@@ -157,7 +157,7 @@ bool Level::init(const std::string& path)
 			LOG_DEBUG("Level.init: NPC \"%s\" ma skrypt \"%s\", poziom \"%s\"", npc->getName().c_str(), escript->Attribute("path"), path.c_str());
 			npc->setScript(escript->Attribute("path"));
 
-			if((std::string)enpc->Attribute("visible")!="1")
+			if(!escript->Attribute("enabled") || (std::string)escript->Attribute("enabled")!="1")
 				{
 				LOG_DEBUG("Level.init: NPC \"%s\" ma ustawiony, ale wylaczony skrypt, poziom \"%s\"", npc->getName().c_str(), path.c_str());
 				npc->setScriptEnabled(false);
@@ -191,58 +191,64 @@ void Level::print(float tinterp)
 
 	for(auto npc: npcs)
 		{
+		if(!npc->isVisible())
+			continue;
+
 		npc->print(tinterp);
 
-		/*auto col=npc->getCollider();
+		if(npc->isCollidable())
+			{
+			auto col=npc->getCollider();
 
-		const AVector cpos=col.getPosition();
-		const AVector csize=col.getHalfSize();
-		const AVector cu=col.getOrientation().getUp()*csize.y;
-		const AVector cr=col.getOrientation().getRight()*csize.x;
-		const AVector cf=col.getOrientation().getForward()*csize.z;
+			const AVector cpos=col.getPosition();
+			const AVector csize=col.getHalfSize();
+			const AVector cu=col.getOrientation().getUp()*csize.y;
+			const AVector cr=col.getOrientation().getRight()*csize.x;
+			const AVector cf=col.getOrientation().getForward()*csize.z;
 
-		Engine::Render::getInstance().drawPolygon(
-			{
-			cpos-cu-cr-cf,
-			cpos-cu+cr-cf,
-			cpos-cu+cr+cf,
-			cpos-cu-cr+cf,
-			}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));
-		Engine::Render::getInstance().drawPolygon(
-			{
-			cpos+cu-cr-cf,
-			cpos+cu+cr-cf,
-			cpos+cu+cr+cf,
-			cpos+cu-cr+cf,
-			}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));
-		Engine::Render::getInstance().drawPolygon(
-			{
-			cpos+cu-cr-cf,
-			cpos+cu+cr-cf,
-			cpos-cu+cr-cf,
-			cpos-cu-cr-cf,
-			}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));
-		Engine::Render::getInstance().drawPolygon(
-			{
-			cpos+cu-cr+cf,
-			cpos+cu+cr+cf,
-			cpos-cu+cr+cf,
-			cpos-cu-cr+cf,
-			}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));
-		Engine::Render::getInstance().drawPolygon(
-			{
-			cpos+cu-cr-cf,
-			cpos+cu-cr+cf,
-			cpos-cu-cr+cf,
-			cpos-cu-cr-cf,
-			}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));
-		Engine::Render::getInstance().drawPolygon(
-			{
-			cpos+cu+cr-cf,
-			cpos+cu+cr+cf,
-			cpos-cu+cr+cf,
-			cpos-cu+cr-cf,
-			}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));*/
+			Engine::Render::getInstance().drawPolygon(
+				{
+				cpos-cu-cr-cf,
+				cpos-cu+cr-cf,
+				cpos-cu+cr+cf,
+				cpos-cu-cr+cf,
+				}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));
+			Engine::Render::getInstance().drawPolygon(
+				{
+				cpos+cu-cr-cf,
+				cpos+cu+cr-cf,
+				cpos+cu+cr+cf,
+				cpos+cu-cr+cf,
+				}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));
+			Engine::Render::getInstance().drawPolygon(
+				{
+				cpos+cu-cr-cf,
+				cpos+cu+cr-cf,
+				cpos-cu+cr-cf,
+				cpos-cu-cr-cf,
+				}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));
+			Engine::Render::getInstance().drawPolygon(
+				{
+				cpos+cu-cr+cf,
+				cpos+cu+cr+cf,
+				cpos-cu+cr+cf,
+				cpos-cu-cr+cf,
+				}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));
+			Engine::Render::getInstance().drawPolygon(
+				{
+				cpos+cu-cr-cf,
+				cpos+cu-cr+cf,
+				cpos-cu-cr+cf,
+				cpos-cu-cr-cf,
+				}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));
+			Engine::Render::getInstance().drawPolygon(
+				{
+				cpos+cu+cr-cf,
+				cpos+cu+cr+cf,
+				cpos-cu+cr+cf,
+				cpos-cu+cr-cf,
+				}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));
+			}
 		}
 	}
 
@@ -276,7 +282,7 @@ NPC* Level::findNPCByRay(const Engine::Math::Geometry::Ray& ray)
 	using namespace Engine::Math;
 
 	const float MAX_RANGE=2.0f;
-	const int STEPS=10;
+	const int STEPS=20;
 
 	const float STEP=MAX_RANGE/STEPS;
 
@@ -288,6 +294,8 @@ NPC* Level::findNPCByRay(const Engine::Math::Geometry::Ray& ray)
 			{
 			if(!npc->isScriptEnabled() || !npc->isVisible())
 				continue;
+
+			//LOG_DEBUG("test %s", npc->getName().c_str());
 
 			if(Collision::test(npc->getCollider(), Geometry::Point(point)))
 				return npc;

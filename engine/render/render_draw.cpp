@@ -172,6 +172,7 @@ void Render::draw(const Math::Orientation& orientation, const FrameBuffer& fbo)
 
 void Render::draw(const Orientation& orientation, const Model& mdl)
 	{
+	statePush();
 	State& state=states.back();
 
 	if(!!mdl.getShader())
@@ -197,6 +198,7 @@ void Render::draw(const Orientation& orientation, const Model& mdl)
 	glDrawArrays(GL_TRIANGLES, 0, vbo.getSize());
 
 	vbo.unbind();
+	statePop();
 	}
 
 

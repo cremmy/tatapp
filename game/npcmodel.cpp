@@ -26,21 +26,31 @@ NPCModel::~NPCModel()
 
 bool NPCModel::load(const std::string& definition)
 	{
-	return false;
+	if(!model.load(definition))
+		{
+		return false;
+		}
+
+	return true;
 	}
 
 
 void NPCModel::update(float dt)
 	{
+	//model.update(dt); // lolz
+
 	NPC::update(dt);
 	}
 
 void NPCModel::print(float)
 	{
-	//
+	using namespace Engine;
+	using namespace Engine::Math;
+
+	Render::getInstance().draw(orientation, model);
 	}
 
 void NPCModel::clear()
 	{
-	//
+	model.clear();
 	}
