@@ -54,6 +54,13 @@ uniform Uniforms
 	mat4 projection;
 	} u;
 	
+uniform Light
+	{
+	vec3 ambient;
+	vec3 position;
+	vec3 color;
+	} l;
+	
 uniform Material
 	{
 	vec3 ambient;
@@ -73,9 +80,10 @@ out vec4 out_color;
 
 void main()
 	{
-	vec3 LDIR=-normalize(u.view*vec4(2, 1, -0.5, 0)).xyz;
+	vec3 LDIR=normalize(u.view*vec4(l.position, 1)).xyz;
 	out_color=texture(u_texture, i.uv)*vec4(m.diffuse, 1.0f)*u_color;//+vec4(m.ambient, 0.0f);
-	//out_color.rgb*=max(dot(LDIR, i.normal), 0.0f);
+	out_color.rgb*=max(dot(LDIR, i.normal), 0.0f);
+	out_color=vec4(i.normal, 1);
 	//out_color.rgb*=max(dot(LDIR, texture(u_normal, i.uv).rgb), 0.0f);
 	
 	//out_color.a=1;

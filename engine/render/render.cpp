@@ -64,7 +64,7 @@ void __attribute__((__stdcall__)) debugCallback(GLenum source, GLenum type, GLui
 Render* Render::instance;
 
 Render::Render(): window(nullptr), context(nullptr), windowmode(FullScreenMode::WINDOWED), vsync(true),
-	vboid(0u), uboid(0u), baseFBO(), baseShaderImage(nullptr), baseShaderPrimitive(nullptr),
+	vboid(0u), uboProjection(0u), uboLight(0u), baseFBO(), baseShaderImage(nullptr), baseShaderPrimitive(nullptr),
 	shaderPost(nullptr), textureLastIdx(0u), textures(), states()
 	{
 	states.reserve(8);
@@ -215,11 +215,20 @@ bool Render::init(int w, int h, const std::string& title, const std::string& ico
 
 	LOG_SUCCESS("Render.init: Udalo sie zainicjowac VBO");
 
-	glGenBuffers(1, &uboid);
+	glGenBuffers(1, &uboProjection);
 
-	if(!uboid)
+	if(!uboProjection)
 		{
-		LOG_ERROR("Render.init: Nie udalo sie zainicjowac UBO [GLid: %u]", uboid);
+		LOG_ERROR("Render.init: Nie udalo sie zainicjowac UBO (macierze) [GLid: %u]", uboProjection);
+		GL_ERROR();
+		return false;
+		}
+
+	glGenBuffers(1, &uboLight);
+
+	if(!uboLight)
+		{
+		LOG_ERROR("Render.init: Nie udalo sie zainicjowac UBO (swiatlo) [GLid: %u]", uboLight);
 		GL_ERROR();
 		return false;
 		}
@@ -276,7 +285,7 @@ bool Render::init(int w, int h, const std::string& title, const std::string& ico
 
 	states.push_back(State());
 
-	glBindBuffer(GL_UNIFORM_BUFFER, uboid);
+	glBindBuffer(GL_UNIFORM_BUFFER, uboProjection);
 	glBufferData(GL_UNIFORM_BUFFER, sizeof(CameraInfo), &states.back().caminfo, GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0u);
 	GL_ERROR();
@@ -399,10 +408,10 @@ void Render::clear()
 
 	vboid=0u;
 
-	if(uboid)
-		glDeleteBuffers(1, &uboid);
+	if(uboProjection)
+		glDeleteBuffers(1, &uboProjection);
 
-	uboid=0u;
+	uboProjection=0u;
 
 	baseFBO.clear();
 
@@ -557,7 +566,7 @@ void Render::statePop()
 	State& state=states[states.size()-2u];
 
 	// Kamera
-	glBindBuffer(GL_UNIFORM_BUFFER, uboid);
+	glBindBuffer(GL_UNIFORM_BUFFER, uboProjection);
 	glBufferData(GL_UNIFORM_BUFFER, sizeof(CameraInfo), &states.back().caminfo, GL_DYNAMIC_DRAW);
 
 	// FBO
@@ -653,7 +662,7 @@ void Render::setCamera(Camera& camera)
 	state.caminfo.projection[14]=mp[2][3];
 	state.caminfo.projection[15]=mp[3][3];
 
-	glBindBuffer(GL_UNIFORM_BUFFER, uboid);
+	glBindBuffer(GL_UNIFORM_BUFFER, uboProjection);
 	glBufferData(GL_UNIFORM_BUFFER, sizeof(CameraInfo), &state.caminfo, GL_DYNAMIC_DRAW);
 //	GLvoid* p=glMapBuffer(GL_UNIFORM_BUFFER, GL_WRITE_ONLY);
 //	memcpy(p, &states.back().caminfo, sizeof(CameraInfo));
@@ -673,7 +682,7 @@ void Render::moveCamera(const Math::AVector& move)
 	state.caminfo.view[13]-=move.x*state.caminfo.view[1]+move.y*state.caminfo.view[5]+move.z*state.caminfo.view[ 9];
 	state.caminfo.view[14]-=move.x*state.caminfo.view[2]+move.y*state.caminfo.view[6]+move.z*state.caminfo.view[10];
 
-	glBindBuffer(GL_UNIFORM_BUFFER, uboid);
+	glBindBuffer(GL_UNIFORM_BUFFER, uboProjection);
 	glBufferData(GL_UNIFORM_BUFFER, sizeof(CameraInfo), &states.back().caminfo, GL_DYNAMIC_DRAW);
 	}
 
@@ -720,18 +729,53 @@ void Render::setShader(const Shader* shader)
 
 	glUseProgram(shader->getProgramID());
 
-	GLuint ubidx=shader->getUniformBlock(SHADER_UNIFORM_BLOCK);
-
+	const GLuint ubidx=shader->getUniformBlock(SHADER_UNIFORM_PROJECTION_BLOCK);
 	if(ubidx!=GL_INVALID_INDEX)
 		{
 		glUniformBlockBinding(shader->getProgramID(), ubidx, 0u); // 0u -> jak wyżej
-		glBindBufferBase(GL_UNIFORM_BUFFER, 0u, uboid); // 0u -> indeks na którym bindowane jest UBO
+		glBindBufferBase(GL_UNIFORM_BUFFER, 0u, uboProjection); // 0u -> indeks na którym bindowane jest UBO
+		}
+
+	if(state.lightEnabled)
+		{
+		const GLuint ubidx=shader->getUniformBlock(SHADER_UNIFORM_LIGHT_BLOCK);
+		if(ubidx!=GL_INVALID_INDEX)
+			{
+			glUniformBlockBinding(shader->getProgramID(), ubidx, 1u); // 1u -> jak wyżej
+			glBindBufferBase(GL_UNIFORM_BUFFER, 1u, uboLight); // 1u -> indeks na którym bindowane jest UBO
+			}
 		}
 	}
 
 void Render::unsetShader()
 	{
 	setShader(baseShaderImage);
+	}
+
+void Render::setLight(const Math::AVector& ambient, const Math::AVector& position, const Math::AVector& color)
+	{
+	State& state=states.back();
+
+	state.lightEnabled=true;
+	state.lightInfo.ambient[0]=ambient[0];
+	state.lightInfo.ambient[1]=ambient[1];
+	state.lightInfo.ambient[2]=ambient[2];
+	state.lightInfo.position[0]=position[0];
+	state.lightInfo.position[1]=position[1];
+	state.lightInfo.position[2]=position[2];
+	state.lightInfo.color[0]=color[0];
+	state.lightInfo.color[1]=color[1];
+	state.lightInfo.color[2]=color[2];
+
+	glBindBuffer(GL_UNIFORM_BUFFER, uboLight);
+	glBufferData(GL_UNIFORM_BUFFER, sizeof(LightInfo), &state.lightInfo, GL_DYNAMIC_DRAW);
+	}
+
+void Render::unsetLight()
+	{
+	State& state=states.back();
+
+	state.lightEnabled=false;
 	}
 
 

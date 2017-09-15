@@ -179,6 +179,7 @@ bool TATAPP::print(float tinterp)
 	using namespace Engine::Math;
 
 	Engine::Render::getInstance().setCamera(cam);
+	Engine::Render::getInstance().setLight(AVector(1.0f, 0.95f, 0.87f)*0.2f, AVector(0, -100, 6), AVector(1, 1, 1)*0.8f);
 
 	Engine::Render::getInstance().drawLine(AVector(0, 0, 0), AVector(2, 0, 0), AVector(1, 0, 0, 1)); // XXX Debug, wywalic
 	Engine::Render::getInstance().drawLine(AVector(0, 0, 0), AVector(0, 2, 0), AVector(0, 1, 0, 1)); // XXX Debug, wywalic

@@ -191,8 +191,8 @@ void Render::draw(const Orientation& orientation, const Model& mdl)
 	GLuint ubidx=state.shader->getUniformBlock("Material");
 	if(ubidx!=GL_INVALID_INDEX)
 		{
-		glUniformBlockBinding(state.shader->getProgramID(), ubidx, 1u); // 1u -> jak wyżej
-		glBindBufferBase(GL_UNIFORM_BUFFER, 1u, mdl.getUBO()); // 1u -> indeks na którym bindowane jest UBO
+		glUniformBlockBinding(state.shader->getProgramID(), ubidx, 2u); // 2u -> jak wyżej
+		glBindBufferBase(GL_UNIFORM_BUFFER, 2u, mdl.getUBO()); // 2u -> indeks na którym bindowane jest UBO
 		}
 
 	glDrawArrays(GL_TRIANGLES, 0, vbo.getSize());

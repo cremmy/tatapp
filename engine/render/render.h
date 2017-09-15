@@ -66,16 +66,32 @@ namespace Engine
 					float projection[16];
 					};
 
+				struct LightInfo
+					{
+					LightInfo() {}
+					LightInfo(const LightInfo& li)  {memcpy(this, &li, sizeof(LightInfo));}
+
+					LightInfo& operator=(const LightInfo&& li)  {memcpy(this, &li, sizeof(LightInfo)); return *this;}
+
+					float ambient[3];
+					float position[3];
+					float color[3];
+					};
+
 				struct State
 					{
-					State(): caminfo(), fbo(nullptr), shader(nullptr), camera(nullptr), color(1, 1, 1, 1) {}
-					State(const State& s): caminfo(s.caminfo), fbo(s.fbo), shader(s.shader), camera(s.camera), color(s.color) {}
+					State(): caminfo(), fbo(nullptr), shader(nullptr), camera(nullptr), color(1, 1, 1, 1), lightEnabled(false), lightInfo() {}
+					State(const State& s): caminfo(s.caminfo), fbo(s.fbo), shader(s.shader), camera(s.camera), color(s.color), lightEnabled(s.lightEnabled), lightInfo(s.lightInfo) {}
 
 					CameraInfo caminfo;
 					FrameBuffer* fbo;
 					const Shader* shader;
 					const Camera* camera;
+
 					Math::AVector color;
+
+					bool lightEnabled;
+					LightInfo lightInfo;
 					};
 
 				// Okno
@@ -88,7 +104,8 @@ namespace Engine
 
 				// Bufory
 				GLuint vboid; // VBO dla rysowania rysunkow
-				GLuint uboid; // UBO (projekcia, widok)
+				GLuint uboProjection; // UBO (projekcja, widok)
+				GLuint uboLight; // UBO (projekcja, widok)
 
 				// Domyślne bufory, kamery, shadery i co tam jeszcze się może pojawić
 				FrameBuffer baseFBO;
@@ -150,6 +167,8 @@ namespace Engine
 				void unsetShader();
 				void setColor(const Math::AVector& s) {states.back().color=s;}
 				void unsetColor() {states.back().color=Math::AVector(1, 1, 1, 1);}
+				void setLight(const Math::AVector& ambient, const Math::AVector& position, const Math::AVector& color);
+				void unsetLight();
 
 				void setShaderEffect(const ShaderPtr& shader);
 				void unsetShaderEffect();
