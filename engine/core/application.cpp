@@ -276,6 +276,7 @@ bool Application::pushState(Base::ApplicationState* state)
 		LOG_ERROR("Application.pushState: Inicjalizacja nie powiodla sie, czyszczenie nowego stanu");
 
 		state->clear();
+		delete state;
 
 		LOG_WARNING("Application.pushState: Przywracanie poprzedniego stanu");
 

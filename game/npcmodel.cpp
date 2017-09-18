@@ -39,6 +39,9 @@ void NPCModel::update(float dt)
 	{
 	//model.update(dt); // lolz
 
+	//orientation.rotateRight(22.5f*dt);
+	//orientation.rotateUp(45.0f*dt);
+
 	NPC::update(dt);
 	}
 

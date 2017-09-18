@@ -50,6 +50,20 @@ bool TATAPP::init(Engine::Core::Application *application)
 	{
 	LOG_INFO("TATAPP.init: Startowanie gry...");
 
+	// Interfejs
+	if(!initUI())
+		{
+		LOG_ERROR("TATAPP.init: Nie udalo sie wczytac grafik interfejsu");
+		return false;
+		}
+
+	if(!uiText.init("font/font_00a.xml", "", uiDialogNone->getW()-2*UI_TEXT_MARGIN, uiDialogNone->getH()-2*UI_TEXT_MARGIN))
+		{
+		LOG_ERROR("TATAPP.init: Nie udalo sie wczytac czcionki");
+		LOG_WARNING("TATAPP.init: Z tego co mi wiadomo, 'czcionka' to pojedynczy znak. Zestaw czcionek nazywany jest 'fontem'.");
+		return false;
+		}
+
 	// Poziom
 	lvl=new Level();
 
@@ -76,19 +90,6 @@ bool TATAPP::init(Engine::Core::Application *application)
 
 	// Przechwytywanie myszy
 	application->setGrabMouse(true);
-
-	if(!initUI())
-		{
-		LOG_ERROR("TATAPP.init: Nie udalo sie wczytac grafik interfejsu");
-		return false;
-		}
-
-	if(!uiText.init("font/font_00a.xml", "", uiDialogNone->getW()-2*UI_TEXT_MARGIN, uiDialogNone->getH()-2*UI_TEXT_MARGIN))
-		{
-		LOG_ERROR("TATAPP.init: Nie udalo sie wczytac czcionki");
-		LOG_WARNING("TATAPP.init: Z tego co mi wiadomo, 'czcionka' to pojedynczy znak. Zestaw czcionek nazywany jest 'fontem'.");
-		return false;
-		}
 
 	LOG_SUCCESS("TATAPP.init: Gra uruchomiona");
 
@@ -179,7 +180,10 @@ bool TATAPP::print(float tinterp)
 	using namespace Engine::Math;
 
 	Engine::Render::getInstance().setCamera(cam);
-	Engine::Render::getInstance().setLight(AVector(1.0f, 0.95f, 0.87f)*0.2f, AVector(0, -100, 6), AVector(1, 1, 1)*0.8f);
+	Engine::Render::getInstance().setLight(
+		AVector(1.0f, 0.95f, 0.87f)*0.2f,
+		AVector(1, 1, -1),
+		AVector(1, 1, 1)*0.8f);
 
 	Engine::Render::getInstance().drawLine(AVector(0, 0, 0), AVector(2, 0, 0), AVector(1, 0, 0, 1)); // XXX Debug, wywalic
 	Engine::Render::getInstance().drawLine(AVector(0, 0, 0), AVector(0, 2, 0), AVector(0, 1, 0, 1)); // XXX Debug, wywalic
@@ -218,7 +222,7 @@ void TATAPP::clear()
 	//player->clear();
 	delete player;
 
-	LOG_SUCCESS("TATAPP.init: Pamiec zwolniona");
+	LOG_SUCCESS("TATAPP.clear: Pamiec zwolniona");
 	}
 
 void TATAPP::pause()

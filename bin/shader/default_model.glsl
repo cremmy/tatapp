@@ -25,6 +25,7 @@ uniform Material
 	
 out VertexData
 	{
+	vec3 position;
 	vec2 uv;
 	vec3 normal;
 	} o;
@@ -33,9 +34,9 @@ void main()
 	{
 	gl_Position=u.projection*u.view*u_model*vec4(in_position, 1.0f);
 	
+	o.position=(u.view*u_model*vec4(in_position, 1.0f)).xyz;
 	o.uv=in_uv;
-	//o.position=(u.view*u_model*vec4(in_position, 1.0f)).xyz;
-	o.normal=(u.view*u_model*vec4(in_normal, 0.0f)).xyz;
+	o.normal=normalize((u_model*vec4(in_normal, 0.0f)).xyz);
 	}
 
 /**** Fragment shader ****/
@@ -57,7 +58,7 @@ uniform Uniforms
 uniform Light
 	{
 	vec3 ambient;
-	vec3 position;
+	vec3 direction;
 	vec3 color;
 	} l;
 	
@@ -72,21 +73,41 @@ uniform Material
 	
 in VertexData
 	{
+	vec3 position;
 	vec2 uv;
 	vec3 normal;
 	} i;
 	
 out vec4 out_color;
 
+// http://shdr.bkcore.com/
+vec2 blinnPhongDir(vec3 lightDir, float lightInt, float Ka, float Kd, float Ks, float shininess)
+	{
+	vec3 s = normalize(lightDir);
+	vec3 v = normalize(-i.position);
+	vec3 n = normalize(i.normal);
+	vec3 h = normalize(v+s);
+	float diffuse = Ka + Kd * lightInt * max(0.0, dot(n, s));
+	float spec =  Ks * pow(max(0.0, dot(n,h)), shininess);
+	return vec2(diffuse, spec);
+	}
+
 void main()
 	{
-	vec3 LDIR=normalize(u.view*vec4(l.position, 1)).xyz;
-	out_color=texture(u_texture, i.uv)*vec4(m.diffuse, 1.0f)*u_color;//+vec4(m.ambient, 0.0f);
-	out_color.rgb*=max(dot(LDIR, i.normal), 0.0f);
-	out_color=vec4(i.normal, 1);
-	//out_color.rgb*=max(dot(LDIR, texture(u_normal, i.uv).rgb), 0.0f);
-	
-	//out_color.a=1;
+	out_color=/*texture(u_texture, i.uv)**/vec4(m.diffuse, 1.0f)*u_color;
+	//out_color+=vec4(m.ambient, 0);
+	//out_color+=vec4(l.ambient, 0);
+	out_color.rgb*=max(dot(vec4(l.direction, 0), vec4(i.normal, 0)), 0.2f);
+	vec2 bp=blinnPhongDir(
+		l.direction,
+		1.0,
+		1.0,
+		1.0,
+		1.0,
+		1.0
+		);
+	out_color*=bp.x*bp.y;
+	out_color.a=1;
 	
 	//if(out_color.a<1.0f/256.f)
 	//	discard;

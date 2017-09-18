@@ -752,7 +752,7 @@ void Render::unsetShader()
 	setShader(baseShaderImage);
 	}
 
-void Render::setLight(const Math::AVector& ambient, const Math::AVector& position, const Math::AVector& color)
+void Render::setLight(const Math::AVector& ambient, const Math::AVector& direction, const Math::AVector& color)
 	{
 	State& state=states.back();
 
@@ -760,9 +760,9 @@ void Render::setLight(const Math::AVector& ambient, const Math::AVector& positio
 	state.lightInfo.ambient[0]=ambient[0];
 	state.lightInfo.ambient[1]=ambient[1];
 	state.lightInfo.ambient[2]=ambient[2];
-	state.lightInfo.position[0]=position[0];
-	state.lightInfo.position[1]=position[1];
-	state.lightInfo.position[2]=position[2];
+	state.lightInfo.direction[0]=direction[0];
+	state.lightInfo.direction[1]=direction[1];
+	state.lightInfo.direction[2]=direction[2];
 	state.lightInfo.color[0]=color[0];
 	state.lightInfo.color[1]=color[1];
 	state.lightInfo.color[2]=color[2];

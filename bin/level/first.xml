@@ -3,15 +3,15 @@
 	<npc template="level/npc_testator.xml" visible="1">
 		<orientation
 			x="3" y="1" z="0"
-			rx="1" ry="1" rz="0"
+			rx="1" ry="0" rz="0"
 			ux="0" uy="0" uz="-1"
 			scale="0.01875" />
 		<script enabled="1" path="npc/testator.ini" />
 	</npc>
 	<npc template="level/npc_kostka.xml" visible="1">
 		<orientation
-			x="0" y="4" z="2.5"
-			rx="1" ry="2" rz="0"
+			x="0" y="4" z="3.5"
+			rx="1" ry="1" rz="0"
 			ux="0" uy="0" uz="1"
 			scale="0.015625" />
 		<script enabled="0" path="npc/testator.ini" />
