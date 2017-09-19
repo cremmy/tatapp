@@ -189,7 +189,7 @@ bool Model::load(const std::string& path)
 					tpath=path.substr(0, slpos+1)+pline[1];
 					}
 
-				material.texDiffuse=TexturePtr(tpath);
+				texDiffuse=TexturePtr(tpath);
 				}
 			else if(pline[0]=="map_bump")
 				{
@@ -213,7 +213,7 @@ bool Model::load(const std::string& path)
 					tpath=path.substr(0, slpos+1)+pline[1];
 					}
 
-				material.texNormal=TexturePtr(tpath);
+				texNormal=TexturePtr(tpath);
 				}
 			}
 
@@ -388,41 +388,41 @@ bool Model::load(const std::string& path)
 
 	auto loadModel=[this, &verts, &uvs, &normals, &faces]()->bool
 		{
-		/*LOG_DEBUG("Model.loadModel: Usrednianie normali");
-		std::vector<Math::AVector> normalAvg;
-		std::vector<int> normalAvgCount;
-
-		normalAvg.resize(verts.size());
-		normalAvgCount.resize(verts.size());
-
-		// Zerowanie
-		for(unsigned i=0u; i<normalAvgCount.size(); ++i)
-			{
-			normalAvgCount[i]=0;
-			}
-
-		auto normAvg=[normals](int vid, int nid, std::vector<Math::AVector>& normalAvg, std::vector<int>& normalAvgCount)
-			{
-			normalAvg[vid]+=normals[nid];
-			normalAvgCount[vid]++;
-			};
-
-		// Usrednianie normali
-		for(unsigned i=0u; i<faces.size(); ++i)
-			{
-			const Face& f=faces[i];
-
-			normAvg(f.av, f.an, normalAvg, normalAvgCount);
-			normAvg(f.bv, f.bn, normalAvg, normalAvgCount);
-			normAvg(f.cv, f.cn, normalAvg, normalAvgCount);
-			}
-
-		for(unsigned i=0u; i<normalAvg.size(); ++i)
-			{
-			normalAvg[i]=Math::AVectorNormalize(normalAvg[i]*1.0f/normalAvgCount[i]);
-			}
-
-		normalAvgCount.clear();*/
+//		LOG_DEBUG("Model.loadModel: Usrednianie normali");
+//		std::vector<Math::AVector> normalAvg;
+//		std::vector<int> normalAvgCount;
+//
+//		normalAvg.resize(verts.size());
+//		normalAvgCount.resize(verts.size());
+//
+//		// Zerowanie
+//		for(unsigned i=0u; i<normalAvgCount.size(); ++i)
+//			{
+//			normalAvgCount[i]=0;
+//			}
+//
+//		auto normAvg=[normals](int vid, int nid, std::vector<Math::AVector>& normalAvg, std::vector<int>& normalAvgCount)
+//			{
+//			normalAvg[vid]+=normals[nid];
+//			normalAvgCount[vid]++;
+//			};
+//
+//		// Usrednianie normali
+//		for(unsigned i=0u; i<faces.size(); ++i)
+//			{
+//			const Face& f=faces[i];
+//
+//			normAvg(f.av, f.an, normalAvg, normalAvgCount);
+//			normAvg(f.bv, f.bn, normalAvg, normalAvgCount);
+//			normAvg(f.cv, f.cn, normalAvg, normalAvgCount);
+//			}
+//
+//		for(unsigned i=0u; i<normalAvg.size(); ++i)
+//			{
+//			normalAvg[i]=Math::AVectorNormalize(normalAvg[i]*1.0f/normalAvgCount[i]);
+//			}
+//
+//		normalAvgCount.clear();
 
 		LOG_DEBUG("Model.loadModel: Wgrywanie trojkatow [faces %u]", faces.size());
 		// Wpisywanie modelu do VBO
@@ -430,13 +430,9 @@ bool Model::load(const std::string& path)
 			{
 			const Face& f=faces[i];
 
-			Vertex a;
-			Vertex b;
-			Vertex c;
-
-			a={verts[f.av].x, verts[f.av].y, verts[f.av].z, 0, 0, 0, 0, 0};
-			b={verts[f.bv].x, verts[f.bv].y, verts[f.bv].z, 0, 0, 0, 0, 0};
-			c={verts[f.cv].x, verts[f.cv].y, verts[f.cv].z, 0, 0, 0, 0, 0};
+			Vertex a(verts[f.av].x, verts[f.av].y, verts[f.av].z,  0, 0,  0, 0, 0,  0, 0, 0);
+			Vertex b(verts[f.bv].x, verts[f.bv].y, verts[f.bv].z,  0, 0,  0, 0, 0,  0, 0, 0);
+			Vertex c(verts[f.cv].x, verts[f.cv].y, verts[f.cv].z,  0, 0,  0, 0, 0,  0, 0, 0);
 
 			if(f.at<uvs.size() && f.bt<uvs.size() && f.ct<uvs.size())
 				{
@@ -467,6 +463,25 @@ bool Model::load(const std::string& path)
 			c.ny=normals[f.cn].y;
 			c.nz=normals[f.cn].z;
 
+			// Prostopadle do normali
+			const Math::AVector distab=verts[f.bv]-verts[f.av];
+			const Math::AVector distac=verts[f.cv]-verts[f.av];
+			const Math::AVector distUVab=uvs[f.bt]-uvs[f.at];
+			const Math::AVector distUVac=uvs[f.ct]-uvs[f.at];
+			const float R=1.0f/(distUVab.x*distUVac.y-distUVab.y*distUVac.x);
+			const Math::AVector tangent=(distab*distUVac.y-distac*distUVab.y)*R;
+
+			a.ntx=tangent.x;
+			a.nty=tangent.y;
+			a.ntz=tangent.z;
+			b.ntx=tangent.x;
+			b.nty=tangent.y;
+			b.ntz=tangent.z;
+			c.ntx=tangent.x;
+			c.nty=tangent.y;
+			c.ntz=tangent.z;
+
+			// Wpisanie do VBO
 			vbo.add(a);
 			vbo.add(b);
 			vbo.add(c);
@@ -510,10 +525,10 @@ bool Model::load(const std::string& path)
 	glBindBuffer(GL_UNIFORM_BUFFER, uboid);
 	glBufferData(GL_UNIFORM_BUFFER, sizeof(Material), &material, GL_DYNAMIC_DRAW);
 
-	if(material.texDiffuse)
-		shader.uniform("u_texture", material.texDiffuse);
-	if(material.texNormal)
-		shader.uniform("u_normal", material.texNormal);
+	if(texDiffuse)
+		shader.uniform("u_texture", texDiffuse);
+	if(texNormal)
+		shader.uniform("u_normal", texNormal);
 
 	LOG_SUCCESS("Model.load: Wczytano model \"%s\"", path.c_str());
 
@@ -524,6 +539,6 @@ void Model::clear()
 	{
 	vbo.clear();
 	shader=nullptr;
-	material.texDiffuse=nullptr;
-	material.texNormal=nullptr;
+	texDiffuse=nullptr;
+	texNormal=nullptr;
 	}

@@ -57,8 +57,8 @@ bool SpriteManager::isValid(Sprite& spr)
 		for(unsigned id=0u; id<(unsigned)Sprite::DirectionName::COUNT; ++id)
 			{
 			Sprite::DirectionName dn=(Sprite::DirectionName)id;
-			Sprite::DirectionName dnclosest=spr[ia].getDirectionClosestExisting(dn);
-
+//			Sprite::DirectionName dnclosest=spr[ia].getDirectionClosestExisting(dn);
+//
 //			LOG_DEBUG("SpriteManager.isValid:   | - Direction: %s (%s); FPS: %.2f; Loop: %u",
 //					Sprite::getDirectionName(dn).c_str(), Sprite::getDirectionName(dnclosest).c_str(), spr[ia][dn].getFramesPerSecond(), spr[ia][dn].getLoopFrameIndex());
 
@@ -67,13 +67,13 @@ bool SpriteManager::isValid(Sprite& spr)
 				atleastone=true;
 				}
 
-			for(unsigned i=0u; i<spr[ia][dn].getFrameCount(); ++i)
-				{
-				const Sprite::Frame& f=spr[ia][dn][i];
-
+//			for(unsigned i=0u; i<spr[ia][dn].getFrameCount(); ++i)
+//				{
+//				const Sprite::Frame& f=spr[ia][dn][i];
+//
 //				LOG_DEBUG("SpriteManager.isValid:   |   | - Frame: %u; [pos %u %u][size %u %u]",
 //					i, f.getImage()->getX(), f.getImage()->getY(), f.getImage()->getW(), f.getImage()->getH());
-				}
+//				}
 			}
 
 		if(!atleastone)

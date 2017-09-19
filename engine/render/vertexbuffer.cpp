@@ -141,9 +141,11 @@ void VertexBuffer::bind() const
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(3);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, x));
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tx));
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, nx));
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, ntx));
 	}
 
 void VertexBuffer::unbind() const
@@ -151,6 +153,7 @@ void VertexBuffer::unbind() const
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
+	glDisableVertexAttribArray(3);
 	}
 
 
@@ -175,10 +178,10 @@ bool VertexBuffer::draw(const Math::Orientation& orientation, const TexturePtr& 
 	const AVector v3=p+r*tptr->getW()-u*tptr->getH();
 	const AVector v4=p               -u*tptr->getH();
 
-	if(!add({v1.x, v1.y, v1.z, 0, 0}) ||
-	   !add({v2.x, v2.y, v2.z, 1, 0}) ||
-	   !add({v3.x, v3.y, v3.z, 1, 1}) ||
-	   !add({v4.x, v4.y, v4.z, 0, 1}))
+	if(!add(Vertex(v1.x, v1.y, v1.z, 0, 0)) ||
+	   !add(Vertex(v2.x, v2.y, v2.z, 1, 0)) ||
+	   !add(Vertex(v3.x, v3.y, v3.z, 1, 1)) ||
+	   !add(Vertex(v4.x, v4.y, v4.z, 0, 1)))
 		return false;
 	return true;
 	}
@@ -200,10 +203,10 @@ bool VertexBuffer::draw(const Math::Orientation& orientation, const TexturePtr& 
 	const float iw=tptr->getW();
 	const float ih=tptr->getH();
 
-	if(!add({v1.x, v1.y, v1.z,  x   /iw,  y   /ih}) ||
-	   !add({v2.x, v2.y, v2.z, (x+w)/iw,  y   /ih}) ||
-	   !add({v3.x, v3.y, v3.z, (x+w)/iw, (y+h)/ih}) ||
-	   !add({v4.x, v4.y, v4.z,  x   /iw, (y+h)/ih}))
+	if(!add(Vertex(v1.x, v1.y, v1.z,  x   /iw,  y   /ih)) ||
+	   !add(Vertex(v2.x, v2.y, v2.z, (x+w)/iw,  y   /ih)) ||
+	   !add(Vertex(v3.x, v3.y, v3.z, (x+w)/iw, (y+h)/ih)) ||
+	   !add(Vertex(v4.x, v4.y, v4.z,  x   /iw, (y+h)/ih)))
 		return false;
 	return true;
 	}

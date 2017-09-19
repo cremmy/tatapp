@@ -24,8 +24,8 @@ void Render::drawLine(const AVector& a, const AVector& b, const Math::AVector& c
 	statePush();
 
 	Vertex data[]={
-		{a.x, a.y, a.z,   0.0f, 0.0f},
-		{b.x, b.y, b.z,   1.0f, 1.0f}
+		Vertex(a.x, a.y, a.z,   0.0f, 0.0f),
+		Vertex(b.x, b.y, b.z,   1.0f, 1.0f)
 		};
 
 	glBindBuffer(GL_ARRAY_BUFFER, vboid);
@@ -66,7 +66,7 @@ void Render::drawPolygon(const std::vector<AVector>& vertices, const AVector& co
 	data.push_back({center.x, center.y, center.z, 0.0f, 0.0f});
 	for(auto vertex: vertices)
 		{
-		data.push_back({vertex.x, vertex.y, vertex.z, 0.0f, 0.0f});
+		data.push_back(Vertex(vertex.x, vertex.y, vertex.z, 0.0f, 0.0f));
 		}
 	data.push_back({vertices[0].x, vertices[0].y, vertices[0].z, 0.0f, 0.0f});
 
@@ -144,10 +144,10 @@ void Render::draw(const Math::Orientation& orientation, const FrameBuffer& fbo)
 
 	Vertex data[]=
 		{
-		{ 0,  0, 0,  0, 0},
-		{iw,  0, 0,  1, 0},
-		{iw,-ih, 0,  1, 1},
-		{ 0,-ih, 0,  0, 1},
+		Vertex( 0,  0, 0,  0, 0),
+		Vertex(iw,  0, 0,  1, 0),
+		Vertex(iw,-ih, 0,  1, 1),
+		Vertex( 0,-ih, 0,  0, 1),
 		};
 
 	bind(0u, fbo.getColorBuffer());
@@ -220,10 +220,10 @@ void Render::draw(const Orientation& orientation, const Texture& tex, float x, f
 
 	Vertex data[]=
 		{
-		{0, 0, 0,  x   /iw,  y   /ih},
-		{w, 0, 0, (x+w)/iw,  y   /ih},
-		{w,-h, 0, (x+w)/iw, (y+h)/ih},
-		{0,-h, 0,  x   /iw, (y+h)/ih},
+		Vertex(0, 0, 0,  x   /iw,  y   /ih),
+		Vertex(w, 0, 0, (x+w)/iw,  y   /ih),
+		Vertex(w,-h, 0, (x+w)/iw, (y+h)/ih),
+		Vertex(0,-h, 0,  x   /iw, (y+h)/ih),
 		};
 
 	bind(0u, tex.getTextureID());

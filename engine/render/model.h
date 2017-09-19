@@ -28,9 +28,6 @@ namespace Engine
 					float specular[4]; // Ks
 					float specularexp; // Ns
 					float transparency; // d
-
-					TexturePtr texDiffuse; // Tekstura koloru
-					TexturePtr texNormal;  // Normal mapa
 					};
 
 			protected:
@@ -38,6 +35,9 @@ namespace Engine
 				ShaderPtr shader;
 				GLuint uboid;
 				Material material;
+
+				TexturePtr texDiffuse; // Tekstura koloru
+				TexturePtr texNormal;  // Normal mapa
 
 			public:
 				Model();
