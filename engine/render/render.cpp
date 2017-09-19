@@ -274,8 +274,8 @@ bool Render::init(int w, int h, const std::string& title, const std::string& ico
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	//glClearColor(0.0f, 0.5f, 1.0f, 0.0f);
-	glClearColor(1, 1, 1, 0);
+	glClearColor(0.0f, 0.5f, 1.0f, 0.0f);
+	//glClearColor(1, 1, 1, 0);
 	//glClear();
 
 //	glEnableVertexAttribArray(0);

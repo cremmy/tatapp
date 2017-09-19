@@ -388,7 +388,7 @@ bool Model::load(const std::string& path)
 
 	auto loadModel=[this, &verts, &uvs, &normals, &faces]()->bool
 		{
-		LOG_DEBUG("Model.loadModel: Usrednianie normali");
+		/*LOG_DEBUG("Model.loadModel: Usrednianie normali");
 		std::vector<Math::AVector> normalAvg;
 		std::vector<int> normalAvgCount;
 
@@ -422,7 +422,7 @@ bool Model::load(const std::string& path)
 			normalAvg[i]=Math::AVectorNormalize(normalAvg[i]*1.0f/normalAvgCount[i]);
 			}
 
-		normalAvgCount.clear();
+		normalAvgCount.clear();*/
 
 		LOG_DEBUG("Model.loadModel: Wgrywanie trojkatow [faces %u]", faces.size());
 		// Wpisywanie modelu do VBO
@@ -448,24 +448,24 @@ bool Model::load(const std::string& path)
 				c.ty=uvs[f.ct].y;
 				}
 
-			a.nx=normalAvg[f.av].x;
-			a.ny=normalAvg[f.av].y;
-			a.nz=normalAvg[f.av].z;
-			b.nx=normalAvg[f.bv].x;
-			b.ny=normalAvg[f.bv].y;
-			b.nz=normalAvg[f.bv].z;
-			c.nx=normalAvg[f.cv].x;
-			c.ny=normalAvg[f.cv].y;
-			c.nz=normalAvg[f.cv].z;
-//			a.nx=normals[f.an].x;
-//			a.ny=normals[f.an].y;
-//			a.nz=normals[f.an].z;
-//			b.nx=normals[f.bn].x;
-//			b.ny=normals[f.bn].y;
-//			b.nz=normals[f.bn].z;
-//			c.nx=normals[f.cn].x;
-//			c.ny=normals[f.cn].y;
-//			c.nz=normals[f.cn].z;
+//			a.nx=normalAvg[f.av].x;
+//			a.ny=normalAvg[f.av].y;
+//			a.nz=normalAvg[f.av].z;
+//			b.nx=normalAvg[f.bv].x;
+//			b.ny=normalAvg[f.bv].y;
+//			b.nz=normalAvg[f.bv].z;
+//			c.nx=normalAvg[f.cv].x;
+//			c.ny=normalAvg[f.cv].y;
+//			c.nz=normalAvg[f.cv].z;
+			a.nx=normals[f.an].x;
+			a.ny=normals[f.an].y;
+			a.nz=normals[f.an].z;
+			b.nx=normals[f.bn].x;
+			b.ny=normals[f.bn].y;
+			b.nz=normals[f.bn].z;
+			c.nx=normals[f.cn].x;
+			c.ny=normals[f.cn].y;
+			c.nz=normals[f.cn].z;
 
 			vbo.add(a);
 			vbo.add(b);

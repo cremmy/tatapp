@@ -59,8 +59,8 @@ uniform Uniforms
 	
 uniform Light
 	{
-	vec4 direction;
-	vec4 color;
+	vec3 direction;
+	vec3 color;
 	} l;
 	
 uniform Material
@@ -86,13 +86,13 @@ void main()
 	{
 	out_color=vec4(0, 0, 0, 1);
 	// Ambient
-	out_color.rgb=m.ambient.rgb;
+	out_color.rgb+=m.ambient.rgb*m.diffuse.rgb;
 	// Diffuse
-	out_color.rgb+=m.diffuse*u_color.rgb*l.color.rgb*clamp(dot(l.direction.xyz, i.normal), 0.0, 1.0);
+	out_color.rgb+=m.diffuse*u_color.rgb*l.color.rgb*clamp(dot(l.direction.xyz, i.normal), -1.0, 1.0);
 	// Specular
-	//vec3 spec_reflection=reflect(-l.direction.xyz, i.normal);
-	//float spec_cosAlpha=clamp(dot(i.cam_direction, spec_reflection), 0.0, 1.0);
-	//out_color.rgb+=m.specular*pow(spec_cosAlpha, m.specularexp);
+	vec3 spec_reflection=reflect(-l.direction.xyz, i.normal);
+	float spec_cosAlpha=clamp(dot(i.cam_direction, spec_reflection), 0.0, 1.0);
+	out_color.rgb+=m.specular*pow(spec_cosAlpha, m.specularexp);
 	
 	//if(out_color.a<1.0f/256.f)
 	//	discard;

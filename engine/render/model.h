@@ -23,9 +23,9 @@ namespace Engine
 			public:
 				struct Material
 					{
-					float ambient[3]; // Ka
-					float diffuse[3]; // Kd
-					float specular[3]; // Ks
+					float ambient[4]; // Ka
+					float diffuse[4]; // Kd
+					float specular[4]; // Ks
 					float specularexp; // Ns
 					float transparency; // d
 
