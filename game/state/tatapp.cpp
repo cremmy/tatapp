@@ -181,9 +181,9 @@ bool TATAPP::print(float tinterp)
 
 	Engine::Render::getInstance().setCamera(cam);
 	Engine::Render::getInstance().setLight(
-		AVector(1.0f, 0.95f, 0.87f)*0.2f,
+		/*AVector(1.0f, 0.95f, 0.87f)*0.2f,*/
 		AVector(1, 1, -1),
-		AVector(1, 1, 1)*0.8f);
+		AVector(1, 1, 1));
 
 	Engine::Render::getInstance().drawLine(AVector(0, 0, 0), AVector(2, 0, 0), AVector(1, 0, 0, 1)); // XXX Debug, wywalic
 	Engine::Render::getInstance().drawLine(AVector(0, 0, 0), AVector(0, 2, 0), AVector(0, 1, 0, 1)); // XXX Debug, wywalic

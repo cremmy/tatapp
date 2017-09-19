@@ -73,9 +73,9 @@ namespace Engine
 
 					LightInfo& operator=(const LightInfo&& li)  {memcpy(this, &li, sizeof(LightInfo)); return *this;}
 
-					float ambient[3];
-					float direction[3];
-					float color[3];
+					/*float ambient[4];*/
+					float direction[4];
+					float color[4];
 					};
 
 				struct State
@@ -167,7 +167,7 @@ namespace Engine
 				void unsetShader();
 				void setColor(const Math::AVector& s) {states.back().color=s;}
 				void unsetColor() {states.back().color=Math::AVector(1, 1, 1, 1);}
-				void setLight(const Math::AVector& ambient, const Math::AVector& direction, const Math::AVector& color);
+				void setLight(/*const Math::AVector& ambient,*/ const Math::AVector& direction, const Math::AVector& color);
 				void unsetLight();
 
 				void setShaderEffect(const ShaderPtr& shader);

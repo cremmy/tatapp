@@ -66,6 +66,12 @@ bool VertexBuffer::finalize()
 	if(isFinalized())
 		return true;
 
+	if(vertices.size()<1u)
+		{
+		LOG_ERROR("VertexBuffer.finalize: Nie wgrano wierzcholkow");
+		return false;
+		}
+
 	GLenum err;
 	glGetError(); // Wyzeruj bledy OpenGL
 

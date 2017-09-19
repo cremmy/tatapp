@@ -28,6 +28,7 @@ out VertexData
 	vec3 position;
 	vec2 uv;
 	vec3 normal;
+	vec3 cam_direction;
 	} o;
 
 void main()
@@ -37,6 +38,7 @@ void main()
 	o.position=(u.view*u_model*vec4(in_position, 1.0f)).xyz;
 	o.uv=in_uv;
 	o.normal=normalize((u_model*vec4(in_normal, 0.0f)).xyz);
+	o.cam_direction=-normalize(o.position);
 	}
 
 /**** Fragment shader ****/
@@ -57,9 +59,8 @@ uniform Uniforms
 	
 uniform Light
 	{
-	vec3 ambient;
-	vec3 direction;
-	vec3 color;
+	vec4 direction;
+	vec4 color;
 	} l;
 	
 uniform Material
@@ -76,38 +77,22 @@ in VertexData
 	vec3 position;
 	vec2 uv;
 	vec3 normal;
+	vec3 cam_direction;
 	} i;
 	
 out vec4 out_color;
 
-// http://shdr.bkcore.com/
-vec2 blinnPhongDir(vec3 lightDir, float lightInt, float Ka, float Kd, float Ks, float shininess)
-	{
-	vec3 s = normalize(lightDir);
-	vec3 v = normalize(-i.position);
-	vec3 n = normalize(i.normal);
-	vec3 h = normalize(v+s);
-	float diffuse = Ka + Kd * lightInt * max(0.0, dot(n, s));
-	float spec =  Ks * pow(max(0.0, dot(n,h)), shininess);
-	return vec2(diffuse, spec);
-	}
-
 void main()
 	{
-	out_color=/*texture(u_texture, i.uv)**/vec4(m.diffuse, 1.0f)*u_color;
-	//out_color+=vec4(m.ambient, 0);
-	//out_color+=vec4(l.ambient, 0);
-	out_color.rgb*=max(dot(vec4(l.direction, 0), vec4(i.normal, 0)), 0.2f);
-	vec2 bp=blinnPhongDir(
-		l.direction,
-		1.0,
-		1.0,
-		1.0,
-		1.0,
-		1.0
-		);
-	out_color*=bp.x*bp.y;
-	out_color.a=1;
+	out_color=vec4(0, 0, 0, 1);
+	// Ambient
+	out_color.rgb=m.ambient.rgb;
+	// Diffuse
+	out_color.rgb+=m.diffuse*u_color.rgb*l.color.rgb*clamp(dot(l.direction.xyz, i.normal), 0.0, 1.0);
+	// Specular
+	//vec3 spec_reflection=reflect(-l.direction.xyz, i.normal);
+	//float spec_cosAlpha=clamp(dot(i.cam_direction, spec_reflection), 0.0, 1.0);
+	//out_color.rgb+=m.specular*pow(spec_cosAlpha, m.specularexp);
 	
 	//if(out_color.a<1.0f/256.f)
 	//	discard;

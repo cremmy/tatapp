@@ -18,7 +18,7 @@
 
 using namespace Engine::Render;
 
-Model::Model()/*: uboid(0u)*/
+Model::Model(): uboid(0u)
 	{
 	//
 	}
@@ -42,6 +42,29 @@ bool Model::load(const std::string& path)
 		LOG_ERROR("Model.load: Nie udalo sie wczytac shadera modelu");
 		return false;
 		}
+
+	struct Face
+		{
+		/*Face():
+			av(0), an(0), at(0),
+			bv(0), bn(0), bt(0),
+			cv(0), cn(0), ct(0) {}
+		Face(const Face& f)=default;*/
+
+		unsigned av, at, an;
+		unsigned bv, bt, bn;
+		unsigned cv, ct, cn;
+		};
+
+	std::vector<Math::AVector> verts;
+	std::vector<Math::AVector> uvs;
+	std::vector<Math::AVector> normals;
+	std::vector<Face> faces;
+
+	verts.reserve(1024);
+	uvs.reserve(1024);
+	normals.reserve(1024);
+	normals.reserve(256);
 
 	auto loadMtl=[this](const std::string& path)->bool
 		{
@@ -205,7 +228,7 @@ bool Model::load(const std::string& path)
 		return true;
 		};
 
-	auto loadObj=[this, loadMtl](const std::string& path)->bool
+	auto loadObj=[this, loadMtl, &verts, &uvs, &normals, &faces](const std::string& path)->bool
 		{
 		LOG_INFO("Model.loadObj: Wczytywanie modelu \"%s\"", path.c_str());
 
@@ -222,15 +245,6 @@ bool Model::load(const std::string& path)
 		Utils::StringParser pface("", "/", Utils::StringParser::DelimiterMode::EACH);
 
 		LOG_DEBUG("Model.loadObj: [lines: %u]", pfile.count());
-
-		std::vector<Math::AVector> verts;
-		verts.reserve(1024);
-
-		std::vector<Math::AVector> uvs;
-		uvs.reserve(1024);
-
-		std::vector<Math::AVector> normals;
-		normals.reserve(1024);
 
 		bool onceft=false;
 		bool oncefn=false;
@@ -331,10 +345,6 @@ bool Model::load(const std::string& path)
 				unsigned fct=pface.toInt(1)-1;
 				unsigned fcn=pface.toInt(2)-1;
 
-				Vertex a;
-				Vertex b;
-				Vertex c;
-
 				if(fav>=verts.size() || fbv>=verts.size() || fcv>=verts.size())
 					{
 					LOG_ERROR("Model.loadObj: Bledny lub niezdefiniowany indeks wierzcholka [\"%s\":%u]", path.c_str(), i);
@@ -342,10 +352,6 @@ bool Model::load(const std::string& path)
 					LOG_DEBUG("Model.loadObj: [verts %u][uvs %u][normals %u]", verts.size(), uvs.size(), normals.size());
 					return false;
 					}
-
-				a={verts[fav].x, verts[fav].y, verts[fav].z, 0, 0, 0, 0, 0};
-				b={verts[fbv].x, verts[fbv].y, verts[fbv].z, 0, 0, 0, 0, 0};
-				c={verts[fcv].x, verts[fcv].y, verts[fcv].z, 0, 0, 0, 0, 0};
 
 				if(fat>=uvs.size() || fbt>=uvs.size() || fct>=uvs.size())
 					{
@@ -356,15 +362,6 @@ bool Model::load(const std::string& path)
 						LOG_WARNING("Model.loadObj: \"%s\"", pline.get().c_str());
 						LOG_DEBUG("Model.loadObj: [verts %u][uvs %u][normals %u]", verts.size(), uvs.size(), normals.size());
 						}
-					}
-				else
-					{
-					a.tx=uvs[fat].x;
-					a.ty=uvs[fat].y;
-					b.tx=uvs[fbt].x;
-					b.ty=uvs[fbt].y;
-					c.tx=uvs[fct].x;
-					c.ty=uvs[fct].y;
 					}
 
 				if(fan>=normals.size() || fbn>=normals.size() || fcn>=normals.size())
@@ -377,22 +374,8 @@ bool Model::load(const std::string& path)
 						LOG_DEBUG("Model.loadObj: [verts %u][uvs %u][normals %u]", verts.size(), uvs.size(), normals.size());
 						}
 					}
-				else
-					{
-					a.nx=normals[fan].x;
-					a.ny=normals[fan].y;
-					a.nz=normals[fan].z;
-					b.nx=normals[fbn].x;
-					b.ny=normals[fbn].y;
-					b.nz=normals[fbn].z;
-					c.nx=normals[fcn].x;
-					c.ny=normals[fcn].y;
-					c.nz=normals[fcn].z;
-					}
 
-				vbo.add(a);
-				vbo.add(b);
-				vbo.add(c);
+				faces.push_back({fav, fat, fan, fbv, fbt, fbn, fcv, fct, fcn});
 				}
 			}
 
@@ -403,9 +386,106 @@ bool Model::load(const std::string& path)
 		return true;
 		};
 
+	auto loadModel=[this, &verts, &uvs, &normals, &faces]()->bool
+		{
+		LOG_DEBUG("Model.loadModel: Usrednianie normali");
+		std::vector<Math::AVector> normalAvg;
+		std::vector<int> normalAvgCount;
+
+		normalAvg.resize(verts.size());
+		normalAvgCount.resize(verts.size());
+
+		// Zerowanie
+		for(unsigned i=0u; i<normalAvgCount.size(); ++i)
+			{
+			normalAvgCount[i]=0;
+			}
+
+		auto normAvg=[normals](int vid, int nid, std::vector<Math::AVector>& normalAvg, std::vector<int>& normalAvgCount)
+			{
+			normalAvg[vid]+=normals[nid];
+			normalAvgCount[vid]++;
+			};
+
+		// Usrednianie normali
+		for(unsigned i=0u; i<faces.size(); ++i)
+			{
+			const Face& f=faces[i];
+
+			normAvg(f.av, f.an, normalAvg, normalAvgCount);
+			normAvg(f.bv, f.bn, normalAvg, normalAvgCount);
+			normAvg(f.cv, f.cn, normalAvg, normalAvgCount);
+			}
+
+		for(unsigned i=0u; i<normalAvg.size(); ++i)
+			{
+			normalAvg[i]=Math::AVectorNormalize(normalAvg[i]*1.0f/normalAvgCount[i]);
+			}
+
+		normalAvgCount.clear();
+
+		LOG_DEBUG("Model.loadModel: Wgrywanie trojkatow [faces %u]", faces.size());
+		// Wpisywanie modelu do VBO
+		for(unsigned i=0u; i<faces.size(); ++i)
+			{
+			const Face& f=faces[i];
+
+			Vertex a;
+			Vertex b;
+			Vertex c;
+
+			a={verts[f.av].x, verts[f.av].y, verts[f.av].z, 0, 0, 0, 0, 0};
+			b={verts[f.bv].x, verts[f.bv].y, verts[f.bv].z, 0, 0, 0, 0, 0};
+			c={verts[f.cv].x, verts[f.cv].y, verts[f.cv].z, 0, 0, 0, 0, 0};
+
+			if(f.at<uvs.size() && f.bt<uvs.size() && f.ct<uvs.size())
+				{
+				a.tx=uvs[f.at].x;
+				a.ty=uvs[f.at].y;
+				b.tx=uvs[f.bt].x;
+				b.ty=uvs[f.bt].y;
+				c.tx=uvs[f.ct].x;
+				c.ty=uvs[f.ct].y;
+				}
+
+			a.nx=normalAvg[f.av].x;
+			a.ny=normalAvg[f.av].y;
+			a.nz=normalAvg[f.av].z;
+			b.nx=normalAvg[f.bv].x;
+			b.ny=normalAvg[f.bv].y;
+			b.nz=normalAvg[f.bv].z;
+			c.nx=normalAvg[f.cv].x;
+			c.ny=normalAvg[f.cv].y;
+			c.nz=normalAvg[f.cv].z;
+//			a.nx=normals[f.an].x;
+//			a.ny=normals[f.an].y;
+//			a.nz=normals[f.an].z;
+//			b.nx=normals[f.bn].x;
+//			b.ny=normals[f.bn].y;
+//			b.nz=normals[f.bn].z;
+//			c.nx=normals[f.cn].x;
+//			c.ny=normals[f.cn].y;
+//			c.nz=normals[f.cn].z;
+
+			vbo.add(a);
+			vbo.add(b);
+			vbo.add(c);
+			}
+
+		return true;
+		};
+
 	if(!loadObj(path))
 		{
 		LOG_ERROR("Model.load: Nie udalo sie wczytac modelu \"%s\"", path.c_str());
+		return false;
+		}
+
+	LOG_DEBUG("Model.load: [verts %u][uvs %u][normals %u][faces %u]", verts.size(), uvs.size(), normals.size(), faces.size());
+
+	if(!loadModel())
+		{
+		LOG_ERROR("Model.load: Nie udalo sie wczytac modelu \"%s\" (plik .obj wczytany poprawnie)", path.c_str());
 		return false;
 		}
 
