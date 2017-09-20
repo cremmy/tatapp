@@ -13,7 +13,14 @@
 			x="0" y="4" z="1.5"
 			rx="1" ry="0" rz="0"
 			ux="0" uy="0" uz="1"
-			scale="1" />
+			scale="0.01875" />
 		<script enabled="0" path="npc/testator.ini" />
+	</npc>
+	<npc template="level/npc_suzanne.xml" visible="1">
+		<orientation
+			x="0" y="-4" z="1.5"
+			rx="1" ry="0" rz="0"
+			ux="0" uy="0" uz="1"
+			scale="1" />
 	</npc>
 </level>

@@ -22,6 +22,7 @@ out VertexData
 	vec3 normal;
 	vec3 tangent;
 	vec3 cam_direction;
+	mat3 TBN;
 	} o;
 
 void main()
@@ -33,6 +34,7 @@ void main()
 	o.normal=normalize((u_model*vec4(in_normal, 0.0f)).xyz);
 	o.tangent=normalize((u_model*vec4(in_tangent, 0.0f)).xyz);
 	o.cam_direction=-normalize(o.position);
+	o.TBN=(mat3(o.tangent, cross(o.normal, o.tangent), o.normal));
 	}
 
 /**** Fragment shader ****/
@@ -73,22 +75,24 @@ in VertexData
 	vec3 normal;
 	vec3 tangent;
 	vec3 cam_direction;
+	mat3 TBN;
 	} i;
 	
 out vec4 out_color;
 
 void main()
 	{
-	vec4 baseColor=vec4(m.diffuse.rgb, 1)*u_color;//*texture(u_texture, i.uv);
+	vec4 baseColor=vec4(m.diffuse.rgb, 1)*u_color*texture(u_texture, i.uv);
+	vec3 fNormal=texture(u_normal, i.uv).rgb*2.0-vec3(1, 1, 1);
 
 	// Ambient
 	out_color=vec4(m.ambient.rgb, m.transparency)*baseColor;
 	// Diffuse
-	out_color.rgb+=baseColor.rgb*l.color.rgb*clamp(dot(l.direction.xyz, i.normal), 0.0, 1.0);
+	out_color.rgb+=baseColor.rgb*l.color.rgb*clamp(dot(l.direction.xyz, fNormal), 0.0, 1.0);
 	// Specular
-	vec3 spec_reflection=reflect(-l.direction.xyz, i.normal);
+	vec3 spec_reflection=reflect(-l.direction.xyz, fNormal);
 	float spec_cosAlpha=max(dot(i.cam_direction, spec_reflection), 0.0);
-	out_color.rgb+=m.specular.rgb*pow(spec_cosAlpha, m.specularexp);
+	//out_color.rgb+=m.specular.rgb*pow(spec_cosAlpha, m.specularexp);
 	// Przezroczystosc
 	//out_color.a*=m.transparency;
 	

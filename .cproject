@@ -47,7 +47,6 @@
 									<listOptionValue builtIn="false" value="SDL2main"/>
 									<listOptionValue builtIn="false" value="SDL2"/>
 									<listOptionValue builtIn="false" value="SDL2_mixer"/>
-									<listOptionValue builtIn="false" value="SDL2_ttf"/>
 									<listOptionValue builtIn="false" value="SOIL"/>
 									<listOptionValue builtIn="false" value="glew32s"/>
 									<listOptionValue builtIn="false" value="opengl32"/>
@@ -119,7 +118,6 @@
 									<listOptionValue builtIn="false" value="glew32s"/>
 									<listOptionValue builtIn="false" value="opengl32"/>
 									<listOptionValue builtIn="false" value="glu32"/>
-									<listOptionValue builtIn="false" value="lua53"/>
 									<listOptionValue builtIn="false" value="tinyxml"/>
 									<listOptionValue builtIn="false" value="z"/>
 								</option>
