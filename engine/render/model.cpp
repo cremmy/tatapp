@@ -35,14 +35,6 @@ bool Model::load(const std::string& path)
 
 	LOG_INFO("Model.load: Wczytywanie \"%s\"", path.c_str());
 
-	shader=ShaderPtr(RENDER_DEFAULT_SHADER_MODEL);
-
-	if(!shader)
-		{
-		LOG_ERROR("Model.load: Nie udalo sie wczytac shadera modelu");
-		return false;
-		}
-
 	struct Face
 		{
 		/*Face():
@@ -191,7 +183,7 @@ bool Model::load(const std::string& path)
 
 				texDiffuse=TexturePtr(tpath);
 				}
-			else if(pline[0]=="map_bump")
+			else if(pline[0]=="map_Bump")
 				{
 				if(pline.count()<2)
 					{
@@ -214,6 +206,30 @@ bool Model::load(const std::string& path)
 					}
 
 				texNormal=TexturePtr(tpath);
+				}
+			else if(pline[0]=="shader")
+				{
+				if(pline.count()<2)
+					{
+					LOG_WARNING("Model.loadMtl: Za malo parametrow [\"%s\":%u]", path.c_str(), i);
+					LOG_WARNING("Model.loadMtl: \"%s\"", pline.get().c_str());
+					continue;
+					}
+
+
+				std::string spath;
+
+				auto slpos=path.rfind('/');
+				if(slpos==path.npos)
+					{
+					spath=pline[1];
+					}
+				else
+					{
+					spath=path.substr(0, slpos+1)+pline[1];
+					}
+
+				shader=ShaderPtr(spath);
 				}
 			}
 
@@ -469,7 +485,7 @@ bool Model::load(const std::string& path)
 			const Math::AVector distUVab=uvs[f.bt]-uvs[f.at];
 			const Math::AVector distUVac=uvs[f.ct]-uvs[f.at];
 			const float R=1.0f/(distUVab.x*distUVac.y-distUVab.y*distUVac.x);
-			const Math::AVector tangent=(distab*distUVac.y-distac*distUVab.y)*R;
+			const Math::AVector tangent=-(distab*distUVac.y-distac*distUVab.y)*R;
 
 			a.ntx=tangent.x;
 			a.nty=tangent.y;
@@ -507,6 +523,18 @@ bool Model::load(const std::string& path)
 	if(!vbo.finalize())
 		{
 		return false;
+		}
+
+	if(!shader)
+		{
+		LOG_WARNING("Model.load: Nie zdefiniowano shadera, wczytywanie domyslnego");
+		shader=ShaderPtr(RENDER_DEFAULT_SHADER_MODEL);
+
+		if(!shader)
+			{
+			LOG_ERROR("Model.load: Nie udalo sie wczytac shadera modelu");
+			return false;
+			}
 		}
 
 	LOG_INFO("Model.load: Inicjalizacja bufora materialu...");

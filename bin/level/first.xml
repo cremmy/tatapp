@@ -22,5 +22,11 @@
 			rx="1" ry="0" rz="0"
 			ux="0" uy="0" uz="1"
 			scale="1" />
+	</npc>	<npc template="level/npc_sphere.xml" visible="1">
+		<orientation
+			x="-3" y="0" z="0.5"
+			rx="1" ry="0" rz="0"
+			ux="0" uy="0" uz="1"
+			scale="1" />
 	</npc>
 </level>
