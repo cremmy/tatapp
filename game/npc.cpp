@@ -154,6 +154,8 @@ void NPC::update(float dt)
 		{
 		orientationTargetPercent+=dt/orientationTargetTime;
 
+		LOG_DEBUG("percent: %f", orientationTargetPercent);
+
 		if(orientationTargetPercent>1.0f)
 			{
 			orientationTargetPercent=1.0f;

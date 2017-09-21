@@ -42,5 +42,10 @@ void Orientation::lookAt(const AVector& target, float angle, float elevation, fl
 
 Orientation Orientation::interpolate(const Orientation& target, float p) const
 	{
-	return Orientation(AVectorLerp(position, target.position, p), AVectorSlerp(right, target.right, p), AVectorSlerp(up, target.up, p));
+	//return Orientation(AVectorLerp(position, target.position, p), AVectorSlerp(right, target.right, p), AVectorSlerp(up, target.up, p), scale*(1.0f-p)+target.scale*p);
+	const AVector nposition=AVectorLerp(position, target.position, p);
+	const AVector nright=AVectorSlerp(right, target.right, p);
+	const AVector nup=AVectorSlerp(up, target.up, p);
+	const float nscale=scale*(1.0f-p)+target.scale*p;
+	return Orientation(nposition, nright, nup, nscale);
 	}

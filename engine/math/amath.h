@@ -359,6 +359,10 @@ namespace Engine
 			{
 			const float DOTP=a|b;
 			const float THETA=acos(DOTP)*p;
+
+			if(THETA<0.0001f && THETA>-0.0001f)
+				return b;
+
 			return (a*cos(THETA)) + AVectorNormalize(b-a*DOTP)*sin(THETA);
 			}
 
