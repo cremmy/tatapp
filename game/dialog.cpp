@@ -375,6 +375,57 @@ void Dialog::update(float dt)
 
 			continue;
 			}
+		else if(cmdpars[0]=="roty")
+			{
+			CMD_PARAMS_REQ(3);
+
+			NPC* npc=lvl->findNPCByName(cmdpars[1]);
+
+			if(!npc)
+				{
+				LOG_ERROR("Dialog.update: Nie znaleziono NPC \"%s\"", cmdpars[1].c_str());
+				continue;
+				}
+
+			npc->setMovement(npc->getOrientation().getRotated(Engine::Math::AVector(0, 1, 0), cmdpars.toFloat(2)), cmdpars.toFloat(3));
+
+			continue;
+			}
+		else if(cmdpars[0]=="rotx")
+			{
+			CMD_PARAMS_REQ(3);
+
+			NPC* npc=lvl->findNPCByName(cmdpars[1]);
+
+			if(!npc)
+				{
+				LOG_ERROR("Dialog.update: Nie znaleziono NPC \"%s\"", cmdpars[1].c_str());
+				continue;
+				}
+
+			npc->setMovement(npc->getOrientation().getRotated(Engine::Math::AVector(1, 0, 0), cmdpars.toFloat(2)), cmdpars.toFloat(3));
+
+			continue;
+			}
+		else if(cmdpars[0]=="move")
+			{
+			// move testator.ini  -2 -2 1  0 0 1  90.0 4.0
+			CMD_PARAMS_REQ(9);
+
+			NPC* npc=lvl->findNPCByName(cmdpars[1]);
+
+			if(!npc)
+				{
+				LOG_ERROR("Dialog.update: Nie znaleziono NPC \"%s\"", cmdpars[1].c_str());
+				continue;
+				}
+
+			Engine::Math::Orientation target=npc->getOrientation();
+			target.rotate(Engine::Math::AVector(cmdpars.toFloat(4), cmdpars.toFloat(5), cmdpars.toFloat(6)));
+			//npc->setMovement(npc->getOrientation().getRotated(Engine::Math::AVector(1, 0, 0), cmdpars.toFloat(2)), cmdpars.toFloat(3));
+
+			continue;
+			}
 		}
 
 	ready=true;
