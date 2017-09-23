@@ -154,7 +154,7 @@ void NPC::update(float dt)
 		{
 		orientationTargetPercent+=dt/orientationTargetTime;
 
-		LOG_DEBUG("percent: %f", orientationTargetPercent);
+		//LOG_DEBUG("percent: %f", orientationTargetPercent);
 
 		if(orientationTargetPercent>1.0f)
 			{
@@ -177,6 +177,7 @@ void NPC::setMovement(const Engine::Math::Orientation& target, float time)
 	if(!isMovementFinished())
 		{
 		LOG_WARNING("NPC.serMovement: Ruch obiektu \"%s\" sie jeszcze nie zakonczyl", name.c_str());
+		orientation=orientationTarget;
 		}
 
 	orientationStart=orientation;

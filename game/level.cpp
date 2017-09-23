@@ -150,7 +150,7 @@ bool Level::init(const std::string& path)
 
 		if(!escript || !escript->Attribute("path"))
 			{
-			LOG_ERROR("Level.init: NPC \"%s\" nie ma zdefiniowanego skryptu, poziom \"%s\"", npc->getName().c_str(), path.c_str());
+			LOG_WARNING("Level.init: NPC \"%s\" nie ma zdefiniowanego skryptu, poziom \"%s\"", npc->getName().c_str(), path.c_str());
 			}
 		else
 			{

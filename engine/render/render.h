@@ -40,6 +40,12 @@ namespace Engine
 			FULLSCREEN,
 			};
 
+		enum class RenderMode
+			{
+			NORMAL,
+			GUI,
+			};
+
 		class FrameBuffer;
 		class Shader;
 		class Texture;
@@ -80,8 +86,8 @@ namespace Engine
 
 				struct State
 					{
-					State(): caminfo(), fbo(nullptr), shader(nullptr), camera(nullptr), color(1, 1, 1, 1), lightEnabled(false), lightInfo() {}
-					State(const State& s): caminfo(s.caminfo), fbo(s.fbo), shader(s.shader), camera(s.camera), color(s.color), lightEnabled(s.lightEnabled), lightInfo(s.lightInfo) {}
+					State(): caminfo(), fbo(nullptr), shader(nullptr), camera(nullptr), color(1, 1, 1, 1), lightEnabled(false), lightInfo(), rendermode(RenderMode::NORMAL) {}
+					State(const State& s): caminfo(s.caminfo), fbo(s.fbo), shader(s.shader), camera(s.camera), color(s.color), lightEnabled(s.lightEnabled), lightInfo(s.lightInfo), rendermode(s.rendermode) {}
 
 					CameraInfo caminfo;
 					FrameBuffer* fbo;
@@ -92,6 +98,8 @@ namespace Engine
 
 					bool lightEnabled;
 					LightInfo lightInfo;
+
+					RenderMode rendermode;
 					};
 
 				// Okno
@@ -109,8 +117,10 @@ namespace Engine
 
 				// Domyślne bufory, kamery, shadery i co tam jeszcze się może pojawić
 				FrameBuffer baseFBO;
+				FrameBuffer baseFBOui;
 				ShaderPtr baseShaderImage;
 				ShaderPtr baseShaderPrimitive;
+				Camera baseCamUi;
 
 				// Postprocessing
 				ShaderPtr shaderPost;
@@ -169,6 +179,8 @@ namespace Engine
 				void unsetColor() {states.back().color=Math::AVector(1, 1, 1, 1);}
 				void setLight(/*const Math::AVector& ambient,*/ const Math::AVector& direction, const Math::AVector& color);
 				void unsetLight();
+				void setDepthTest(bool enabled);
+				void setRenderMode(RenderMode mode);
 
 				void setShaderEffect(const ShaderPtr& shader);
 				void unsetShaderEffect();

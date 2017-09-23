@@ -242,6 +242,12 @@ bool Render::init(int w, int h, const std::string& title, const std::string& ico
 		return false;
 		}
 
+	if(!baseFBOui.init(w, h, FrameBuffer::FBO_RENDERBUFFER))
+		{
+		LOG_ERROR("Render.init: Nie udalo sie zainicjowac buforu interfejsu");
+		return false;
+		}
+
 	baseShaderImage=ShaderPtr(RENDER_DEFAULT_SHADER_IMAGE);
 
 	if(!baseShaderImage)
@@ -257,6 +263,8 @@ bool Render::init(int w, int h, const std::string& title, const std::string& ico
 		LOG_ERROR("Render.init: Nie udalo sie wczytac domyslnego shadera prymitywow (%s)", RENDER_DEFAULT_SHADER_PRIMITIVE);
 		return false;
 		}
+
+	baseCamUi.GUI(w, h);
 
 	/**** vSync ****/
 	if(SDL_GL_SetSwapInterval(1)!=0)
@@ -304,6 +312,7 @@ void Render::update()
 	//glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
 //	const unsigned T0=SDL_GetTicks();
+	// TODO ustandaryzpwac rysowanie buforow na ekran, uwzglednic, ze beda rysowane dwa
 	if(shaderPost)
 		{
 		const Vertex data[]=
@@ -332,6 +341,16 @@ void Render::update()
 
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
+
+		// GUI
+		int bw, bh;
+		baseFBOui.getSize(bw, bh);
+
+		int sw, sh;
+		getWindowSize(sw, sh);
+
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, baseFBOui.getFBO());
+		glBlitFramebuffer(0, 0, bw, bh, 0, 0, sw, sh,  GL_COLOR_BUFFER_BIT, GL_LINEAR);
 		}
 	else if(windowmode!=FullScreenMode::WINDOWED)
 		{
@@ -372,6 +391,9 @@ void Render::update()
 			}
 
 		glBlitFramebuffer(0, 0, bw, bh, sx, sy, sw, sh,  GL_COLOR_BUFFER_BIT, GL_LINEAR); // <- blitowanie depth buffera powoduje INVALID_OPERATION
+
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, baseFBOui.getFBO());
+		glBlitFramebuffer(0, 0, bw, bh, sx, sy, sw, sh,  GL_COLOR_BUFFER_BIT, GL_LINEAR);
 		}
 	else
 		{
@@ -382,6 +404,9 @@ void Render::update()
 		getWindowSize(sw, sh);
 
 		glBlitFramebuffer(0, 0, bw, bh, 0, 0, bw, bh,  GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, baseFBOui.getFBO());
+		glBlitFramebuffer(0, 0, bw, bh, 0, 0, sw, sh,  GL_COLOR_BUFFER_BIT, GL_LINEAR);
 		}
 
 //	const unsigned T1=SDL_GetTicks();
@@ -398,6 +423,7 @@ void Render::update()
 	unsetShader();
 	//unsetFrameBuffer();
 	unsetColor();
+	setFrameBuffer(baseFBOui, true);
 	setFrameBuffer(baseFBO, true);
 	}
 
@@ -568,6 +594,15 @@ void Render::statePop()
 	// Kamera
 	glBindBuffer(GL_UNIFORM_BUFFER, uboProjection);
 	glBufferData(GL_UNIFORM_BUFFER, sizeof(CameraInfo), &states.back().caminfo, GL_DYNAMIC_DRAW);
+
+	if(state.rendermode==RenderMode::NORMAL)
+		{
+		setDepthTest(true);
+		}
+	else
+		{
+		setDepthTest(true);
+		}
 
 	// FBO
 	//if(state.fbo) // Zawsze musi być Król Li-- framebuffer
@@ -779,6 +814,40 @@ void Render::unsetLight()
 	State& state=states.back();
 
 	state.lightEnabled=false;
+	}
+
+void Render::setDepthTest(bool enabled)
+	{
+	if(enabled)
+		glEnable(GL_DEPTH_TEST);
+	else
+		glDisable(GL_DEPTH_TEST);
+	}
+
+void Render::setRenderMode(RenderMode mode)
+	{
+	State& state=states.back();
+
+	if(state.rendermode==mode)
+		{
+		return;
+		}
+
+	state.rendermode=mode;
+
+	switch(mode)
+		{
+		case RenderMode::NORMAL:
+			unsetFrameBuffer();
+			setDepthTest(true);
+		break;
+
+		case RenderMode::GUI:
+			setCamera(baseCamUi);
+			setFrameBuffer(baseFBOui, false);
+			setDepthTest(false);
+		break;
+		}
 	}
 
 

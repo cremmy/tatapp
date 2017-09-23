@@ -86,7 +86,7 @@ namespace Engine
 					bool init(const std::string& font, const std::string& str, int w, int h, int line=-1, int space=-1, int tab=-1);
 					bool init();
 					void update();
-					void print(const Math::Orientation& orientation);
+					void print(const Math::Orientation& orientation) const;
 					void clear();
 
 					void setStr(const std::string& str);

@@ -8,6 +8,7 @@
 #pragma once
 
 #include "engine/base/applicationstate.h"
+#include "engine/core/appeventlistener.h"
 #include "engine/graphics/imageptr.h"
 #include "engine/graphics/ui/text.h"
 #include "engine/render/camera.h"
@@ -19,14 +20,14 @@ namespace Game
 
 	namespace State
 		{
-		class TATAPP: public Engine::Base::ApplicationState
+		class TATAPP: public Engine::Base::ApplicationState, public Engine::Core::AppEventListener
 			{
 			protected:
 				Level *lvl;
 				Player *player;
 
 				Engine::Render::Camera cam;
-				Engine::Render::Camera camUI;
+//				Engine::Render::Camera camUI;
 
 				float uiDialogAlpha;
 				Engine::Graphics::ImagePtr uiDialogNone;

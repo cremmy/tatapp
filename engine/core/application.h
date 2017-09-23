@@ -51,34 +51,8 @@ namespace Engine
 				bool pushState(Base::ApplicationState* state);
 				bool popState();
 
-				void addListener(AppEvent::Type type, AppEventListener& listener)
-					{
-#ifdef BUILD_DEBUG
-					if(listeners.find(type)!=listeners.end())
-						{
-						for(auto* l: listeners[type])
-							{
-							assert(l!=&listener);
-							}
-						}
-#endif
-
-					listeners[type].push_back(&listener);
-					}
-
-				void removeListener(AppEventListener& listener)
-					{
-					for(auto itt=listeners.begin(); itt!=listeners.end(); ++itt)
-						{
-						for(auto itl=itt->second.begin(); itl!=itt->second.end(); ++itl)
-							{
-							if(*itl==&listener)
-								continue;
-
-							itt->second.erase(itl--);
-							}
-						}
-					}
+				void addListener(AppEvent::Type type, AppEventListener& listener);
+				void removeListener(AppEventListener& listener);
 
 				void stop();
 

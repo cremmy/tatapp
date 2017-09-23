@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 
+#include "engine/math/orientation.h"
 #include "engine/math/geometry/aabb.h"
 #include "engine/math/geometry/ray.h"
 
@@ -22,6 +23,7 @@ namespace Game
 		{
 		protected:
 			std::vector<NPC*> npcs;
+			Engine::Math::Orientation startpos;
 
 		public:
 			Level();

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<npc name="materac" type="model">
+	<!--<collider z="0.25" w="0.5" d="0.5" h="0.5" />-->
+	<model>model/materac.obj</model>
+</npc>

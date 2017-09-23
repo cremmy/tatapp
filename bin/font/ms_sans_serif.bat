@@ -1,0 +1,1 @@
+font ms_sans_serif.png 512 168 16 24 > ms_sans_serif.xml

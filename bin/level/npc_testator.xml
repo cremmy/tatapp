@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<npc name="testator" type="sprite">
-	<collider z="0.9" w="0.5" d="1.8" h="0.5" />
-	<sprite>sprite/testator/testator.xml</sprite>
-</npc>

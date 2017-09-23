@@ -104,8 +104,8 @@ void Application::run()
 
 				case SDL_KEYDOWN:
 #ifdef BUILD_DEBUG
-					if(event.key.keysym.sym==SDLK_ESCAPE)
-						stop();
+					//if(event.key.keysym.sym==SDLK_ESCAPE)
+					//	stop();
 #endif
 					if(event.key.keysym.sym==SDLK_F4 && event.key.keysym.mod==KMOD_LALT)
 						stop();
@@ -324,6 +324,37 @@ bool Application::popState()
 	LOG_SUCCESS("Application.popState: Stan zdjety ze stosu");
 
 	return true;
+	}
+
+
+void Application::addListener(AppEvent::Type type, AppEventListener& listener)
+	{
+#ifdef BUILD_DEBUG
+	if(listeners.find(type)!=listeners.end())
+		{
+		for(auto* l: listeners[type])
+			{
+			assert(l!=&listener);
+			}
+		}
+#endif
+
+	listeners[type].push_back(&listener);
+	}
+
+void Application::removeListener(AppEventListener& listener)
+	{
+	for(auto itt=listeners.begin(); itt!=listeners.end(); ++itt)
+		{
+		for(auto itl=itt->second.begin(); itl!=itt->second.end(); ++itl)
+			{
+			if(*itl!=&listener)
+				continue;
+
+			LOG_DEBUG("Application.removeListener: Kasowanie listenera typu %d", (int)itt->first);
+			itt->second.erase(itl--);
+			}
+		}
 	}
 
 

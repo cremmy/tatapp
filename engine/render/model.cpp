@@ -525,6 +525,11 @@ bool Model::load(const std::string& path)
 		return false;
 		}
 
+	if(!texDiffuse)
+		{
+		shader=ShaderPtr("shader/default_model_no-texture.glsl");
+		}
+
 	if(!shader)
 		{
 		LOG_WARNING("Model.load: Nie zdefiniowano shadera, wczytywanie domyslnego");

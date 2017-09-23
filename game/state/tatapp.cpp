@@ -6,6 +6,8 @@
  */
 
 #include "tatapp.h"
+
+#include "ingamemenu.h"
 #include "../level.h"
 #include "../player.h"
 
@@ -20,7 +22,8 @@
 using namespace Game;
 using namespace Game::State;
 
-const int UI_TEXT_MARGIN=32;
+const int UI_TEXT_MARGIN_H=24;
+const int UI_TEXT_MARGIN_V=24;
 
 Engine::Graphics::ImagePtr grid;
 
@@ -30,9 +33,9 @@ TATAPP::TATAPP(): Engine::Base::ApplicationState(), lvl(nullptr), player(nullptr
 		Engine::Render::getInstance().getFrameBufferWidth(),
 		Engine::Render::getInstance().getFrameBufferHeight(),
 		0.25f, 1000.0f);
-	camUI.GUI(
-		Engine::Render::getInstance().getFrameBufferWidth(),
-		Engine::Render::getInstance().getFrameBufferHeight());
+//	camUI.GUI(
+//		Engine::Render::getInstance().getFrameBufferWidth(),
+//		Engine::Render::getInstance().getFrameBufferHeight());
 
 	grid=Engine::Graphics::ImagePtr("image/grid_gray.png"); // XXX Debug, wywalic
 	}
@@ -50,6 +53,8 @@ bool TATAPP::init(Engine::Core::Application *application)
 	{
 	LOG_INFO("TATAPP.init: Startowanie gry...");
 
+	this->application=application;
+
 	// Interfejs
 	if(!initUI())
 		{
@@ -57,7 +62,7 @@ bool TATAPP::init(Engine::Core::Application *application)
 		return false;
 		}
 
-	if(!uiText.init("font/font_00a.xml", "", uiDialogNone->getW()-2*UI_TEXT_MARGIN, uiDialogNone->getH()-2*UI_TEXT_MARGIN))
+	if(!uiText.init("font/dejavu.xml", "", uiDialogNone->getW()-2*UI_TEXT_MARGIN_H, uiDialogNone->getH()-2*UI_TEXT_MARGIN_V, -1, 4))
 		{
 		LOG_ERROR("TATAPP.init: Nie udalo sie wczytac czcionki");
 		LOG_WARNING("TATAPP.init: Z tego co mi wiadomo, 'czcionka' to pojedynczy znak. Zestaw czcionek nazywany jest 'fontem'.");
@@ -67,7 +72,7 @@ bool TATAPP::init(Engine::Core::Application *application)
 	// Poziom
 	lvl=new Level();
 
-	if(!lvl->init("level/first.xml"))
+	if(!lvl->init("level/room_01.xml"))
 		{
 		LOG_ERROR("TATAPP.init: Nie udalo sie wczytac poziomu");
 		return false;
@@ -89,6 +94,7 @@ bool TATAPP::init(Engine::Core::Application *application)
 	player->getDialog().setPlayer(player);
 
 	// Przechwytywanie myszy
+	resume();
 	application->setGrabMouse(true);
 
 	LOG_SUCCESS("TATAPP.init: Gra uruchomiona");
@@ -132,6 +138,19 @@ bool TATAPP::initUI()
 
 bool TATAPP::update(float dt)
 	{
+	Engine::Core::AppEvent e;
+
+	while(popEvent(e))
+		{
+		if(e.getType()!=Engine::Core::AppEvent::Type::KEY_UP)
+			continue;
+		if(e.data.keyboard.key!=SDLK_ESCAPE)
+			continue;
+
+		application->pushState(new IngameMenu());
+		return false;
+		}
+
 	lvl->update(dt);
 	player->update(dt);
 
@@ -166,6 +185,8 @@ bool TATAPP::update(float dt)
 		}
 	else
 		{
+		uiDialog=uiDialogNone;
+
 		if(uiDialogAlpha>0.0f)
 			uiDialogAlpha-=dt;
 		else
@@ -195,7 +216,9 @@ bool TATAPP::print(float tinterp)
 
 	if(uiDialogAlpha>0.0f)
 		{
-		Engine::Render::getInstance().setCamera(camUI);
+		Engine::Render::getInstance().statePush();
+		Engine::Render::getInstance().setRenderMode(Engine::Render::RenderMode::GUI);
+//		Engine::Render::getInstance().setCamera(camUI);
 		Engine::Render::getInstance().setColor(AVector(1, 1, 1, uiDialogAlpha));
 
 		const AVector UI_DIALOG_OFFSET(
@@ -203,8 +226,9 @@ bool TATAPP::print(float tinterp)
 			Engine::Render::getInstance().getFrameBufferHeight()-uiDialog->getH());
 
 		Engine::Render::getInstance().draw(Orientation::GUI+UI_DIALOG_OFFSET, uiDialog);
-		uiText.print(Orientation::GUI+UI_DIALOG_OFFSET+AVector(UI_TEXT_MARGIN, UI_TEXT_MARGIN, 0.1f));
+		uiText.print(Orientation::GUI+UI_DIALOG_OFFSET+AVector(UI_TEXT_MARGIN_H, UI_TEXT_MARGIN_V, 0.1f));
 		Engine::Render::getInstance().setColor(AVector(1, 1, 1, 1));
+		Engine::Render::getInstance().statePop();
 		}
 
 	return false;
@@ -215,6 +239,7 @@ void TATAPP::clear()
 	LOG_INFO("TATAPP.clear: Zwalnianie pamieci...");
 
 	application->setGrabMouse(false);
+	application->removeListener(*this);
 
 	lvl->clear();
 	delete lvl;
@@ -227,10 +252,12 @@ void TATAPP::clear()
 
 void TATAPP::pause()
 	{
-	application->setGrabMouse(false);
+	//application->setGrabMouse(false);
+	application->removeListener(*this);
 	}
 
 void TATAPP::resume()
 	{
-	application->setGrabMouse(true);
+	//application->setGrabMouse(true);
+	application->addListener(Engine::Core::AppEvent::Type::KEY_UP, *this);
 	}

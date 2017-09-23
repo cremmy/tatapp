@@ -144,6 +144,8 @@ SpritePtr SpriteManager::get(const std::string& path)
 		return SpritePtr(nullptr);
 		}
 
+	named[path]=spr;
+
 	LOG_SUCCESS("SpriteManager.get: Wczytano \"%s:%s\"", spr->getPath().c_str(), spr->getName().c_str());
 
 	return SpritePtr(spr);

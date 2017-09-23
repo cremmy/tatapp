@@ -290,6 +290,16 @@ void Dialog::update(float dt)
 
 			break;
 			}
+		else if(cmdpars[0]=="w8")
+			{
+			CMD_PARAMS_REQ(1);
+
+			ready=false;
+			waitTimer=cmdpars.toFloat(1);
+			++index;
+
+			return;
+			}
 /*****************************************************************************/
 		/** Tekst **/
 		else if(cmdpars[0]=="str")
@@ -420,11 +430,102 @@ void Dialog::update(float dt)
 				continue;
 				}
 
-			Engine::Math::Orientation target=npc->getOrientation();
-			target.rotate(Engine::Math::AVector(cmdpars.toFloat(4), cmdpars.toFloat(5), cmdpars.toFloat(6)));
-			//npc->setMovement(npc->getOrientation().getRotated(Engine::Math::AVector(1, 0, 0), cmdpars.toFloat(2)), cmdpars.toFloat(3));
+			if(cmdpars.count()>11)
+				{
+				// Orientacja
+				npc->setMovement(Engine::Math::Orientation(
+					Engine::Math::AVector(cmdpars.toFloat(2), cmdpars.toFloat(3), cmdpars.toFloat(4)),
+					Engine::Math::AVector(cmdpars.toFloat(5), cmdpars.toFloat(6), cmdpars.toFloat(7)),
+					Engine::Math::AVector(cmdpars.toFloat(8), cmdpars.toFloat(9), cmdpars.toFloat(10)),
+					(cmdpars.count()>12)?cmdpars.toFloat(12):1.0f
+					), cmdpars.toFloat(11));
+				}
+			else
+				{
+				// Oś i kąt obrotu
+				Engine::Math::Orientation target=npc->getOrientation();
+				target.rotate(Engine::Math::AVectorNormalize(Engine::Math::AVector(cmdpars.toFloat(5), cmdpars.toFloat(6), cmdpars.toFloat(7))), cmdpars.toFloat(8));
+				target.setPosition(Engine::Math::AVector(cmdpars.toFloat(2), cmdpars.toFloat(3), cmdpars.toFloat(4)));
+				if(cmdpars.count()>9)
+					{
+					target.setScale(cmdpars.toFloat(10));
+					}
+				npc->setMovement(target, cmdpars.toFloat(9));
+				}
 
 			continue;
+			}
+		else if(cmdpars[0]=="orientation")
+			{
+			// move testator.ini  -2 -2 1  1 0 0  0 0 1
+			CMD_PARAMS_REQ(10);
+
+			NPC* npc=lvl->findNPCByName(cmdpars[1]);
+
+			if(!npc)
+				{
+				LOG_ERROR("Dialog.update: Nie znaleziono NPC \"%s\"", cmdpars[1].c_str());
+				continue;
+				}
+
+			npc->setOrientation(Engine::Math::Orientation(
+				Engine::Math::AVector(cmdpars.toFloat(2), cmdpars.toFloat(3), cmdpars.toFloat(4)),
+				Engine::Math::AVector(cmdpars.toFloat(5), cmdpars.toFloat(6), cmdpars.toFloat(7)),
+				Engine::Math::AVector(cmdpars.toFloat(8), cmdpars.toFloat(9), cmdpars.toFloat(10))
+				));
+
+			continue;
+			}
+/*****************************************************************************/
+		/** Widoczność **/
+		else if(cmdpars[0]=="show")
+			{
+			CMD_PARAMS_REQ(1);
+
+			NPC* npc=lvl->findNPCByName(cmdpars[1]);
+
+			if(!npc)
+				{
+				LOG_ERROR("Dialog.update: Nie znaleziono NPC \"%s\"", cmdpars[1].c_str());
+				continue;
+				}
+
+			npc->setVisibility(true);
+			}
+		else if(cmdpars[0]=="hide")
+			{
+			CMD_PARAMS_REQ(1);
+
+			NPC* npc=lvl->findNPCByName(cmdpars[1]);
+
+			if(!npc)
+				{
+				LOG_ERROR("Dialog.update: Nie znaleziono NPC \"%s\"", cmdpars[1].c_str());
+				continue;
+				}
+
+			npc->setVisibility(false);
+			}
+/*****************************************************************************/
+		/** Inne **/
+		else if(cmdpars[0]=="lvl")
+			{
+			CMD_PARAMS_REQ(1);
+
+			if(!lvl->init(cmdpars[1]))
+				{
+				LOG_ERROR("Dialog.update: Ups, chyba zepsulem gre. Tehe~");
+				ready=true;
+				break;
+				}
+
+			//player->setPosition(Engine::Math::AVector());
+			}
+/*****************************************************************************/
+		/** Inne **/
+		else
+			{
+			LOG_ERROR("Dialog.update: Nieznana komenda \"%s\"", cmdpars[0].c_str());
 			}
 		}
 

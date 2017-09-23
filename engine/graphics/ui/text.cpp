@@ -42,6 +42,9 @@ bool Text::init(const std::string& font, const std::string& str, int w, int h, i
 	setFont(font);
 	setStr(str);
 
+	if(!this->font)
+		return false;
+
 	return init();
 	}
 
@@ -67,7 +70,7 @@ void Text::update()
 	print();
 	}
 
-void Text::print(const Orientation& orientation)
+void Text::print(const Orientation& orientation) const
 	{
 	Render::getInstance().draw(orientation, buff);
 	}
