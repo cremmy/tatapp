@@ -12,7 +12,9 @@
 #include "engine/math/orientation.h"
 #include "engine/math/geometry/aabb.h"
 
+#include "database.h"
 #include "dialog.h"
+#include "fade.h"
 #include "level.h"
 
 namespace Game
@@ -25,6 +27,9 @@ namespace Game
 
 			Level* lvl;
 			NPC* npcTarget;
+
+			Database db;
+			Fade fade;
 
 			Engine::Math::Geometry::AABB collider;
 			float eyeHeight;
@@ -51,7 +56,8 @@ namespace Game
 			const Engine::Math::Orientation getEyeOrientation() const {return orientation+Engine::Math::AVector(0, 0, eyeHeight);}
 			const NPC* getNPCTarget() const {return npcTarget;}
 			Dialog& getDialog() {return dialog;}
-			const Dialog& getDialog() const {return dialog;}
+			Database& getDatabase() {return db;}
+			Fade& getFade() {return fade;}
 
 		};
 

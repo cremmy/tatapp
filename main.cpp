@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
 
 	//Engine::Debug::Log::setLevel(Engine::Debug::Log::ALL);
 	//Engine::Debug::Log::setPrintLocation(true);
+	Engine::Debug::Log::setOut(fopen("log.txt", "a"));
 
 	LOG_INFO("Start");
 	LOG_INFO("Build %s %s", __DATE__, __TIME__);

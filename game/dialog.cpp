@@ -13,6 +13,7 @@
 #include "engine/utils/stringparser.h"
 #include "level.h"
 #include "npc.h"
+#include "player.h"
 
 using namespace Game;
 
@@ -505,6 +506,223 @@ void Dialog::update(float dt)
 				}
 
 			npc->setVisibility(false);
+			}
+/*****************************************************************************/
+		/** Fade **/
+		else if(cmdpars[0]=="fade")
+			{
+			if(cmdpars.count()==2)
+				{
+				player->getFade().set(1, cmdpars.toFloat(1));
+				}
+			else if(cmdpars.count()==3)
+				{
+				player->getFade().set(1, cmdpars[1], cmdpars.toFloat(2));
+				}
+			else if(cmdpars.count()==4)
+				{
+				player->getFade().set(1, cmdpars[1], cmdpars.toFloat(2), cmdpars.toFloat(3));
+				}
+			else
+				{
+				CMD_PARAMS_REQ(2);
+				}
+			}
+		else if(cmdpars[0]=="unfade")
+			{
+			player->getFade().set(1, nullptr, 0.0f, 0.0f);
+			}
+/*****************************************************************************/
+		/** Zmienne i baza danych **/
+		else if(cmdpars[0]=="save")
+			{
+			CMD_PARAMS_REQ(3);
+
+			if(cmdpars[1]=="val")
+				{
+				LOG_DEBUG("Dialog.update: \"set\": ustawianie \"%s\" na %d", cmdpars[2].c_str(), cmdpars.toInt(3));
+				player->getDatabase().setVal(cmdpars[2], cmdpars.toInt(3));
+				}
+			else
+				{
+				const std::string key=cmdpars[2];
+
+				cmdpars.remove(2);
+				cmdpars.remove(1);
+				cmdpars.remove(0);
+
+				player->getDatabase().setStr(key, cmdpars.get());
+				}
+			}
+		else if(cmdpars[0]=="if")
+			{
+			CMD_PARAMS_REQ(5);
+
+			if(cmdpars[1]=="val")
+				{
+				int dbv=player->getDatabase().getVal(cmdpars[2]);
+
+				if(cmdpars.count()==6)
+					{
+					if(dbv==cmdpars.toInt(3))
+						{
+						LOG_DEBUG("Dialog.update: \"if\": Porownywanie z \"%s\": %s==%d", cmdpars[2].c_str(), cmdpars[3].c_str(), dbv);
+						b=cmdpars.toInt(4);
+						index=-1;
+						continue;
+						}
+					else
+						{
+						LOG_DEBUG("Dialog.update: \"if\": Porownywanie z \"%s\": %s!=%d", cmdpars[2].c_str(), cmdpars[3].c_str(), dbv);
+						b=cmdpars.toInt(5);
+						index=-1;
+						continue;
+						}
+					}
+				else
+					{
+					int pv=cmdpars.toInt(3);
+
+					if(dbv<pv)
+						{
+						LOG_DEBUG("Dialog.update: \"if\": Porownywanie z \"%s\": %s<%d", cmdpars[2].c_str(), cmdpars[3].c_str(), dbv);
+						b=cmdpars.toInt(4);
+						index=-1;
+						continue;
+						}
+					else if(dbv==pv)
+						{
+						LOG_DEBUG("Dialog.update: \"if\": Porownywanie z \"%s\": %s==%d", cmdpars[2].c_str(), cmdpars[3].c_str(), dbv);
+						b=cmdpars.toInt(5);
+						index=-1;
+						continue;
+						}
+					else
+						{
+						LOG_DEBUG("Dialog.update: \"if\": Porownywanie z \"%s\": %s>%d", cmdpars[2].c_str(), cmdpars[3].c_str(), dbv);
+						b=cmdpars.toInt(6);
+						index=-1;
+						continue;
+						}
+					}
+				}
+			else
+				{
+				LOG_ERROR("Dialog.update: TODO \"if\": Porownywanie stringow");
+				}
+			}
+		else if(cmdpars[0]=="ifi")
+			{
+			if(cmdpars.count()<6)
+				{
+				LOG_ERROR("Dialog.update: Za malo argumentow do \"ifi\", oczekiwano 6/7, otrzymano %d", cmdpars.count());
+				continue;
+				}
+
+			if(cmdpars[1]=="val")
+				{
+				int dbv=player->getDatabase().getVal(cmdpars[2]);
+
+				if(cmdpars.count()==6)
+					{
+					if(dbv==cmdpars.toInt(3))
+						{
+						LOG_DEBUG("Dialog.update: \"ifi\": Porownywanie z \"%s\": %s==%d", cmdpars[2].c_str(), cmdpars[3].c_str(), dbv);
+						index=cmdpars.toInt(4)-1;
+						continue;
+						}
+					else
+						{
+						LOG_DEBUG("Dialog.update: \"ifi\": Porownywanie z \"%s\": %s!=%d", cmdpars[2].c_str(), cmdpars[3].c_str(), dbv);
+						index=cmdpars.toInt(5)-1;
+						continue;
+						}
+					}
+				else
+					{
+					int pv=cmdpars.toInt(3);
+
+					if(dbv<pv)
+						{
+						LOG_DEBUG("Dialog.update: \"ifi\": Porownywanie z \"%s\": %s<%d", cmdpars[2].c_str(), cmdpars[3].c_str(), dbv);
+						index=cmdpars.toInt(4)-1;
+						continue;
+						}
+					else if(dbv==pv)
+						{
+						LOG_DEBUG("Dialog.update: \"ifi\": Porownywanie z \"%s\": %s==%d", cmdpars[2].c_str(), cmdpars[3].c_str(), dbv);
+						index=cmdpars.toInt(5)-1;
+						continue;
+						}
+					else
+						{
+						LOG_DEBUG("Dialog.update: \"ifi\": Porownywanie z \"%s\": %s>%d", cmdpars[2].c_str(), cmdpars[3].c_str(), dbv);
+						index=cmdpars.toInt(6)-1;
+						continue;
+						}
+					}
+				}
+			else
+				{
+				LOG_ERROR("Dialog.update: TODO \"switch\": Porownywanie stringow");
+				}
+			}
+		else if(cmdpars[0]=="switch")
+			{
+			if(cmdpars.count()<6)
+				{
+				LOG_ERROR("Dialog.update: Za malo argumentow do \"ifi\", oczekiwano 6/7, otrzymano %d", cmdpars.count());
+				continue;
+				}
+
+			if(cmdpars[1]=="val")
+				{
+				int dbv=player->getDatabase().getVal(cmdpars[2]);
+
+				if(dbv<0 || dbv>(int)cmdpars.count()-3)
+					{
+					LOG_DEBUG("Dialog.update: \"switch\": Brak akcji dla wartosci %d (lub jest ona ujemna)", dbv);
+					continue;
+					}
+
+				LOG_DEBUG("Dialog.update: \"switch\": Akcja %d -> %d", dbv, cmdpars.toInt(dbv+3));
+
+				b=cmdpars.toInt(dbv+3);
+				index=index-1;
+				continue;
+				}
+			else
+				{
+				LOG_ERROR("Dialog.update: TODO \"switch\": Porownywanie stringow");
+				}
+			}
+		else if(cmdpars[0]=="switchi")
+			{
+			if(cmdpars.count()<6)
+				{
+				LOG_ERROR("Dialog.update: Za malo argumentow do \"switchi\", oczekiwano 6/7, otrzymano %d", cmdpars.count());
+				continue;
+				}
+
+			if(cmdpars[1]=="val")
+				{
+				int dbv=player->getDatabase().getVal(cmdpars[2]);
+
+				if(dbv<0 || dbv>(int)cmdpars.count()-3)
+					{
+					LOG_DEBUG("Dialog.update: \"switchi\": Brak akcji dla wartosci %d (lub jest ona ujemna)", dbv);
+					continue;
+					}
+
+				LOG_DEBUG("Dialog.update: \"switchi\": Akcja %d -> %d", dbv, cmdpars.toInt(dbv)-3);
+
+				index=cmdpars.toInt(dbv-3)-1;
+				continue;
+				}
+			else
+				{
+				LOG_ERROR("Dialog.update: TODO \"switchi\": Porownywanie stringow");
+				}
 			}
 /*****************************************************************************/
 		/** Inne **/

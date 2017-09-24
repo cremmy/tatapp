@@ -45,6 +45,9 @@ void Player::init(Level* lvl, const AABB& collider, float eyeHeight)
 	this->eyeHeight=eyeHeight;
 
 	orientation.lookAt(AVector(10, 20, -eyeHeight), AVector(0, 0, 0), AVector(0, 0, 1));
+
+	fade.init();
+	fade.addCache(Engine::Graphics::ImagePtr("image/fade.png"));
 	}
 
 void Player::update(float dt)
@@ -52,6 +55,7 @@ void Player::update(float dt)
 	speed=AVector(0, 0, 0);
 
 	handleEvents();
+	fade.update(dt);
 
 	if(dialogCooldown>0.0f)
 		{
@@ -261,4 +265,6 @@ void Player::print(float /*tinterp*/)
 		cpos-cu+cr+cf,
 		cpos-cu-cr+cf,
 		}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));*/
+
+	fade.print();
 	}

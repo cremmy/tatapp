@@ -58,6 +58,8 @@ void Fade::print()
 	//Engine::Render::pushState();
 	//Engine::Render::setMode(Engine::Render::MODE_GUI);
 
+	bool once=false;
+
 	//for(auto lay: layers)
 	for(std::vector<Layer*>::reverse_iterator it=layers.rbegin(); it!=layers.rend(); ++it)
 		{
@@ -70,8 +72,21 @@ void Fade::print()
 		if(!lay->image)
 			continue;
 
+		if(!once)
+			{
+			Render::getInstance().statePush();
+			Render::getInstance().setRenderMode(Render::RenderMode::GUI);
+			once=true;
+			}
+
 		Render::getInstance().setColor(AVector(1, 1, 1, lay->alpha));
 		Render::getInstance().draw(Orientation::GUI, lay->image);
+		}
+
+	if(once)
+		{
+		//Render::getInstance().setRenderMode(Render::RenderMode::NORMAL);
+		Render::getInstance().statePop();
 		}
 
 	//Engine::Render::popState();
@@ -138,6 +153,11 @@ void Fade::set(unsigned layer, float targetalpha, float alpha)
 		LOG_INFO("Fade.set: Alokacja warstwy (%u)", layer);
 
 		layers[layer]=new Layer();
+		}
+
+	if(!layers[layer]->image && cache.size()>0u)
+		{
+		layers[layer]->image=cache[0];
 		}
 
 	if(alpha>=0.0f)

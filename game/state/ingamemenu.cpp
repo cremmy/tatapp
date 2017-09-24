@@ -22,6 +22,8 @@ enum class Actions
 //	VOLUME_SOUND,
 //	VOLUME_MUSIC,
 	EXIT,
+	EXIT_NO,
+	EXIT_YES,
 	};
 
 IngameMenu::IngameMenu()
@@ -49,7 +51,11 @@ bool IngameMenu::init(Engine::Core::Application *application)
 //	menu.getRootLayer()->addOption( new Menu::Option((int)Actions::VOLUME_SOUND, Menu::Type::VALUE, "Muzyka") );
 //		menu.getOptionByTag((int)Actions::VOLUME_SOUND)->initValue(0.0f, 100.0f, 1.0f);
 //		//menu.getOptionByTag((int)Actions::VOLUME_SOUND)->setVal(Sound::getGlobalSoundVolume()*100.0f);
-	menu.getRootLayer()->addOption( new Menu::Option((int)Actions::EXIT, Menu::Type::ACTION, "Wyj\x9C""cie") );
+	menu.getRootLayer()->addOption( new Menu::Option((int)Actions::EXIT, Menu::Type::ENTER, "Wyj\x9C""cie") );
+	menu.getOptionByTag((int)Actions::EXIT)->initSubLayer( new Menu::Layer());
+	menu.getOptionByTag((int)Actions::EXIT)->getSubLayer()->addOption( new Menu::Option((int)Actions::EXIT_NO, Menu::Type::RETURN, "Powr\xF3t"));
+	menu.getOptionByTag((int)Actions::EXIT)->getSubLayer()->addOption( new Menu::Option((int)Actions::EXIT_YES, Menu::Type::ACTION, "Wyj\x9C""cie"));
+
 
 	camUI.GUI(
 		Engine::Render::getInstance().getFrameBufferWidth(),
@@ -98,7 +104,7 @@ bool IngameMenu::update(float dt)
 //			break;
 
 			default:
-			case (int)Actions::EXIT:
+			case (int)Actions::EXIT_YES:
 				application->stop(); // To tez moze byc ryzykowne
 				//return false; // Bez przesady
 			break;
@@ -129,22 +135,25 @@ bool IngameMenu::update(float dt)
 	return false;
 	}
 
-bool IngameMenu::print(float /*tinterp*/)
+void IngameMenu::print(float /*tinterp*/)
 	{
 	using namespace Engine::Math;
 
-	Engine::Render::getInstance().setCamera(camUI);
-	Engine::Render::getInstance().setColor(AVector(1, 1, 1, 1));
+	Engine::Render::getInstance().statePush();
+	Engine::Render::getInstance().setRenderMode(Engine::Render::RenderMode::GUI);
+	Engine::Render::getInstance().setColor(AVector(1, 1, 1, 0.75));
 /*	Engine::Render::getInstance().drawPolygon({
 		AVector(RW*0.25f, 0),
 		AVector(RW*0.25f, RH),
 		AVector(RW*0.75f, RH),
 		AVector(RW*0.75f, 0)
 		}, AVector(0.8, 0.8, 0.8, 1), AVector(0.8, 0.8, 0.8, 1));*/
-	Engine::Render::getInstance().draw(Orientation::GUI+AVector(0, 0, -0.1), background);
+	Engine::Render::getInstance().draw(Orientation::GUI, background);
+	Engine::Render::getInstance().setColor(AVector(1, 1, 1, 1));
 	menu.getText().print(Orientation::GUI);
+	Engine::Render::getInstance().statePop();
 
-	return false;
+	//return true;
 	}
 
 void IngameMenu::clear()

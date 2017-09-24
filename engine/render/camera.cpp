@@ -56,6 +56,20 @@ bool Camera::GUI(float width, float height)
 	return true;
 	}
 
+bool Camera::postprocess()
+	{
+	this->type=Type::POSTPROCESS;
+	this->fov=0.0f;
+	this->scale=1.0f;
+	this->width=2.0f;
+	this->height=2.0f;
+	this->cutnear=-1.0f;
+	this->cutfar=1.0f;
+
+	updateProjectionMatrix();
+	return true;
+	}
+
 void Camera::updateProjectionMatrix()
 	{
 	using namespace Math;
@@ -95,7 +109,6 @@ void Camera::updateProjectionMatrix()
 			}
 		break;
 
-		default:
 		case Type::GUI:
 			{
 			const float R=width;
@@ -114,6 +127,11 @@ void Camera::updateProjectionMatrix()
 					);
 			}
 		break;
+
+		default:
+		case Type::POSTPROCESS:
+			this->projection=AMatrixIdentity();
+		break;
 		}
 	}
 
@@ -123,7 +141,7 @@ void Camera::updateViewMatrix() const
 
 	needupdate=false;
 
-	if(type==Type::GUI)
+	if(type==Type::GUI || type==Type::POSTPROCESS)
 		{
 		this->view=AMatrix(
 				AVector(1, 0, 0, 0),

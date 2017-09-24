@@ -121,6 +121,7 @@ namespace Engine
 				ShaderPtr baseShaderImage;
 				ShaderPtr baseShaderPrimitive;
 				Camera baseCamUi;
+				bool blitui;
 
 				// Postprocessing
 				ShaderPtr shaderPost;

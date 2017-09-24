@@ -31,7 +31,8 @@ namespace Game
 
 				virtual bool init(Engine::Core::Application *application);
 				virtual bool update(float dt);
-				virtual bool print(float tinterp);
+				virtual void print(float tinterp);
+				virtual bool isOverlay() const {return true;}
 				virtual void clear();
 				virtual void pause();
 				virtual void resume();

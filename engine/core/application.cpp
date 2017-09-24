@@ -198,10 +198,24 @@ void Application::run()
 		const unsigned PRINT_TIME_START=SDL_GetTicks();
 		tmpprintcount++;
 
-		for(auto it=states.rbegin(); it!=states.rend(); ++it)
+		/*for(auto it=states.rbegin(); it!=states.rend(); ++it)
 			{
 			if(!(*it)->print((accumulator%LOOP_UPDATE_DELAY)/1000.0F))
 				break;
+			}*/
+
+		int count=0;
+		for(auto it=states.rbegin(); it!=states.rend(); ++it)
+			{
+			if(!(*it)->isOverlay())
+				break;
+
+			++count;
+			}
+
+		for(auto it=states.begin()+states.size()-1-count; it!=states.end(); ++it)
+			{
+			(*it)->print((accumulator%LOOP_UPDATE_DELAY)/1000.0F);
 			}
 
 		tmpprinttime+=SDL_GetTicks()-PRINT_TIME_START;

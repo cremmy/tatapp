@@ -64,7 +64,7 @@ void __attribute__((__stdcall__)) debugCallback(GLenum source, GLenum type, GLui
 Render* Render::instance;
 
 Render::Render(): window(nullptr), context(nullptr), windowmode(FullScreenMode::WINDOWED), vsync(true),
-	vboid(0u), uboProjection(0u), uboLight(0u), baseFBO(), baseShaderImage(nullptr), baseShaderPrimitive(nullptr),
+	vboid(0u), uboProjection(0u), uboLight(0u), baseFBO(), baseShaderImage(nullptr), baseShaderPrimitive(nullptr), blitui(false),
 	shaderPost(nullptr), textureLastIdx(0u), textures(), states()
 	{
 	states.reserve(8);
@@ -130,6 +130,8 @@ bool Render::init(int w, int h, const std::string& title, const std::string& ico
 		LOG_ERROR("Render.init: Nie udalo sie utworzyc okna: %s", SDL_GetError());
 		return false;
 		}
+
+	this->windowmode=mode;
 
 	LOG_SUCCESS("Render.init: Utworzono okno");
 	LOG_DEBUG("Render.init: Wybrany sterownik: %s", SDL_GetCurrentVideoDriver());
@@ -201,6 +203,9 @@ bool Render::init(int w, int h, const std::string& title, const std::string& ico
 	glEnable(GL_DEBUG_OUTPUT);
 	glDebugMessageCallback(debugCallback, nullptr);
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	/**** Bufory ****/
 	LOG_INFO("Render.init: Inicjalizacja buforow...");
 
@@ -242,7 +247,7 @@ bool Render::init(int w, int h, const std::string& title, const std::string& ico
 		return false;
 		}
 
-	if(!baseFBOui.init(w, h, FrameBuffer::FBO_RENDERBUFFER))
+	if(!baseFBOui.init(w, h, FrameBuffer::FBO_COLOR_BUFFER))
 		{
 		LOG_ERROR("Render.init: Nie udalo sie zainicjowac buforu interfejsu");
 		return false;
@@ -264,6 +269,7 @@ bool Render::init(int w, int h, const std::string& title, const std::string& ico
 		return false;
 		}
 
+	//baseCamUi.postprocess();
 	baseCamUi.GUI(w, h);
 
 	/**** vSync ****/
@@ -279,11 +285,8 @@ bool Render::init(int w, int h, const std::string& title, const std::string& ico
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	glClearColor(0.0f, 0.5f, 1.0f, 0.0f);
-	//glClearColor(1, 1, 1, 0);
+	//glClearColor(0.0f, 0.5f, 1.0f, 0.0f);
+	glClearColor(1, 1, 1, 0);
 	//glClear();
 
 //	glEnableVertexAttribArray(0);
@@ -308,110 +311,119 @@ bool Render::init(int w, int h, const std::string& title, const std::string& ico
 void Render::update()
 	{
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0u);
-	glBindFramebuffer(GL_READ_FRAMEBUFFER, baseFBO.getFBO());
-	//glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
 //	const unsigned T0=SDL_GetTicks();
-	// TODO ustandaryzpwac rysowanie buforow na ekran, uwzglednic, ze beda rysowane dwa
-	if(shaderPost)
+	// Wyrysowanie buforow na ekran
+	int bw, bh;
+	baseFBO.getSize(bw, bh);
+
+	int sx=0;
+	int sy=0;
+	int sw, sh;
+	getWindowSize(sw, sh);
+
+	const float ASPECT=bw/(float)bh;
+	const float SCALE_W=sw/bw;
+	const float SCALE_H=sh/bh;
+
+	if(windowmode==FullScreenMode::WINDOWED)
 		{
-		const Vertex data[]=
-			{
-			{-1, -1, 0,   0, 0},
-			{-1,  1, 0,   0, 1},
-			{ 1,  1, 0,   1, 1},
-			{ 1, -1, 0,   1, 0}
-			};
-
-		glBindBuffer(GL_ARRAY_BUFFER, vboid);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STREAM_DRAW);
-
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, x));
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tx));
-
-		setShader(shaderPost);
-		shaderPost.setUniforms();
-
-		glUniform1i(shaderPost->getUniform("time"), SDL_GetTicks());
-
-		bind(0u, baseFBO.getColorBuffer());
-		glDrawArrays(GL_QUADS, 0, 4);
-
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
-
-		// GUI
-		int bw, bh;
-		baseFBOui.getSize(bw, bh);
-
-		int sw, sh;
-		getWindowSize(sw, sh);
-
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, baseFBOui.getFBO());
-		glBlitFramebuffer(0, 0, bw, bh, 0, 0, sw, sh,  GL_COLOR_BUFFER_BIT, GL_LINEAR);
+		//sx=0;
+		//sy=0;
+		sw=bw;
+		sh=bh;
 		}
-	else if(windowmode!=FullScreenMode::WINDOWED)
+	// 1920x1200 vs 1024x768
+	// SCALE_W = 1.8750
+	// SCALE_H = 1.5625
+	else if(SCALE_W>=SCALE_H)
 		{
-		int bw, bh;
-		baseFBO.getSize(bw, bh);
-
-		int sx=0;
-		int sy=0;
-		int sw, sh;
-		getWindowSize(sw, sh);
-
-		const float ASPECT=bw/(float)bh;
-		const float SCALE_W=sw/bw;
-		const float SCALE_H=sh/bh;
-
-		// 1920x1200 vs 1024x768
-		// SCALE_W = 1.8750
-		// SCALE_H = 1.5625
-		if(SCALE_W>=SCALE_H)
-			{
-			// Czarne paski po bokach
-			//int nh=sh;              // 1200
-			const int nw=ceil(sh*ASPECT); // 1600
-			sx=(sw-nw)/2;
-			sy=0;
-			sw=nw;
-			//sh=nh;
-			}
-		else
-			{
-			// Czarne paski u gory i dolu
-			//int nw=sw;
-			const int nh=floor(sw/ASPECT);
-			sx=0;
-			sy=(sh-nh)/2;
-			//sw=nw;
-			sh=nh;
-			}
-
-		glBlitFramebuffer(0, 0, bw, bh, sx, sy, sw, sh,  GL_COLOR_BUFFER_BIT, GL_LINEAR); // <- blitowanie depth buffera powoduje INVALID_OPERATION
-
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, baseFBOui.getFBO());
-		glBlitFramebuffer(0, 0, bw, bh, sx, sy, sw, sh,  GL_COLOR_BUFFER_BIT, GL_LINEAR);
+		// Czarne paski po bokach
+		//int nh=sh;              // 1200
+		const int nw=ceil(sh*ASPECT); // 1600
+		sx=(sw-nw)/2;
+		sy=0;
+		sw=nw;
+		//sh=nh;
 		}
 	else
 		{
-		int bw, bh;
-		baseFBO.getSize(bw, bh);
-
-		int sw, sh;
-		getWindowSize(sw, sh);
-
-		glBlitFramebuffer(0, 0, bw, bh, 0, 0, bw, bh,  GL_COLOR_BUFFER_BIT, GL_NEAREST);
-
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, baseFBOui.getFBO());
-		glBlitFramebuffer(0, 0, bw, bh, 0, 0, sw, sh,  GL_COLOR_BUFFER_BIT, GL_LINEAR);
+		// Czarne paski u gory i dolu
+		//int nw=sw;
+		const int nh=floor(sw/ASPECT);
+		sx=0;
+		sy=(sh-nh)/2;
+		//sw=nw;
+		sh=nh;
 		}
+
+	const float OX=(float)bw/sw;
+	const float OY=(float)bh/sh;
+
+	State& state=states.back();
+
+	const Math::AVector color(1, 1, 1, 1);
+	const Math::AMatrix mmodel=Math::AMatrixIdentity();
+	const Vertex data[]=
+		{
+		Vertex(-OX, -OY, 0,   0, 0),
+		Vertex(-OX,  OY, 0,   0, 1),
+		Vertex( OX,  OY, 0,   1, 1),
+		Vertex( OX, -OY, 0,   1, 0)
+		};
+
+	Camera campp;
+	campp.postprocess();
+	setCamera(campp);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vboid);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STREAM_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, x));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tx));
+
+	//setDepthTest(false);
+
+	if(shaderPost)
+		{
+		setShader(shaderPost);
+		glUniform1i(shaderPost->getUniform("time"), SDL_GetTicks());
+		glUniformMatrix4fv(state.shader->getUniform(SHADER_UNIFORM_MODEL_MATRIX), 1, GL_TRUE, &mmodel.row[0].x);
+		glUniform4fv(state.shader->getUniform(SHADER_UNIFORM_COLOR), 1, &color.x);
+
+		bind(0u, baseFBO.getColorBuffer());
+		glDrawArrays(GL_QUADS, 0, 4);
+		}
+	else
+		{
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, baseFBO.getFBO());
+		glBlitFramebuffer(0, 0, bw, bh, sx, sy, sw, sh,  GL_COLOR_BUFFER_BIT, GL_LINEAR); // <- blitowanie depth buffera powoduje INVALID_OPERATION
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, states.front().fbo->getFBO());
+		}
+
+	if(blitui)
+		{
+		setShader(baseShaderImage);
+		glUniformMatrix4fv(state.shader->getUniform(SHADER_UNIFORM_MODEL_MATRIX), 1, GL_TRUE, &mmodel.row[0].x);
+		glUniform4fv(state.shader->getUniform(SHADER_UNIFORM_COLOR), 1, &color.x);
+
+		//glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+		bind(0u, baseFBOui.getColorBuffer());
+		glDrawArrays(GL_QUADS, 0, 4);
+		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		}
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	//setDepthTest(true);
 
 //	const unsigned T1=SDL_GetTicks();
 
 	SDL_GL_SwapWindow(window);
+	glClear(GL_COLOR_BUFFER_BIT);
 
 //	const unsigned T2=SDL_GetTicks();
 
@@ -423,8 +435,15 @@ void Render::update()
 	unsetShader();
 	//unsetFrameBuffer();
 	unsetColor();
-	setFrameBuffer(baseFBOui, true);
+
+	if(blitui)
+		{
+		setFrameBuffer(baseFBOui, true);
+		blitui=false;
+		}
+
 	setFrameBuffer(baseFBO, true);
+	setDepthTest(true);
 	}
 
 void Render::clear()
@@ -732,6 +751,10 @@ void Render::setFrameBuffer(FrameBuffer& fbo, bool clear)
 
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo.getFBO());
 		glViewport(0, 0, fbo.getWidth(), fbo.getHeight());
+		glEnable(GL_BLEND);
+		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+		// ^ Używając wcześniejszej funkcji (GL_ONE_MINUS_nanana) wyrysowanie rysunku z alfą nad rysunkiem bez niej powodowało nadpisanie alfy.
 		}
 
 	if(clear)
@@ -843,6 +866,7 @@ void Render::setRenderMode(RenderMode mode)
 		break;
 
 		case RenderMode::GUI:
+			blitui=true;
 			setCamera(baseCamUi);
 			setFrameBuffer(baseFBOui, false);
 			setDepthTest(false);

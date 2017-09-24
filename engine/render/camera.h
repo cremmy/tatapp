@@ -21,6 +21,7 @@ namespace Engine
 					PERSPECTIVE,
 					ORTHOGRAPHIC,
 					GUI,
+					POSTPROCESS,
 					};
 
 			protected:
@@ -53,6 +54,7 @@ namespace Engine
 				bool perspective(float width, float height, float cutnear=1.0, float cutfar=1000.0f, float fov=60.0f);
 				bool ortho(float width, float height, float cutnear=0.0, float cutfar=1000.0f);
 				bool GUI(float width, float height);
+				bool postprocess();
 
 				Math::AVector getPosition() const {return orientation.getPosition();}
 				Math::AVector getRight() const {return orientation.getRight();}

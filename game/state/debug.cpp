@@ -124,7 +124,7 @@ bool Debug::update(float dt)
 	return false; // nie, nie aktualizuj stanów poniżej
 	}
 
-bool Debug::print(float tinterp)
+void Debug::print(float tinterp)
 	{
 	using namespace Engine::Math;
 	using namespace Local;
@@ -138,7 +138,7 @@ bool Debug::print(float tinterp)
 
 	lvl->print(tinterp);
 
-	return false; // Tak, wyświetlaj stany poniżej
+	//return false; // Tak, wyświetlaj stany poniżej
 	}
 
 void Debug::clear()

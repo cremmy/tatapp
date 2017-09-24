@@ -196,7 +196,7 @@ bool TATAPP::update(float dt)
 	return false;
 	}
 
-bool TATAPP::print(float tinterp)
+void TATAPP::print(float tinterp)
 	{
 	using namespace Engine::Math;
 
@@ -227,11 +227,10 @@ bool TATAPP::print(float tinterp)
 
 		Engine::Render::getInstance().draw(Orientation::GUI+UI_DIALOG_OFFSET, uiDialog);
 		uiText.print(Orientation::GUI+UI_DIALOG_OFFSET+AVector(UI_TEXT_MARGIN_H, UI_TEXT_MARGIN_V, 0.1f));
-		Engine::Render::getInstance().setColor(AVector(1, 1, 1, 1));
 		Engine::Render::getInstance().statePop();
 		}
 
-	return false;
+	//return false;
 	}
 
 void TATAPP::clear()

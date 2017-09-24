@@ -49,7 +49,8 @@ namespace Engine
 				 * Wołane przez Application co jakiś czas, podobnie do update
 				 * @return Czy powinny być wyświetlone stany poniżej?
 				 */
-				virtual bool print(float tinterp)=0;
+				virtual void print(float tinterp)=0;
+				virtual bool isOverlay() const=0;
 				/** Czyszczenie
 				 * Wywoływane przez Application przy zrzucaniu ze stosu stan�w
 				 */
