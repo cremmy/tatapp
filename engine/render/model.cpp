@@ -283,14 +283,16 @@ bool Model::load(const std::string& path)
 
 				std::string mpath;
 
+				pline.remove(0);
+
 				auto slpos=path.rfind('/');
 				if(slpos==path.npos)
 					{
-					mpath=pline[1];
+					mpath=pline.get();
 					}
 				else
 					{
-					mpath=path.substr(0, slpos+1)+pline[1];
+					mpath=path.substr(0, slpos+1)+pline.get();
 					}
 
 				if(!loadMtl(mpath))
@@ -480,22 +482,25 @@ bool Model::load(const std::string& path)
 			c.nz=normals[f.cn].z;
 
 			// Prostopadle do normali
-			const Math::AVector distab=verts[f.bv]-verts[f.av];
-			const Math::AVector distac=verts[f.cv]-verts[f.av];
-			const Math::AVector distUVab=uvs[f.bt]-uvs[f.at];
-			const Math::AVector distUVac=uvs[f.ct]-uvs[f.at];
-			const float R=1.0f/(distUVab.x*distUVac.y-distUVab.y*distUVac.x);
-			const Math::AVector tangent=-(distab*distUVac.y-distac*distUVab.y)*R;
+			if(uvs.size()>0u)
+				{
+				const Math::AVector distab=verts[f.bv]-verts[f.av];
+				const Math::AVector distac=verts[f.cv]-verts[f.av];
+				const Math::AVector distUVab=uvs[f.bt]-uvs[f.at];
+				const Math::AVector distUVac=uvs[f.ct]-uvs[f.at];
+				const float R=1.0f/(distUVab.x*distUVac.y-distUVab.y*distUVac.x);
+				const Math::AVector tangent=-(distab*distUVac.y-distac*distUVab.y)*R;
 
-			a.ntx=tangent.x;
-			a.nty=tangent.y;
-			a.ntz=tangent.z;
-			b.ntx=tangent.x;
-			b.nty=tangent.y;
-			b.ntz=tangent.z;
-			c.ntx=tangent.x;
-			c.nty=tangent.y;
-			c.ntz=tangent.z;
+				a.ntx=tangent.x;
+				a.nty=tangent.y;
+				a.ntz=tangent.z;
+				b.ntx=tangent.x;
+				b.nty=tangent.y;
+				b.ntz=tangent.z;
+				c.ntx=tangent.x;
+				c.nty=tangent.y;
+				c.ntz=tangent.z;
+				}
 
 			// Wpisanie do VBO
 			vbo.add(a);
