@@ -141,7 +141,7 @@ void IngameMenu::print(float /*tinterp*/)
 
 	Engine::Render::getInstance().statePush();
 	Engine::Render::getInstance().setRenderMode(Engine::Render::RenderMode::GUI);
-	Engine::Render::getInstance().setColor(AVector(1, 1, 1, 0.75));
+	Engine::Render::getInstance().setColor(AVector(1, 1, 1, 0.9));
 /*	Engine::Render::getInstance().drawPolygon({
 		AVector(RW*0.25f, 0),
 		AVector(RW*0.25f, RH),

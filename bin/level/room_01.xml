@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <level>
+	<collider x1="3" y1="-2" z1="0" x2="4" y2="2" z2="1.5" />
 	<!--<npc template="level/npc/golab.xml" visible="1">
 		<orientation
 			x="0" y="0" z="0"

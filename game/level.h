@@ -23,6 +23,7 @@ namespace Game
 		{
 		protected:
 			std::vector<NPC*> npcs;
+			std::vector<Engine::Math::Geometry::AABB> colliders;
 			Engine::Math::Orientation startpos;
 
 		public:

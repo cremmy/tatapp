@@ -286,7 +286,8 @@ bool Render::init(int w, int h, const std::string& title, const std::string& ico
 	glDepthFunc(GL_LESS);
 
 	//glClearColor(0.0f, 0.5f, 1.0f, 0.0f);
-	glClearColor(1, 1, 1, 0);
+	//glClearColor(1, 1, 1, 0);
+	glClearColor(0, 0, 0, 0);
 	//glClear();
 
 //	glEnableVertexAttribArray(0);
@@ -304,6 +305,20 @@ bool Render::init(int w, int h, const std::string& title, const std::string& ico
 	//unsetFrameBuffer();
 	setFrameBuffer(baseFBO, true);
 	setShader(baseShaderImage);
+
+	/** Loading **/
+		{
+		TexturePtr loading("image/loading.png");
+
+		if(loading)
+			{
+			LOG_INFO("Render.init: Wyswietlanie ekranu wczytywania");
+
+			setRenderMode(RenderMode::GUI);
+			draw(Math::Orientation::GUI, loading);
+			update();
+			}
+		}
 
 	return true;
 	}
@@ -587,7 +602,7 @@ bool Render::toggleFullscreen()
 		}
 	else if(windowmode==FullScreenMode::WINDOWED)
 		{
-		return setFullscreen(FullScreenMode::WINDOWED_FULLSCREEN);
+		return setFullscreen(FullScreenMode::FULLSCREEN);
 		}
 	else //if(windowmode==FullScreenMode::WINDOWED_FULLSCREEN)
 		{

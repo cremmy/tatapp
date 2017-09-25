@@ -75,6 +75,36 @@ bool Level::init(const std::string& path)
 		return false;
 		}
 
+	/**** Collidery ****/
+	TiXmlNode* ncol=nlvl->FirstChild("collider");
+	while(ncol)
+		{
+		TiXmlElement* ecol=ncol->ToElement();
+
+		double x1, y1, z1;
+		double x2, y2, z2;
+
+		if(!ecol->Attribute("x1", &x1) ||
+		   !ecol->Attribute("y1", &y1) ||
+		   !ecol->Attribute("z1", &z1) ||
+		   !ecol->Attribute("x2", &x2) ||
+		   !ecol->Attribute("y2", &y2) ||
+		   !ecol->Attribute("z2", &z2))
+			{
+			LOG_ERROR("Level.init: Collider nie ma poprawnie zdefiniowanych wymiarow, poziom \"%s\"", path.c_str());
+			delete [] data;
+			return false;
+			}
+
+		const AVector a(x1, y1, z1);
+		const AVector b(x2, y2, z2);
+
+		colliders.push_back(Engine::Math::Geometry::AABB((a+b)*0.5, AVectorAbsolute(b-a)));
+
+		ncol=ncol->NextSibling("collider");
+		}
+
+	/**** NPC ****/
 	TiXmlNode* nnpc=nlvl->FirstChild("npc");
 	while(nnpc)
 		{
@@ -189,6 +219,58 @@ void Level::print(float tinterp)
 	{
 	using namespace Engine::Math;
 
+	for(auto col: colliders)
+		{
+		const AVector cpos=col.getPosition();
+		const AVector csize=col.getHalfSize();
+		const AVector cu=AVector(0, csize.y, 0);
+		const AVector cr=AVector(csize.x, 0, 0);
+		const AVector cf=AVector(0, 0, csize.z);
+
+		Engine::Render::getInstance().drawPolygon(
+			{
+			cpos-cu-cr-cf,
+			cpos-cu+cr-cf,
+			cpos-cu+cr+cf,
+			cpos-cu-cr+cf,
+			}, AVector(1, 0.75, 0, 1), AVector(1, 0.75, 0, 0.7));
+		Engine::Render::getInstance().drawPolygon(
+			{
+			cpos+cu-cr-cf,
+			cpos+cu+cr-cf,
+			cpos+cu+cr+cf,
+			cpos+cu-cr+cf,
+			}, AVector(1, 0.75, 0, 1), AVector(1, 0.75, 0, 0.7));
+		Engine::Render::getInstance().drawPolygon(
+			{
+			cpos+cu-cr-cf,
+			cpos+cu+cr-cf,
+			cpos-cu+cr-cf,
+			cpos-cu-cr-cf,
+			}, AVector(1, 0.75, 0, 1), AVector(1, 0.75, 0, 0.7));
+		Engine::Render::getInstance().drawPolygon(
+			{
+			cpos+cu-cr+cf,
+			cpos+cu+cr+cf,
+			cpos-cu+cr+cf,
+			cpos-cu-cr+cf,
+			}, AVector(1, 0.75, 0, 1), AVector(1, 0.75, 0, 0.7));
+		Engine::Render::getInstance().drawPolygon(
+			{
+			cpos+cu-cr-cf,
+			cpos+cu-cr+cf,
+			cpos-cu-cr+cf,
+			cpos-cu-cr-cf,
+			}, AVector(1, 0.75, 0, 1), AVector(1, 0.75, 0, 0.7));
+		Engine::Render::getInstance().drawPolygon(
+			{
+			cpos+cu+cr-cf,
+			cpos+cu+cr+cf,
+			cpos-cu+cr+cf,
+			cpos-cu+cr-cf,
+			}, AVector(1, 0.75, 0, 1), AVector(1, 0.75, 0, 0.7));
+		}
+
 	for(auto npc: npcs)
 		{
 		if(!npc->isVisible())
@@ -196,7 +278,7 @@ void Level::print(float tinterp)
 
 		npc->print(tinterp);
 
-/*		if(npc->isCollidable())
+		if(npc->isCollidable())
 			{
 			auto col=npc->getCollider();
 
@@ -248,7 +330,7 @@ void Level::print(float tinterp)
 				cpos-cu+cr+cf,
 				cpos-cu+cr-cf,
 				}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));
-			}*/
+			}
 		}
 	}
 
@@ -308,6 +390,12 @@ NPC* Level::findNPCByRay(const Engine::Math::Geometry::Ray& ray)
 bool Level::test(const Engine::Math::Geometry::AABB& box)
 	{
 	using namespace Engine::Math;
+
+	for(auto col: colliders)
+		{
+		if(Collision::test(col, box))
+			return true;
+		}
 
 	for(auto npc: npcs)
 		{
