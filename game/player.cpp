@@ -64,6 +64,11 @@ void Player::update(float dt)
 
 	if(dialog.getMode()==Dialog::Mode::NONE)
 		{
+		if(npcTarget)
+			{
+			npcTarget->setTargeted();
+			}
+
 		const AVector spddt=speed*dt;
 		updateMove(AVector(spddt.x, 0));
 		updateMove(AVector(0, spddt.y));

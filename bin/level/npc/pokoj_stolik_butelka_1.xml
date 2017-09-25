@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<npc name="butelka" type="model">
-	<!--<collider z="0.25" w="0.5" d="0.5" h="0.5" />-->
+<npc name="stolik_butelka_1" type="model">
+	<collider x="-0.76" y="0.37" z="0.87" w="0.08" d="0.2" h="0.08" />
 	<model>model/butelka.obj</model>
 </npc>

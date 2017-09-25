@@ -18,6 +18,8 @@ namespace Game
 	class NPC
 		{
 		protected:
+			static const Engine::Math::AVector MARK_COLOR;
+
 			Engine::Math::Orientation orientation;
 
 			float orientationTargetPercent; // 0->1
@@ -34,6 +36,8 @@ namespace Game
 
 			bool collidable;
 			Engine::Math::Geometry::AABB collider;
+
+			bool targeted;
 
 			virtual bool load(const std::string& definition)=0;
 
@@ -68,6 +72,7 @@ namespace Game
 			void setVisibility(bool s) {visible=s;}
 			void setCollider(const Engine::Math::Geometry::AABB& s) {collidable=true; collider=s;}
 			void setCollisionEnabled(bool s) {collidable=s;}
+			void setTargeted() {targeted=true;}
 		};
 
 	} /* namespace Game */

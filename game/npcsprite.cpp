@@ -48,8 +48,19 @@ void NPCSprite::print(float)
 	using namespace Engine;
 	using namespace Engine::Math;
 
+	if(targeted)
+		{
+		Render::getInstance().setColor(MARK_COLOR);
+		}
+
 	Render::getInstance().draw(Orientation(orientation.getPosition(), Render::getInstance().getCurrentCamera()->getBillboard(orientation.getPosition()), orientation.getScale()), sprite);
 	//Render::getInstance().draw(orientation, sprite);
+
+	if(targeted)
+		{
+		targeted=false;
+		Render::getInstance().unsetColor();
+		}
 	}
 
 void NPCSprite::clear()

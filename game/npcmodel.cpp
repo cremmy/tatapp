@@ -50,7 +50,18 @@ void NPCModel::print(float)
 	using namespace Engine;
 	using namespace Engine::Math;
 
+	if(targeted)
+		{
+		Render::getInstance().setColor(MARK_COLOR);
+		}
+
 	Render::getInstance().draw(orientation, model);
+
+	if(targeted)
+		{
+		targeted=false;
+		Render::getInstance().unsetColor();
+		}
 	}
 
 void NPCModel::clear()

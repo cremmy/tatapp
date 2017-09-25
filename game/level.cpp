@@ -219,7 +219,7 @@ void Level::print(float tinterp)
 	{
 	using namespace Engine::Math;
 
-	for(auto col: colliders)
+	/*for(auto col: colliders)
 		{
 		const AVector cpos=col.getPosition();
 		const AVector csize=col.getHalfSize();
@@ -269,7 +269,7 @@ void Level::print(float tinterp)
 			cpos-cu+cr+cf,
 			cpos-cu+cr-cf,
 			}, AVector(1, 0.75, 0, 1), AVector(1, 0.75, 0, 0.7));
-		}
+		}*/
 
 	for(auto npc: npcs)
 		{
