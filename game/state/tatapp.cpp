@@ -93,6 +93,8 @@ bool TATAPP::init(Engine::Core::Application *application)
 	player->getDialog().setLevel(lvl);
 	player->getDialog().setPlayer(player);
 
+	player->setPosition(Engine::Math::AVector(0, 2, 0));
+
 	// Przechwytywanie myszy
 	resume();
 	application->setGrabMouse(true);

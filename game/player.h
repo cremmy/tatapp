@@ -59,6 +59,8 @@ namespace Game
 			Database& getDatabase() {return db;}
 			Fade& getFade() {return fade;}
 
+			void setPosition(const Engine::Math::AVector& s) {orientation.setPosition(s);}
+
 		};
 
 	} /* namespace Game */
