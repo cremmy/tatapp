@@ -5,20 +5,8 @@
 	<collider x1="-3.25" y1="4.3" z1="0" x2="-3.15" y2="5.5" z2="1.5" /><!-- Sciana z drzwiami -->
 	<collider x1="-3.25" y1="-0.1" z1="0" x2="2" y2="0" z2="1.5" />
 	<collider x1="-3.25" y1="5.5" z1="0" x2="2" y2="5.6" z2="1.5" />
-	<!--<npc template="level/npc/golab.xml" visible="1">
-		<orientation
-			x="0" y="0" z="0"
-			rx="1" ry="0" rz="0"
-			ux="0" uy="0" uz="1"
-			scale="1" />
-	</npc>-->
-	<!--<npc template="level/npc/vg.xml" visible="1">
-		<orientation
-			x="0" y="0" z="0"
-			rx="1" ry="0" rz="0"
-			ux="0" uy="0" uz="1"
-			scale="1" />
-	</npc>-->
+	
+	<!-- Meble -->
 	<npc template="level/npc/pokoj.xml" visible="1">
 		<orientation
 			x="0" y="0" z="0"
@@ -28,7 +16,7 @@
 	</npc>
 	<npc template="level/npc/pokoj_drzwi.xml" visible="1">
 		<orientation
-			x="0" y="0" z="0"
+			x="-3.23" y="4.36" z="0"
 			rx="1" ry="0" rz="0"
 			ux="0" uy="0" uz="1"
 			scale="1" />
@@ -277,5 +265,22 @@
 			rx="1" ry="0" rz="0"
 			ux="0" uy="0" uz="1"
 			scale="1" />
+	</npc>
+	
+	<!-- NPC -->
+	<npc template="level/npc/golab.xml" visible="1">
+		<orientation
+			x="1.7" y="2.65" z="0.46"
+			rx="1" ry="0" rz="0"
+			ux="0" uy="0" uz="1"
+			scale="0.015625" />
+		<script enabled="1" path="npc/golab.ini" />
+	</npc>
+	<npc template="level/npc/cien.xml" visible="1">
+		<orientation
+			x="-5.2" y="3.8" z="0"
+			rx="1" ry="0" rz="0"
+			ux="0" uy="0" uz="1"
+			scale="0.015625" />
 	</npc>
 </level>

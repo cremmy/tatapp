@@ -99,18 +99,23 @@ void SoundPlayer::clear()
 	Mix_Quit();
 	}
 
-void SoundPlayer::play(const std::string& path, int channel, int loops)
+void SoundPlayer::play(const std::string& path, int volume, int channel, int loops)
 	{
 	Mix_Chunk* chunk=loadSample(path);
 
 	if(!chunk)
 		return;
 
-	if(Mix_PlayChannel(-1, chunk, loops)<0)
+	const int CHANNEL_RECVD=Mix_PlayChannel(-1, chunk, loops);
+	if(CHANNEL_RECVD<0)
 		{
 		LOG_ERROR("SoundPlayer.play: Nie udalo sie uruchomic dzwieku \"%s\"", path.c_str());
 		return;
 		}
+
+	LOG_DEBUG("SoundPlayer.play: Odtwarzanie \"%s\", kanal %d, glosnosc %d, petle %d", path.c_str(), volume, channel, loops);
+
+	Mix_Volume(CHANNEL_RECVD, volume);
 	}
 
 

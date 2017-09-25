@@ -53,8 +53,8 @@ namespace Engine
 				void update();
 				void clear();
 
-				void play(const std::string& path, int loops=0u) {play(path, -1, loops);}
-				void play(const std::string& path, int channel, int loops);
+				void play(const std::string& path, int volume=128, int loops=0u) {play(path, volume, -1, loops);}
+				void play(const std::string& path, int volume, int channel, int loops);
 
 				void music(const std::string& path, unsigned fadeinms=0u, unsigned fadeoutms=500u);
 				void stop(unsigned fadeoutms=500u);

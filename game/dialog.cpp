@@ -10,6 +10,7 @@
 #include <sstream>
 
 #include "engine/debug/log.h"
+#include "engine/sound/soundplayer.h"
 #include "engine/utils/stringparser.h"
 #include "level.h"
 #include "npc.h"
@@ -723,6 +724,23 @@ void Dialog::update(float dt)
 				{
 				LOG_ERROR("Dialog.update: TODO \"switchi\": Porownywanie stringow");
 				}
+			}
+/*****************************************************************************/
+		/** Dzwieki **/
+		else if(cmdpars[0]=="sound")
+			{
+			CMD_PARAMS_REQ(2);
+
+			float volume=cmdpars.toFloat(2);
+
+			if(volume>1.0f)
+				volume=1.0f;
+			else if(volume<0.0f)
+				volume=0.0f;
+
+			Engine::Sound::getInstance().play(cmdpars[1], volume*128);
+
+			//player->setPosition(Engine::Math::AVector());
 			}
 /*****************************************************************************/
 		/** Inne **/

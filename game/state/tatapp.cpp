@@ -12,12 +12,12 @@
 #include "../player.h"
 
 #include "engine/debug/log.h"
+#include "engine/math/orientation.h"
 #include "engine/render/render.h"
 #include "engine/graphics/atlas.h"
 #include "engine/graphics/ui/text.h"
 
-#include "engine/math/orientation.h" // XXX Debug, wywalic
-#include "engine/graphics/imageptr.h" // XXX Debug, wywalic
+//#include "engine/graphics/imageptr.h" // XXX Debug, wywalic
 
 using namespace Game;
 using namespace Game::State;
@@ -37,12 +37,12 @@ TATAPP::TATAPP(): Engine::Base::ApplicationState(), lvl(nullptr), player(nullptr
 //		Engine::Render::getInstance().getFrameBufferWidth(),
 //		Engine::Render::getInstance().getFrameBufferHeight());
 
-	grid=Engine::Graphics::ImagePtr("image/grid_gray.png"); // XXX Debug, wywalic
+//	grid=Engine::Graphics::ImagePtr("image/grid_gray.png"); // XXX Debug, wywalic
 	}
 
 TATAPP::~TATAPP()
 	{
-	grid=nullptr; // XXX Debug, wywalic
+//	grid=nullptr; // XXX Debug, wywalic
 	uiDialogNormal=nullptr;
 	uiDialogChoice=nullptr;
 	uiDialogBacklog=nullptr;
@@ -208,10 +208,10 @@ void TATAPP::print(float tinterp)
 		AVectorNormalize(AVector(1, 1, -1)),
 		AVector(1, 1, 1));
 
-	Engine::Render::getInstance().drawLine(AVector(0, 0, 0), AVector(2, 0, 0), AVector(1, 0, 0, 1)); // XXX Debug, wywalic
-	Engine::Render::getInstance().drawLine(AVector(0, 0, 0), AVector(0, 2, 0), AVector(0, 1, 0, 1)); // XXX Debug, wywalic
-	Engine::Render::getInstance().drawLine(AVector(0, 0, 0), AVector(0, 0, 2), AVector(0, 0, 1, 1)); // XXX Debug, wywalic
-	Engine::Render::getInstance().draw(Orientation::FLAT_XY+AVector(-grid->getW()*0.5f, grid->getH()*0.5f, -0.125f), grid); // XXX Debug, wywalic
+//	Engine::Render::getInstance().drawLine(AVector(0, 0, 0), AVector(2, 0, 0), AVector(1, 0, 0, 1)); // XXX Debug, wywalic
+//	Engine::Render::getInstance().drawLine(AVector(0, 0, 0), AVector(0, 2, 0), AVector(0, 1, 0, 1)); // XXX Debug, wywalic
+//	Engine::Render::getInstance().drawLine(AVector(0, 0, 0), AVector(0, 0, 2), AVector(0, 0, 1, 1)); // XXX Debug, wywalic
+//	Engine::Render::getInstance().draw(Orientation::FLAT_XY+AVector(-grid->getW()*0.5f, grid->getH()*0.5f, -0.125f), grid); // XXX Debug, wywalic
 
 	lvl->print(tinterp);
 	player->print(tinterp);

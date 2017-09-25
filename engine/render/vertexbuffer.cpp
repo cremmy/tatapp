@@ -7,6 +7,8 @@
 
 #include "vertexbuffer.h"
 
+#include <fstream>
+
 #include "textureptr.h"
 #include "../debug/log.h"
 #include "../graphics/spriteptr.h"
@@ -221,3 +223,86 @@ bool VertexBuffer::draw(const Math::Orientation& orientation, const Graphics::Sp
 	return draw(orientation/*-sptr.getCurrentFrame().getOffset()*/, sptr.getCurrentFrame().getImage());
 	}
 
+bool VertexBuffer::save(const std::string& path)
+	{
+	if(vertices.empty())
+		{
+		LOG_WARNING("VertexBuffer.save: Bufor jest pusty lub zamkniety");
+		return false;
+		}
+
+	std::fstream out;
+
+	out.open(path.c_str(), std::ios::out|std::ios::binary|std::ios::trunc);
+
+	if(!out.is_open())
+		{
+		LOG_ERROR("VertexBuffer.save: Nie udalo sie otworzyc pliku \"%s\"", path.c_str());
+		return false;
+		}
+
+	const unsigned size=vertices.size();
+	out.write((char*)&size, sizeof(size));
+	out.write((char*)vertices.data(), vertices.size()*sizeof(vertices[0]));
+
+	if(out.fail())
+		{
+		out.close();
+		LOG_ERROR("VertexBuffer.save: Wystapil problem przy zapisie do pliku \"%s\"", path.c_str());
+		return false;
+		}
+
+	out.close();
+
+	return true;
+	}
+
+bool VertexBuffer::load(const std::string& path)
+	{
+	clear();
+
+	std::fstream in;
+
+	in.open(path.c_str(), std::ios::in|std::ios::binary);
+
+	if(!in.is_open())
+		{
+		LOG_ERROR("VertexBuffer.load: Nie udalo sie otworzyc pliku \"%s\"", path.c_str());
+		return false;
+		}
+
+	unsigned size;
+
+	in.read((char*)&size, sizeof(size));
+
+	if(in.fail())
+		{
+		in.close();
+		LOG_ERROR("VertexBuffer.load: Wystapil problem przy odczytywaniu z pliku \"%s\" (size)", path.c_str());
+		return false;
+		}
+
+	LOG_INFO("VertexBuffer.load: Plik \"%s\" zawiera %u wierzcholkow", path.c_str(), size);
+
+	if(size>100000u)
+		{
+		LOG_ERROR("VertexBuffer.load: Ponad 100'000 wierzcholkow wydaje sie malo prawdopodobne - przerywanie");
+		in.close();
+		return false;
+		}
+
+	vertices.resize(size);
+
+	in.read((char*)vertices.data(), vertices.size()*sizeof(vertices[0]));
+
+	if(in.fail())
+		{
+		in.close();
+		LOG_ERROR("VertexBuffer.load: Wystapil problem przy odczytywaniu z pliku \"%s\"", path.c_str());
+		return false;
+		}
+
+	in.close();
+
+	return true;
+	}

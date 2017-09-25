@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <npc name="golab" type="sprite">
-	<collider z="0.3" w="0.6" d="0.6" h="0.6" />
+	<collider z="0.3" w="0.4" d="0.9" h="0.4" />
 	<sprite>sprite/golab/golab.xml</sprite>
 </npc>

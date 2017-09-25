@@ -244,7 +244,7 @@ bool Model::load(const std::string& path)
 		return true;
 		};
 
-	auto loadObj=[this, loadMtl, &verts, &uvs, &normals, &faces](const std::string& path)->bool
+	auto loadObj=[this, loadMtl, &verts, &uvs, &normals, &faces](const std::string& path, bool onlyMaterial)->bool
 		{
 		LOG_INFO("Model.loadObj: Wczytywanie modelu \"%s\"", path.c_str());
 
@@ -301,9 +301,15 @@ bool Model::load(const std::string& path)
 					//return false; // Brak tekstur nie bedzie krytycznym problemem
 					continue;
 					}
+
+				if(onlyMaterial)
+					{
+					delete [] data;
+					return true;
+					}
 				}
 			// Vertex
-			else if(pline[0]=="v")
+			else if(pline[0]=="v" && !onlyMaterial)
 				{
 				if(pline.count()<4)
 					{
@@ -315,7 +321,7 @@ bool Model::load(const std::string& path)
 				verts.push_back(Math::AVector(pline.toFloat(1), pline.toFloat(2), pline.toFloat(3)));
 				}
 			// Texture
-			else if(pline[0]=="vt")
+			else if(pline[0]=="vt" && !onlyMaterial)
 				{
 				if(pline.count()<3)
 					{
@@ -327,7 +333,7 @@ bool Model::load(const std::string& path)
 				uvs.push_back(Math::AVector(pline.toFloat(1), pline.toFloat(2)));
 				}
 			// Normal
-			else if(pline[0]=="vn")
+			else if(pline[0]=="vn" && !onlyMaterial)
 				{
 				if(pline.count()<4)
 					{
@@ -339,7 +345,7 @@ bool Model::load(const std::string& path)
 				normals.push_back(Math::AVector(pline.toFloat(1), pline.toFloat(2), pline.toFloat(3)));
 				}
 			// Face
-			else if(pline[0]=="f")
+			else if(pline[0]=="f" && !onlyMaterial)
 				{
 				if(pline.count()<4)
 					{
@@ -511,18 +517,38 @@ bool Model::load(const std::string& path)
 		return true;
 		};
 
-	if(!loadObj(path))
+	std::string cachePath=(std::string)"cache/"+path;
+
+	if(IO::Resource::find(cachePath) && vbo.load(cachePath))
 		{
-		LOG_ERROR("Model.load: Nie udalo sie wczytac modelu \"%s\"", path.c_str());
-		return false;
+		LOG_SUCCESS("Model.load: Wczytano model z cache \"%s\"", cachePath.c_str());
+
+		if(!loadObj(path, true))
+			{
+			LOG_ERROR("Model.load: Nie udalo sie wczytac materialu \"%s\"", path.c_str());
+			return false;
+			}
 		}
-
-	LOG_DEBUG("Model.load: [verts %u][uvs %u][normals %u][faces %u]", verts.size(), uvs.size(), normals.size(), faces.size());
-
-	if(!loadModel())
+	else
 		{
-		LOG_ERROR("Model.load: Nie udalo sie wczytac modelu \"%s\" (plik .obj wczytany poprawnie)", path.c_str());
-		return false;
+		if(!loadObj(path, false))
+			{
+			LOG_ERROR("Model.load: Nie udalo sie wczytac modelu \"%s\"", path.c_str());
+			return false;
+			}
+
+		LOG_DEBUG("Model.load: [verts %u][uvs %u][normals %u][faces %u]", verts.size(), uvs.size(), normals.size(), faces.size());
+
+		if(!loadModel())
+			{
+			LOG_ERROR("Model.load: Nie udalo sie wczytac modelu \"%s\" (plik .obj wczytany poprawnie)", path.c_str());
+			return false;
+			}
+
+		if(!vbo.save(cachePath))
+			{
+			LOG_WARNING("Model.load: Nie udalo sie dodac modelu do cache \"%s\"", cachePath.c_str());
+			}
 		}
 
 	if(!vbo.finalize())

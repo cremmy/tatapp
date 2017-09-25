@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <string>
 #include <vector>
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -47,6 +48,9 @@ namespace Engine
 				bool finalize(); // Przesłanie werteksów z RAMu do grafiki
 				void flush();    // Wyczyszczenie buforów
 				void clear();    // Zwolnienie całej pamięci
+
+				bool save(const std::string& path);
+				bool load(const std::string& path);
 
 				void bind() const;
 				void unbind() const;

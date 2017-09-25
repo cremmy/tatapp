@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<sprite name="cien">
+	<image name="default">cien.png</image>
+
+	<animation name="standing">
+		<direction name="right" fps="0" loopto="0">
+			<frame x="0" y="0" w="64" h="128" offsetx="33" offsety="128"></frame>
+		</direction>
+	</animation>
+</sprite>
