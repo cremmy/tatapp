@@ -444,8 +444,17 @@ void Render::update()
 
 	//LOG_INFO("blit %u swap %u", T1-T0, T2-T1);
 
+	const bool lienabled=states[0].lightEnabled;
+	const LightInfo li=states[0].lightInfo;
+
 	states.clear();
 	states.push_back(State());
+
+	if(lienabled)
+		{
+		states[0].lightEnabled=true;
+		states[0].lightInfo=li;
+		}
 
 	unsetShader();
 	//unsetFrameBuffer();

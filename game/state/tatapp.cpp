@@ -94,6 +94,19 @@ bool TATAPP::init(Engine::Core::Application *application)
 	player->getDialog().setPlayer(player);
 
 	player->setPosition(Engine::Math::AVector(0, 2, 0));
+	if(!player->getDialog().init("npc/start.ini"))
+		{
+		LOG_ERROR("TATAPP.init: Nie znaleziono skryptu startowego, aaaaaaaa");
+		}
+	else
+		{
+		player->getDialog().start();
+		}
+
+	// Oswietlenie początkowe
+	Engine::Render::getInstance().setLight(
+		Engine::Math::AVectorNormalize(Engine::Math::AVector(0, 1, -0.2)),
+		Engine::Math::AVector(1, 1, 1));
 
 	// Przechwytywanie myszy
 	resume();
@@ -119,7 +132,8 @@ bool TATAPP::initUI()
 	if(!atlas.addImage(BitmapPtr("image/ui_dialog_none.png")) ||
 	   !atlas.addImage(BitmapPtr("image/ui_dialog_normal.png")) ||
 	   !atlas.addImage(BitmapPtr("image/ui_dialog_choice.png")) ||
-	   !atlas.addImage(BitmapPtr("image/ui_dialog_backlog.png")))
+	   !atlas.addImage(BitmapPtr("image/ui_dialog_backlog.png")) ||
+	   !atlas.addImage(BitmapPtr("image/ui_crosshair.png")))
 		{
 		LOG_ERROR("TATAPP.initUI: Nie udalo sie dodac rysunkow do atlasu");
 		return false;
@@ -134,6 +148,7 @@ bool TATAPP::initUI()
 	uiDialogNormal=atlas.getImage(1u);
 	uiDialogChoice=atlas.getImage(2u);
 	uiDialogBacklog=atlas.getImage(3u);
+	uiCrosshair=atlas.getImage(4u);
 
 	return true;
 	}
@@ -160,7 +175,9 @@ bool TATAPP::update(float dt)
 
 	if(player->getDialog().getMode()!=Dialog::Mode::NONE)
 		{
-		if(uiDialogAlpha<1.0f)
+		if(player->getDialog().getMessage().length()<=1 && uiDialogAlpha>0.0f)
+			uiDialogAlpha-=dt;
+		else if(uiDialogAlpha<1.0f)
 			uiDialogAlpha+=dt*2.0f;
 		else
 			uiDialogAlpha=1.0f;
@@ -203,10 +220,6 @@ void TATAPP::print(float tinterp)
 	using namespace Engine::Math;
 
 	Engine::Render::getInstance().setCamera(cam);
-	Engine::Render::getInstance().setLight(
-		/*AVector(1.0f, 0.95f, 0.87f)*0.2f,*/
-		AVectorNormalize(AVector(1, 1, -1)),
-		AVector(1, 1, 1));
 
 //	Engine::Render::getInstance().drawLine(AVector(0, 0, 0), AVector(2, 0, 0), AVector(1, 0, 0, 1)); // XXX Debug, wywalic
 //	Engine::Render::getInstance().drawLine(AVector(0, 0, 0), AVector(0, 2, 0), AVector(0, 1, 0, 1)); // XXX Debug, wywalic
@@ -216,10 +229,11 @@ void TATAPP::print(float tinterp)
 	lvl->print(tinterp);
 	player->print(tinterp);
 
+	Engine::Render::getInstance().statePush();
+	Engine::Render::getInstance().setRenderMode(Engine::Render::RenderMode::GUI);
+
 	if(uiDialogAlpha>0.0f)
 		{
-		Engine::Render::getInstance().statePush();
-		Engine::Render::getInstance().setRenderMode(Engine::Render::RenderMode::GUI);
 //		Engine::Render::getInstance().setCamera(camUI);
 		Engine::Render::getInstance().setColor(AVector(1, 1, 1, uiDialogAlpha));
 
@@ -229,8 +243,16 @@ void TATAPP::print(float tinterp)
 
 		Engine::Render::getInstance().draw(Orientation::GUI+UI_DIALOG_OFFSET, uiDialog);
 		uiText.print(Orientation::GUI+UI_DIALOG_OFFSET+AVector(UI_TEXT_MARGIN_H, UI_TEXT_MARGIN_V, 0.1f));
-		Engine::Render::getInstance().statePop();
 		}
+
+	Engine::Render::getInstance().setColor(AVector(1, 1, 1, 1-uiDialogAlpha));
+
+	const AVector UI_CROSSHAIR_OFFSET(
+		(Engine::Render::getInstance().getFrameBufferWidth()+uiCrosshair->getW())*0.5f,
+		(Engine::Render::getInstance().getFrameBufferHeight()+uiCrosshair->getH())*0.5f);
+
+	Engine::Render::getInstance().draw(Orientation::GUI+UI_CROSSHAIR_OFFSET+AVector(0, 0, 0.2f), uiCrosshair);
+	Engine::Render::getInstance().statePop();
 
 	//return false;
 	}

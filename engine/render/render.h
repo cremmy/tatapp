@@ -77,7 +77,7 @@ namespace Engine
 					LightInfo() {}
 					LightInfo(const LightInfo& li)  {memcpy(this, &li, sizeof(LightInfo));}
 
-					LightInfo& operator=(const LightInfo&& li)  {memcpy(this, &li, sizeof(LightInfo)); return *this;}
+					LightInfo& operator=(const LightInfo& li)  {memcpy(this, &li, sizeof(LightInfo)); return *this;}
 
 					/*float ambient[4];*/
 					float direction[4];

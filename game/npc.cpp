@@ -14,7 +14,7 @@
 
 using namespace Game;
 
-const Engine::Math::AVector NPC::MARK_COLOR(1.5f, 1.5f, 1.5f, 1.0f);
+const Engine::Math::AVector NPC::MARK_COLOR(1.5f, 0.5f, 0.5f, 1.0f);
 
 NPC::NPC(): orientationTargetPercent(1.0f), orientationTargetTime(0.0f),
 	name("<unnamed>"), scriptEnabled(false), scriptPath("<not set>"), visible(true),

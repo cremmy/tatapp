@@ -278,7 +278,7 @@ void Level::print(float tinterp)
 
 		npc->print(tinterp);
 
-		if(npc->isCollidable())
+		/*if(npc->isCollidable())
 			{
 			auto col=npc->getCollider();
 
@@ -330,7 +330,7 @@ void Level::print(float tinterp)
 				cpos-cu+cr+cf,
 				cpos-cu+cr-cf,
 				}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));
-			}
+			}*/
 		}
 	}
 

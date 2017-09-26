@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <npc name="stolik_szczotka" type="model">
-	<!--<collider z="0.25" w="0.5" d="0.5" h="0.5" />-->
+	<collider x="-0.9" y="0.84" z="0.84" w="0.15" d="0.1" h="0.15" />
 	<model>model/szczotka.obj</model>
 </npc>

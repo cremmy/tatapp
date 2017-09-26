@@ -35,6 +35,7 @@ namespace Game
 				Engine::Graphics::ImagePtr uiDialogChoice;
 				Engine::Graphics::ImagePtr uiDialogBacklog;
 				Engine::Graphics::ImagePtr uiDialog;
+				Engine::Graphics::ImagePtr uiCrosshair;
 				Engine::Graphics::UI::Text uiText;
 
 				bool initUI();

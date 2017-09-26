@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <npc name="obraz_1" type="model">
-	<collider x="-2.65" y="-0.08" z="1.76" w="0.75" d="0.5" h="0.05" />
+	<collider x="-2.65" y="-0.18" z="1.76" w="0.75" d="0.5" h="0.25" />
 	<model>model/obraz nad lozkiem.obj</model>
 </npc>

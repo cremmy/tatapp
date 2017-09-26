@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <npc name="lustro" type="model">
-	<!--<collider z="0.25" w="0.5" d="0.5" h="0.5" />-->
+	<collider x="1.24" y="-0.19" z="1.57" w="0.5" d="0.75" h="0.25" />
 	<model>model/lustro.obj</model>
 </npc>

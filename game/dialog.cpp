@@ -10,6 +10,7 @@
 #include <sstream>
 
 #include "engine/debug/log.h"
+#include "engine/render/render.h"
 #include "engine/sound/soundplayer.h"
 #include "engine/utils/stringparser.h"
 #include "level.h"
@@ -308,8 +309,8 @@ void Dialog::update(float dt)
 			{
 			CMD_PARAMS_REQ(1);
 
-			cmdpars.remove(0);
-			message+=cmdpars.get();
+			//cmdpars.remove(0);
+			message+=cmdpars.get().substr(4);
 
 			continue;
 			}
@@ -479,6 +480,49 @@ void Dialog::update(float dt)
 			continue;
 			}
 /*****************************************************************************/
+		/** Ruch gracza **/
+		else if(cmdpars[0]=="pmove")
+			{
+			// pmove -2 -2 1  0 0 1  90.0 4.0
+			CMD_PARAMS_REQ(8);
+
+			if(cmdpars.count()>11)
+				{
+				// Orientacja
+				player->setMovement(Engine::Math::Orientation(
+					Engine::Math::AVector(cmdpars.toFloat(2), cmdpars.toFloat(3), cmdpars.toFloat(4)),
+					Engine::Math::AVector(cmdpars.toFloat(5), cmdpars.toFloat(6), cmdpars.toFloat(7)),
+					Engine::Math::AVector(cmdpars.toFloat(8), cmdpars.toFloat(9), cmdpars.toFloat(10)),
+					(cmdpars.count()>12)?cmdpars.toFloat(12):1.0f
+					), cmdpars.toFloat(11));
+				}
+			else
+				{
+				// Oś i kąt obrotu
+				Engine::Math::Orientation target=player->getOrientation();
+				target.rotate(Engine::Math::AVectorNormalize(Engine::Math::AVector(cmdpars.toFloat(5), cmdpars.toFloat(6), cmdpars.toFloat(7))), cmdpars.toFloat(8));
+				target.setPosition(Engine::Math::AVector(cmdpars.toFloat(2), cmdpars.toFloat(3), cmdpars.toFloat(4)));
+				if(cmdpars.count()>9)
+					{
+					target.setScale(cmdpars.toFloat(10));
+					}
+				player->setMovement(target, cmdpars.toFloat(9));
+				}
+
+			continue;
+			}
+		else if(cmdpars[0]=="lookat")
+			{
+			// lookat -2 -2 1  4.0
+			CMD_PARAMS_REQ(3);
+
+			player->setLookAt(
+				Engine::Math::AVector(cmdpars.toFloat(1), cmdpars.toFloat(2), cmdpars.toFloat(3)),
+				(cmdpars.count()>4)?cmdpars.toFloat(4):0.0f);
+
+			continue;
+			}
+/*****************************************************************************/
 		/** Widoczność **/
 		else if(cmdpars[0]=="show")
 			{
@@ -518,11 +562,15 @@ void Dialog::update(float dt)
 				}
 			else if(cmdpars.count()==3)
 				{
-				player->getFade().set(1, cmdpars[1], cmdpars.toFloat(2));
+				player->getFade().set(1, cmdpars.toFloat(1), cmdpars.toFloat(2));
 				}
 			else if(cmdpars.count()==4)
 				{
 				player->getFade().set(1, cmdpars[1], cmdpars.toFloat(2), cmdpars.toFloat(3));
+				}
+			else if(cmdpars.count()==5)
+				{
+				player->getFade().set(cmdpars.toInt(1), cmdpars[2], cmdpars.toFloat(3), cmdpars.toFloat(4));
 				}
 			else
 				{
@@ -756,6 +804,14 @@ void Dialog::update(float dt)
 				}
 
 			//player->setPosition(Engine::Math::AVector());
+			}
+		else if(cmdpars[0]=="lvl")
+			{
+			CMD_PARAMS_REQ(6);
+
+			Engine::Render::getInstance().setLight(
+				Engine::Math::AVector(cmdpars.toFloat(1), cmdpars.toFloat(2), cmdpars.toFloat(3)),
+				Engine::Math::AVector(cmdpars.toFloat(4), cmdpars.toFloat(5), cmdpars.toFloat(6)));
 			}
 /*****************************************************************************/
 		/** Inne **/

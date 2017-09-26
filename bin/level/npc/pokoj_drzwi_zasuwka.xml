@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <npc name="drzwi_zasuwka" type="model">
-	<!--<collider z="0.25" w="0.5" d="0.5" h="0.5" />-->
+	<collider x="-3.21" y="3.36" z="0.99" w="0.2" d="0.1" h="0.2" />
 	<model>model/zasuwka.obj</model>
 </npc>

@@ -39,6 +39,11 @@ namespace Game
 			float dialogCooldown;
 			Dialog dialog;
 
+			float orientationTargetPercent; // 0->1
+			float orientationTargetTime;   // Ile sekund do konca animacji
+			Engine::Math::Orientation orientationStart;
+			Engine::Math::Orientation orientationTarget;
+
 			Engine::Core::Application* application;
 
 			void handleEvents();
@@ -52,6 +57,7 @@ namespace Game
 			void update(float dt);
 			void print(float tinterp);
 
+			bool isMovementFinished() const;
 			const Engine::Math::Orientation& getOrientation() const {return orientation;}
 			const Engine::Math::Orientation getEyeOrientation() const {return orientation+Engine::Math::AVector(0, 0, eyeHeight);}
 			const NPC* getNPCTarget() const {return npcTarget;}
@@ -60,7 +66,8 @@ namespace Game
 			Fade& getFade() {return fade;}
 
 			void setPosition(const Engine::Math::AVector& s) {orientation.setPosition(s);}
-
+			void setMovement(const Engine::Math::Orientation& target, float time);
+			void setLookAt(const Engine::Math::AVector& target, float time);
 		};
 
 	} /* namespace Game */

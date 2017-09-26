@@ -20,7 +20,8 @@ using namespace Engine::Math::Geometry;
 
 const float DIALOG_COOLDOWN=0.5f;
 
-Player::Player(Engine::Core::Application* application): Engine::Core::AppEventListener(), lvl(nullptr), npcTarget(nullptr), eyeHeight(0.0f), dialogCooldown(0.0f)
+Player::Player(Engine::Core::Application* application): Engine::Core::AppEventListener(), lvl(nullptr), npcTarget(nullptr), eyeHeight(0.0f), dialogCooldown(0.0f),
+	orientationTargetPercent(1.0), orientationTargetTime(0.0f)
 	{
 	application->addListener(Engine::Core::AppEvent::Type::KEY_DOWN, *this);
 	application->addListener(Engine::Core::AppEvent::Type::KEY_UP, *this);
@@ -76,6 +77,27 @@ void Player::update(float dt)
 	else
 		{
 		dialog.update(dt);
+		}
+
+	if(!isMovementFinished())
+		{
+		if(orientationTargetTime<0.0001f)
+			{
+			orientationTargetPercent=1.0f;
+			}
+		else
+			{
+			orientationTargetPercent+=dt/orientationTargetTime;
+
+			//LOG_DEBUG("percent: %f", orientationTargetPercent);
+
+			if(orientationTargetPercent>1.0f)
+				{
+				orientationTargetPercent=1.0f;
+				}
+
+			orientation=orientationStart.interpolate(orientationTarget, orientationTargetPercent);
+			}
 		}
 	}
 
@@ -274,4 +296,56 @@ void Player::print(float /*tinterp*/)
 		}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));*/
 
 	fade.print();
+	}
+
+
+bool Player::isMovementFinished() const
+	{
+	if(orientationTargetPercent>=1.0f)
+		return true;
+	return false;
+	}
+
+
+void Player::setMovement(const Engine::Math::Orientation& target, float time)
+	{
+	if(!isMovementFinished())
+		{
+		LOG_WARNING("NPC.serMovement: Ruch gracza jeszcze sie nie zakonczyl");
+		orientation=orientationTarget;
+		}
+
+	if(time<=0.0f)
+		{
+		orientation=orientationTarget;
+		return;
+		}
+
+	orientationStart=orientation;
+	orientationTarget=target;
+	orientationTargetTime=time;
+	orientationTargetPercent=0.0f;
+	}
+
+void Player::setLookAt(const Engine::Math::AVector& target, float time)
+	{
+	if(!isMovementFinished())
+		{
+		LOG_WARNING("NPC.serMovement: Ruch gracza jeszcze sie nie zakonczyl");
+		orientation=orientationTarget;
+		}
+
+	Engine::Math::Orientation otarget;
+	otarget.lookAt(target-AVector(0, 0, eyeHeight), orientation.getPosition(), Engine::Math::AVector(0, 0, 1));
+
+	if(time<=0.0f)
+		{
+		orientation=orientationTarget;
+		return;
+		}
+
+	orientationStart=orientation;
+	orientationTarget=otarget;
+	orientationTargetTime=time;
+	orientationTargetPercent=0.0f;
 	}
