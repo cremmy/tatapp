@@ -137,6 +137,12 @@ bool Level::init(const std::string& path)
 			npc->setVisibility(false);
 			}
 
+		if(enpc->Attribute("collidable") && (std::string)enpc->Attribute("collidable")!="1")
+			{
+			LOG_DEBUG("Level.init: NPC \"%s\" ma wyaczone kolizje, poziom \"%s\"", npc->getName().c_str(), path.c_str());
+			npc->setCollisionEnabled(false);
+			}
+
 		TiXmlElement* eorient=enpc->FirstChildElement("orientation");
 
 		if(!eorient)
@@ -343,6 +349,7 @@ void Level::clear()
 		}
 
 	npcs.clear();
+	colliders.clear();
 	}
 
 

@@ -29,7 +29,7 @@
 			ux="0" uy="0" uz="1"
 			scale="1" />
 	</npc>
-	<npc template="level/npc/pokoj_drzwi_zasuwka.xml" visible="1">
+	<npc template="level/npc/pokoj_drzwi_zasuwka.xml" visible="1" collidable="0">
 		<orientation
 			x="0" y="0" z="0"
 			rx="1" ry="0" rz="0"
@@ -283,7 +283,7 @@
 	</npc>
 	
 	<!-- NPC -->
-	<npc template="level/npc/golab.xml" visible="1">
+	<npc template="level/npc/golab.xml" visible="0">
 		<orientation
 			x="1.7" y="2.65" z="0.46"
 			rx="1" ry="0" rz="0"
@@ -297,5 +297,14 @@
 			rx="1" ry="0" rz="0"
 			ux="0" uy="0" uz="1"
 			scale="0.015625" />
+	</npc>
+
+	<npc template="level/npc/testator.xml" visible="1">
+		<orientation
+			x="0" y="4.5" z="0"
+			rx="1" ry="0" rz="0"
+			ux="0" uy="0" uz="1"
+			scale="0.015625" />
+		<script enabled="1" path="npc/testator.ini" />
 	</npc>
 </level>

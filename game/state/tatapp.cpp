@@ -72,7 +72,7 @@ bool TATAPP::init(Engine::Core::Application *application)
 	// Poziom
 	lvl=new Level();
 
-	if(!lvl->init("level/room_01.xml"))
+	if(!lvl->init("level/01.xml"))
 		{
 		LOG_ERROR("TATAPP.init: Nie udalo sie wczytac poziomu");
 		return false;
@@ -275,12 +275,12 @@ void TATAPP::clear()
 
 void TATAPP::pause()
 	{
-	//application->setGrabMouse(false);
+	application->setGrabMouse(false);
 	application->removeListener(*this);
 	}
 
 void TATAPP::resume()
 	{
-	//application->setGrabMouse(true);
+	application->setGrabMouse(true);
 	application->addListener(Engine::Core::AppEvent::Type::KEY_UP, *this);
 	}

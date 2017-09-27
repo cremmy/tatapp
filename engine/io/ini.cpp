@@ -31,6 +31,8 @@ bool INI::init(const std::string& path, const std::string& group)
 		return false;
 		}
 
+	values.clear();
+
 	Utils::StringParser lines(data, "\r\n");
 	Utils::StringParser keyvalue("", "=");
 

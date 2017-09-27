@@ -5,7 +5,6 @@
  *      Author: crm
  */
 
-#include <game/state/tatapp.h>
 #include <SDL2/SDL.h>
 
 #include "engine/debug/log.h"
@@ -16,10 +15,9 @@
 
 #include "game/state/tatapp.h"
 
-#include "engine/math/collision/test.h"
-
-/* XXX Problemy z silnikiem:
- *  - Model przestawia shadera na swojego, ale tekstura juz tego nie robi - po wyrysowaniu modelu tekstura rysuje sie z shaderem modelowym
+/* TODO
+ *  - Dźwięk chodzenia gracza (float timeout na kolejny dźwięk?)
+ *  - Dźwięk otwieranych drzwi
  */
 
 int main(int argc, char *argv[])
@@ -33,15 +31,12 @@ int main(int argc, char *argv[])
 	//Engine::Debug::Log::setPrintLocation(true);
 
 #ifdef BUILD_RELEASE
-	Engine::Debug::Log::setOut(fopen("log.txt", "w"));
+	//Engine::Debug::Log::setOut(fopen("log.txt", "w"));
 	Engine::Debug::Log::setLevel(Engine::Debug::Log::PRODUCTION);
 #endif
 
 	LOG_INFO("Start");
 	LOG_INFO("Build %s %s", __DATE__, __TIME__);
-
-	//Engine::Math::Collision::_check2D();
-	//Engine::Math::Collision::_check3D();
 
 	Engine::Core::Application app;
 

@@ -76,6 +76,7 @@ void Player::update(float dt)
 		}
 	else
 		{
+		npcTarget=nullptr;
 		dialog.update(dt);
 		}
 
@@ -113,6 +114,13 @@ void Player::handleEvents()
 			}
 		else if(e.getType()==Engine::Core::AppEvent::Type::KEY_UP)
 			{
+			if(e.data.keyboard.key==SDLK_q)
+				{
+				LOG_INFO("Player: [p %.2f %.2f] [d %.2f %.2f]",
+						orientation.getPosition().x, orientation.getPosition().y,
+						orientation.getPosition().x+orientation.getForward().x, orientation.getPosition().y+orientation.getForward().y);
+				}
+
 			if(dialog.getMode()!=Dialog::Mode::NONE)
 				{
 				if(e.data.keyboard.key==SDLK_d)

@@ -56,7 +56,7 @@ namespace Game
 			const std::string& getName() const {return name;}
 			const std::string& getScriptPath() const {return scriptPath;}
 			//Engine::Math::Geometry::AABB getCollider() const {return Engine::Math::Geometry::AABB(orientation.getPosition(), collider.getSize());}
-			Engine::Math::Geometry::Box getCollider() const {return Engine::Math::Geometry::Box(orientation+collider.getPosition(), collider.getSize());}
+			Engine::Math::Geometry::Box getCollider() const;// {return Engine::Math::Geometry::Box(orientation-orientation.getMatrix()*collider.getPosition(), collider.getSize());}
 
 			bool isMovementFinished() const;
 			bool isScriptEnabled() const {return scriptEnabled;}

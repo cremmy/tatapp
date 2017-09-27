@@ -167,6 +167,14 @@ void NPC::update(float dt)
 		}
 	}
 
+
+Engine::Math::Geometry::Box NPC::getCollider() const
+	{
+	//const Engine::Math::Orientation& o=orientation;
+	const Engine::Math::AVector OFFSET(collider.getPosition());
+	return Engine::Math::Geometry::Box(orientation+OFFSET, collider.getSize());
+	}
+
 bool NPC::isMovementFinished() const
 	{
 	if(orientationTargetPercent>=1.0f)
