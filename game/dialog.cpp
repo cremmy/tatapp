@@ -420,10 +420,9 @@ void Dialog::update(float dt)
 
 			continue;
 			}
-		else if(cmdpars[0]=="move")
+		else if(cmdpars[0]=="rotate")
 			{
-			// move testator.ini  -2 -2 1  0 0 1  90.0 4.0
-			CMD_PARAMS_REQ(9);
+			CMD_PARAMS_REQ(3);
 
 			NPC* npc=lvl->findNPCByName(cmdpars[1]);
 
@@ -433,17 +432,32 @@ void Dialog::update(float dt)
 				continue;
 				}
 
-			if(cmdpars.count()>11)
+			npc->setMovement(Engine::Math::Orientation(
+				npc->getOrientation().getPosition(),
+				Engine::Math::AMatrixRotZ(cmdpars.toFloat(2))*Engine::Math::AVector(1, 0, 0),
+				Engine::Math::AVector(0, 0, 1)), cmdpars.toFloat(3));
+
+			continue;
+			}
+		else if(cmdpars[0]=="move")
+			{
+			CMD_PARAMS_REQ(5);
+
+			NPC* npc=lvl->findNPCByName(cmdpars[1]);
+
+			if(!npc)
 				{
-				// Orientacja
-				npc->setMovement(Engine::Math::Orientation(
-					Engine::Math::AVector(cmdpars.toFloat(2), cmdpars.toFloat(3), cmdpars.toFloat(4)),
-					Engine::Math::AVector(cmdpars.toFloat(5), cmdpars.toFloat(6), cmdpars.toFloat(7)),
-					Engine::Math::AVector(cmdpars.toFloat(8), cmdpars.toFloat(9), cmdpars.toFloat(10)),
-					(cmdpars.count()>12)?cmdpars.toFloat(12):1.0f
-					), cmdpars.toFloat(11));
+				LOG_ERROR("Dialog.update: Nie znaleziono NPC \"%s\"", cmdpars[1].c_str());
+				continue;
 				}
-			else
+
+			// move testator.ini  -2 -2 1  4.0
+			if(cmdpars.count()==6)
+				{
+				npc->setMovement(Engine::Math::Orientation(Engine::Math::AVector(cmdpars.toFloat(2), cmdpars.toFloat(3), cmdpars.toFloat(4)), npc->getOrientation()), cmdpars.toFloat(5));
+				}
+			// move testator.ini  -2 -2 1  0 0 1  90.0 4.0
+			else if(cmdpars.count()==11)
 				{
 				// Oś i kąt obrotu
 				Engine::Math::Orientation target=npc->getOrientation();
@@ -454,6 +468,17 @@ void Dialog::update(float dt)
 					target.setScale(cmdpars.toFloat(10));
 					}
 				npc->setMovement(target, cmdpars.toFloat(9));
+
+				}
+			else
+				{
+				// Orientacja
+				npc->setMovement(Engine::Math::Orientation(
+					Engine::Math::AVector(cmdpars.toFloat(2), cmdpars.toFloat(3), cmdpars.toFloat(4)),
+					Engine::Math::AVector(cmdpars.toFloat(5), cmdpars.toFloat(6), cmdpars.toFloat(7)),
+					Engine::Math::AVector(cmdpars.toFloat(8), cmdpars.toFloat(9), cmdpars.toFloat(10)),
+					(cmdpars.count()>12)?cmdpars.toFloat(12):1.0f
+					), cmdpars.toFloat(11));
 				}
 
 			continue;
@@ -483,20 +508,32 @@ void Dialog::update(float dt)
 		/** Ruch gracza **/
 		else if(cmdpars[0]=="pmove")
 			{
-			// pmove -2 -2 1  0 0 1  90.0 4.0
-			CMD_PARAMS_REQ(8);
+			// pmove -2 -2 1  0 0 1  4.0
+			CMD_PARAMS_REQ(7);
 
-			if(cmdpars.count()>11)
+			/*if(cmdpars.count()==5)
 				{
 				// Orientacja
-				player->setMovement(Engine::Math::Orientation(
-					Engine::Math::AVector(cmdpars.toFloat(2), cmdpars.toFloat(3), cmdpars.toFloat(4)),
-					Engine::Math::AVector(cmdpars.toFloat(5), cmdpars.toFloat(6), cmdpars.toFloat(7)),
-					Engine::Math::AVector(cmdpars.toFloat(8), cmdpars.toFloat(9), cmdpars.toFloat(10)),
-					(cmdpars.count()>12)?cmdpars.toFloat(12):1.0f
-					), cmdpars.toFloat(11));
+				Engine::Math::Orientation target;
+
+				target.lookAt(
+						Engine::Math::AVector(cmdpars.toFloat(1), cmdpars.toFloat(2), cmdpars.toFloat(3)),
+						player->getOrientation().getPosition());
+
+				player->setMovement(target, cmdpars.toFloat(4));
 				}
-			else
+			else */if(cmdpars.count()==8)
+				{
+				// Orientacja
+				Engine::Math::Orientation target;
+
+				target.lookAt(
+						Engine::Math::AVector(cmdpars.toFloat(1), cmdpars.toFloat(2), cmdpars.toFloat(3)),
+						Engine::Math::AVector(cmdpars.toFloat(4), cmdpars.toFloat(5), cmdpars.toFloat(6)));
+
+				player->setMovement(target, cmdpars.toFloat(7));
+				}
+			else if(cmdpars.count()==11)
 				{
 				// Oś i kąt obrotu
 				Engine::Math::Orientation target=player->getOrientation();
@@ -507,6 +544,10 @@ void Dialog::update(float dt)
 					target.setScale(cmdpars.toFloat(10));
 					}
 				player->setMovement(target, cmdpars.toFloat(9));
+				}
+			else
+				{
+				LOG_ERROR("Dialog.update: Za malo argumentow do \"lookat\", otrzymano %d", cmdpars.count());
 				}
 
 			continue;
@@ -553,6 +594,72 @@ void Dialog::update(float dt)
 			npc->setVisibility(false);
 			}
 /*****************************************************************************/
+		/** Kolizje **/
+		else if(cmdpars[0]=="collide")
+			{
+			CMD_PARAMS_REQ(1);
+
+			NPC* npc=lvl->findNPCByName(cmdpars[1]);
+
+			if(!npc)
+				{
+				LOG_ERROR("Dialog.update: Nie znaleziono NPC \"%s\"", cmdpars[1].c_str());
+				continue;
+				}
+
+			npc->setCollisionEnabled(true);
+			}
+		else if(cmdpars[0]=="uncollide")
+			{
+			CMD_PARAMS_REQ(1);
+
+			NPC* npc=lvl->findNPCByName(cmdpars[1]);
+
+			if(!npc)
+				{
+				LOG_ERROR("Dialog.update: Nie znaleziono NPC \"%s\"", cmdpars[1].c_str());
+				continue;
+				}
+
+			npc->setCollisionEnabled(false);
+			}
+/*****************************************************************************/
+		/** Skrypty **/
+		else if(cmdpars[0]=="enable")
+			{
+			CMD_PARAMS_REQ(1);
+
+			NPC* npc=lvl->findNPCByName(cmdpars[1]);
+
+			if(!npc)
+				{
+				LOG_ERROR("Dialog.update: Nie znaleziono NPC \"%s\"", cmdpars[1].c_str());
+				continue;
+				}
+
+			npc->setScriptEnabled(true);
+
+			if(cmdpars.count()>2)
+				{
+				LOG_INFO("Dialog:update: Ustawianie skryptu npc \"%s\" na \"%s\"", cmdpars[1].c_str(), cmdpars[2].c_str());
+				npc->setScript(cmdpars[2]);
+				}
+			}
+		else if(cmdpars[0]=="disable")
+			{
+			CMD_PARAMS_REQ(1);
+
+			NPC* npc=lvl->findNPCByName(cmdpars[1]);
+
+			if(!npc)
+				{
+				LOG_ERROR("Dialog.update: Nie znaleziono NPC \"%s\"", cmdpars[1].c_str());
+				continue;
+				}
+
+			npc->setScriptEnabled(false);
+			}
+/*****************************************************************************/
 		/** Fade **/
 		else if(cmdpars[0]=="fade")
 			{
@@ -585,193 +692,152 @@ void Dialog::update(float dt)
 		/** Zmienne i baza danych **/
 		else if(cmdpars[0]=="save")
 			{
-			CMD_PARAMS_REQ(3);
+			CMD_PARAMS_REQ(2);
 
-			if(cmdpars[1]=="val")
-				{
-				LOG_DEBUG("Dialog.update: \"set\": ustawianie \"%s\" na %d", cmdpars[2].c_str(), cmdpars.toInt(3));
-				player->getDatabase().setVal(cmdpars[2], cmdpars.toInt(3));
-				}
-			else
-				{
-				const std::string key=cmdpars[2];
-
-				cmdpars.remove(2);
-				cmdpars.remove(1);
-				cmdpars.remove(0);
-
-				player->getDatabase().setStr(key, cmdpars.get());
-				}
+			LOG_DEBUG("Dialog.update: \"set\": ustawianie \"%s\" na %d", cmdpars[1].c_str(), cmdpars.toInt(2));
+			player->getDatabase().setVal(cmdpars[1], cmdpars.toInt(2));
 			}
 		else if(cmdpars[0]=="if")
 			{
-			CMD_PARAMS_REQ(5);
+			CMD_PARAMS_REQ(4);
 
-			if(cmdpars[1]=="val")
+			int dbv=player->getDatabase().getVal(cmdpars[1]);
+
+			if(cmdpars.count()==5)
 				{
-				int dbv=player->getDatabase().getVal(cmdpars[2]);
-
-				if(cmdpars.count()==6)
+				if(dbv==cmdpars.toInt(2))
 					{
-					if(dbv==cmdpars.toInt(3))
-						{
-						LOG_DEBUG("Dialog.update: \"if\": Porownywanie z \"%s\": %s==%d", cmdpars[2].c_str(), cmdpars[3].c_str(), dbv);
-						b=cmdpars.toInt(4);
-						index=-1;
-						continue;
-						}
-					else
-						{
-						LOG_DEBUG("Dialog.update: \"if\": Porownywanie z \"%s\": %s!=%d", cmdpars[2].c_str(), cmdpars[3].c_str(), dbv);
-						b=cmdpars.toInt(5);
-						index=-1;
-						continue;
-						}
+					LOG_DEBUG("Dialog.update: \"if\": Porownywanie z \"%s\": %s==%d", cmdpars[1].c_str(), cmdpars[2].c_str(), dbv);
+					b=cmdpars.toInt(3);
+					index=-1;
+					continue;
 					}
 				else
 					{
-					int pv=cmdpars.toInt(3);
-
-					if(dbv<pv)
-						{
-						LOG_DEBUG("Dialog.update: \"if\": Porownywanie z \"%s\": %s<%d", cmdpars[2].c_str(), cmdpars[3].c_str(), dbv);
-						b=cmdpars.toInt(4);
-						index=-1;
-						continue;
-						}
-					else if(dbv==pv)
-						{
-						LOG_DEBUG("Dialog.update: \"if\": Porownywanie z \"%s\": %s==%d", cmdpars[2].c_str(), cmdpars[3].c_str(), dbv);
-						b=cmdpars.toInt(5);
-						index=-1;
-						continue;
-						}
-					else
-						{
-						LOG_DEBUG("Dialog.update: \"if\": Porownywanie z \"%s\": %s>%d", cmdpars[2].c_str(), cmdpars[3].c_str(), dbv);
-						b=cmdpars.toInt(6);
-						index=-1;
-						continue;
-						}
+					LOG_DEBUG("Dialog.update: \"if\": Porownywanie z \"%s\": %s!=%d", cmdpars[1].c_str(), cmdpars[2].c_str(), dbv);
+					b=cmdpars.toInt(4);
+					index=-1;
+					continue;
 					}
 				}
 			else
 				{
-				LOG_ERROR("Dialog.update: TODO \"if\": Porownywanie stringow");
+				int pv=cmdpars.toInt(2);
+
+				if(dbv<pv)
+					{
+					LOG_DEBUG("Dialog.update: \"if\": Porownywanie z \"%s\": %s<%d", cmdpars[1].c_str(), cmdpars[2].c_str(), dbv);
+					b=cmdpars.toInt(3);
+					index=-1;
+					continue;
+					}
+				else if(dbv==pv)
+					{
+					LOG_DEBUG("Dialog.update: \"if\": Porownywanie z \"%s\": %s==%d", cmdpars[1].c_str(), cmdpars[2].c_str(), dbv);
+					b=cmdpars.toInt(4);
+					index=-1;
+					continue;
+					}
+				else
+					{
+					LOG_DEBUG("Dialog.update: \"if\": Porownywanie z \"%s\": %s>%d", cmdpars[1].c_str(), cmdpars[2].c_str(), dbv);
+					b=cmdpars.toInt(5);
+					index=-1;
+					continue;
+					}
 				}
 			}
 		else if(cmdpars[0]=="ifi")
 			{
-			if(cmdpars.count()<6)
+			if(cmdpars.count()<5)
 				{
-				LOG_ERROR("Dialog.update: Za malo argumentow do \"ifi\", oczekiwano 6/7, otrzymano %d", cmdpars.count());
+				LOG_ERROR("Dialog.update: Za malo argumentow do \"ifi\", oczekiwano 5/6, otrzymano %d", cmdpars.count());
 				continue;
 				}
 
-			if(cmdpars[1]=="val")
-				{
-				int dbv=player->getDatabase().getVal(cmdpars[2]);
+			int dbv=player->getDatabase().getVal(cmdpars[1]);
 
-				if(cmdpars.count()==6)
+			if(cmdpars.count()==5)
+				{
+				if(dbv==cmdpars.toInt(2))
 					{
-					if(dbv==cmdpars.toInt(3))
-						{
-						LOG_DEBUG("Dialog.update: \"ifi\": Porownywanie z \"%s\": %s==%d", cmdpars[2].c_str(), cmdpars[3].c_str(), dbv);
-						index=cmdpars.toInt(4)-1;
-						continue;
-						}
-					else
-						{
-						LOG_DEBUG("Dialog.update: \"ifi\": Porownywanie z \"%s\": %s!=%d", cmdpars[2].c_str(), cmdpars[3].c_str(), dbv);
-						index=cmdpars.toInt(5)-1;
-						continue;
-						}
+					LOG_DEBUG("Dialog.update: \"ifi\": Porownywanie z \"%s\": %s==%d", cmdpars[1].c_str(), cmdpars[2].c_str(), dbv);
+					index=cmdpars.toInt(3)-1;
+					continue;
 					}
 				else
 					{
-					int pv=cmdpars.toInt(3);
-
-					if(dbv<pv)
-						{
-						LOG_DEBUG("Dialog.update: \"ifi\": Porownywanie z \"%s\": %s<%d", cmdpars[2].c_str(), cmdpars[3].c_str(), dbv);
-						index=cmdpars.toInt(4)-1;
-						continue;
-						}
-					else if(dbv==pv)
-						{
-						LOG_DEBUG("Dialog.update: \"ifi\": Porownywanie z \"%s\": %s==%d", cmdpars[2].c_str(), cmdpars[3].c_str(), dbv);
-						index=cmdpars.toInt(5)-1;
-						continue;
-						}
-					else
-						{
-						LOG_DEBUG("Dialog.update: \"ifi\": Porownywanie z \"%s\": %s>%d", cmdpars[2].c_str(), cmdpars[3].c_str(), dbv);
-						index=cmdpars.toInt(6)-1;
-						continue;
-						}
+					LOG_DEBUG("Dialog.update: \"ifi\": Porownywanie z \"%s\": %s!=%d", cmdpars[1].c_str(), cmdpars[2].c_str(), dbv);
+					index=cmdpars.toInt(4)-1;
+					continue;
 					}
 				}
 			else
 				{
-				LOG_ERROR("Dialog.update: TODO \"switch\": Porownywanie stringow");
+				int pv=cmdpars.toInt(2);
+
+				if(dbv<pv)
+					{
+					LOG_DEBUG("Dialog.update: \"ifi\": Porownywanie z \"%s\": %s<%d", cmdpars[1].c_str(), cmdpars[2].c_str(), dbv);
+					index=cmdpars.toInt(3)-1;
+					continue;
+					}
+				else if(dbv==pv)
+					{
+					LOG_DEBUG("Dialog.update: \"ifi\": Porownywanie z \"%s\": %s==%d", cmdpars[1].c_str(), cmdpars[2].c_str(), dbv);
+					index=cmdpars.toInt(4)-1;
+					continue;
+					}
+				else
+					{
+					LOG_DEBUG("Dialog.update: \"ifi\": Porownywanie z \"%s\": %s>%d", cmdpars[1].c_str(), cmdpars[2].c_str(), dbv);
+					index=cmdpars.toInt(5)-1;
+					continue;
+					}
 				}
 			}
 		else if(cmdpars[0]=="switch")
 			{
-			if(cmdpars.count()<6)
+			if(cmdpars.count()<5)
 				{
-				LOG_ERROR("Dialog.update: Za malo argumentow do \"ifi\", oczekiwano 6/7, otrzymano %d", cmdpars.count());
+				LOG_ERROR("Dialog.update: Za malo argumentow do \"ifi\", oczekiwano 5/6, otrzymano %d", cmdpars.count());
 				continue;
 				}
 
-			if(cmdpars[1]=="val")
+			int dbv=player->getDatabase().getVal(cmdpars[1]);
+
+			if(dbv<0 || dbv>(int)cmdpars.count()-2)
 				{
-				int dbv=player->getDatabase().getVal(cmdpars[2]);
-
-				if(dbv<0 || dbv>(int)cmdpars.count()-3)
-					{
-					LOG_DEBUG("Dialog.update: \"switch\": Brak akcji dla wartosci %d (lub jest ona ujemna)", dbv);
-					continue;
-					}
-
-				LOG_DEBUG("Dialog.update: \"switch\": Akcja %d -> %d", dbv, cmdpars.toInt(dbv+3));
-
-				b=cmdpars.toInt(dbv+3);
-				index=index-1;
+				LOG_DEBUG("Dialog.update: \"switch\": Brak akcji dla wartosci %d (lub jest ona ujemna)", dbv);
 				continue;
 				}
-			else
-				{
-				LOG_ERROR("Dialog.update: TODO \"switch\": Porownywanie stringow");
-				}
+
+			LOG_DEBUG("Dialog.update: \"switch\": Akcja %d -> %d", dbv, cmdpars.toInt(dbv+2));
+
+			b=cmdpars.toInt(dbv+2);
+			index=index-1;
+			continue;
 			}
 		else if(cmdpars[0]=="switchi")
 			{
-			if(cmdpars.count()<6)
+			if(cmdpars.count()<5)
 				{
 				LOG_ERROR("Dialog.update: Za malo argumentow do \"switchi\", oczekiwano 6/7, otrzymano %d", cmdpars.count());
 				continue;
 				}
 
-			if(cmdpars[1]=="val")
+			int dbv=player->getDatabase().getVal(cmdpars[1]);
+
+			if(dbv<0 || dbv>(int)cmdpars.count()-2)
 				{
-				int dbv=player->getDatabase().getVal(cmdpars[2]);
-
-				if(dbv<0 || dbv>(int)cmdpars.count()-3)
-					{
-					LOG_DEBUG("Dialog.update: \"switchi\": Brak akcji dla wartosci %d (lub jest ona ujemna)", dbv);
-					continue;
-					}
-
-				LOG_DEBUG("Dialog.update: \"switchi\": Akcja %d -> %d", dbv, cmdpars.toInt(dbv)-3);
-
-				index=cmdpars.toInt(dbv-3)-1;
+				LOG_DEBUG("Dialog.update: \"switchi\": Brak akcji dla wartosci %d (lub jest ona ujemna)", dbv);
 				continue;
 				}
-			else
-				{
-				LOG_ERROR("Dialog.update: TODO \"switchi\": Porownywanie stringow");
-				}
+
+			LOG_DEBUG("Dialog.update: \"switchi\": Akcja %d -> %d", dbv, cmdpars.toInt(dbv)-2);
+
+			index=cmdpars.toInt(dbv-2)-1;
+			continue;
 			}
 /*****************************************************************************/
 		/** Dzwieki **/
