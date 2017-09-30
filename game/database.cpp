@@ -187,7 +187,9 @@ void Database::clear()
 int Database::getVal(const std::string& name)
 	{
 	if(vdb.find(name)==vdb.end())
-		return 0;
+		{
+		vdb[name]=0;
+		}
 	return vdb[name];
 	}
 

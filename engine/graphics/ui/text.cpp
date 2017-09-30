@@ -236,7 +236,7 @@ void Text::print()
 	Render::Camera cam;
 	cam.GUI(w, h);
 
-	LOG_DEBUG("Text.print: [%s]", str.c_str());
+	//LOG_DEBUG("Text.print: [%s]", str.c_str());
 	Render::getInstance().statePush();
 	Render::getInstance().setFrameBuffer(buff, true);
 	Render::getInstance().setCamera(cam);

@@ -219,6 +219,8 @@ void Dialog::update(float dt)
 	continue;\
 	}
 
+	/*int comCount=0;*/
+
 	for(/**/; index<100; ++index)
 		{
 		std::string cmd;
@@ -251,6 +253,8 @@ void Dialog::update(float dt)
 			{
 			continue;
 			}
+
+		/*comCount++;*/
 
 		//LOG_DEBUG("Dialog.update: [%5d:%2d][%s]", b, index, cmd.c_str());
 
@@ -318,8 +322,8 @@ void Dialog::update(float dt)
 			{
 			CMD_PARAMS_REQ(1);
 
-			cmdpars.remove(0);
-			message+=cmdpars.get()+"\n";
+			//cmdpars.remove(0);
+			message+=cmdpars.get().substr(6)+"\n";
 
 			continue;
 			}
@@ -327,8 +331,8 @@ void Dialog::update(float dt)
 			{
 			CMD_PARAMS_REQ(1);
 
-			cmdpars.remove(0);
-			message+=(std::string)"\n"+cmdpars.get();
+			//cmdpars.remove(0);
+			message+=(std::string)"\n"+cmdpars.get().substr(6);
 
 			continue;
 			}
@@ -697,6 +701,13 @@ void Dialog::update(float dt)
 			LOG_DEBUG("Dialog.update: \"set\": ustawianie \"%s\" na %d", cmdpars[1].c_str(), cmdpars.toInt(2));
 			player->getDatabase().setVal(cmdpars[1], cmdpars.toInt(2));
 			}
+		else if(cmdpars[0]=="add")
+			{
+			CMD_PARAMS_REQ(2);
+
+			LOG_DEBUG("Dialog.update: \"add\": zwiekszanie \"%s\" o %d", cmdpars[1].c_str(), cmdpars.toInt(2));
+			player->getDatabase().setVal(cmdpars[1], player->getDatabase().getVal(cmdpars[1])+cmdpars.toInt(2));
+			}
 		else if(cmdpars[0]=="if")
 			{
 			CMD_PARAMS_REQ(4);
@@ -798,9 +809,9 @@ void Dialog::update(float dt)
 			}
 		else if(cmdpars[0]=="switch")
 			{
-			if(cmdpars.count()<5)
+			if(cmdpars.count()<3)
 				{
-				LOG_ERROR("Dialog.update: Za malo argumentow do \"ifi\", oczekiwano 5/6, otrzymano %d", cmdpars.count());
+				LOG_ERROR("Dialog.update: Za malo argumentow do \"switch\", oczekiwano 5/6, otrzymano %d", cmdpars.count());
 				continue;
 				}
 
@@ -858,7 +869,7 @@ void Dialog::update(float dt)
 			}
 /*****************************************************************************/
 		/** Inne **/
-		else if(cmdpars[0]=="lvl")
+		/*else if(cmdpars[0]=="lvl")
 			{
 			CMD_PARAMS_REQ(1);
 
@@ -870,8 +881,8 @@ void Dialog::update(float dt)
 				}
 
 			//player->setPosition(Engine::Math::AVector());
-			}
-		else if(cmdpars[0]=="lvl")
+			}*/
+		else if(cmdpars[0]=="light")
 			{
 			CMD_PARAMS_REQ(6);
 
@@ -883,6 +894,7 @@ void Dialog::update(float dt)
 		/** Inne **/
 		else
 			{
+			/*--comCount;*/
 			LOG_ERROR("Dialog.update: Nieznana komenda \"%s\"", cmdpars[0].c_str());
 			}
 		}
@@ -898,8 +910,16 @@ void Dialog::update(float dt)
 	else
 		{
 		log.push_back(message);
-		LOG_DEBUG("Dialog.update: [%s]", message.c_str());
+		//LOG_DEBUG("Dialog.update: [%s]", message.c_str());
 		}
+
+	/*if(comCount<=0)
+		{
+		LOG_ERROR("Dialog.update: Nie znaleziono ani jednej poprawnej komendy [b %d]", b);
+
+		b=0;
+		ready=false;
+		}*/
 
 #undef CMD_PARAMS_REQ
 	}

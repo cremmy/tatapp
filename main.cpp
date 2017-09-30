@@ -16,8 +16,8 @@
 #include "game/state/tatapp.h"
 
 /* TODO
- *  - Dźwięk chodzenia gracza (float timeout na kolejny dźwięk?)
- *  - Dźwięk otwieranych drzwi
+ *  + Dźwięk chodzenia gracza (float timeout na kolejny dźwięk?)
+ *  + Dźwięk otwieranych drzwi
  */
 
 int main(int argc, char *argv[])

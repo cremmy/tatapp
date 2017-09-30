@@ -16,7 +16,7 @@
 	</npc>
 	<npc template="level/npc/pokoj_drzwi.xml" visible="1">
 		<orientation
-			x="-3.23" y="4.36" z="0"
+			x="-3.23" y="4.2956" z="0"
 			rx="1" ry="0" rz="0"
 			ux="0" uy="0" uz="1"
 			scale="1" />
@@ -31,7 +31,7 @@
 	</npc>
 	<npc template="level/npc/pokoj_drzwi_zasuwka.xml" visible="1" collidable="0">
 		<orientation
-			x="0" y="0" z="0"
+			x="-3.23" y="4.2956" z="0"
 			rx="1" ry="0" rz="0"
 			ux="0" uy="0" uz="1"
 			scale="1" />
@@ -205,6 +205,13 @@
 			ux="0" uy="0" uz="1"
 			scale="1" />
 	</npc>
+	<npc template="level/npc/pokoj_sciana_4.xml" visible="1">
+		<orientation
+			x="0" y="0" z="0"
+			rx="1" ry="0" rz="0"
+			ux="0" uy="0" uz="1"
+			scale="1" />
+	</npc>
 	<npc template="level/npc/pokoj_stolik.xml" visible="1">
 		<orientation
 			x="0" y="0" z="0"
@@ -299,12 +306,12 @@
 			scale="0.015625" />
 	</npc>
 
-	<npc template="level/npc/testator.xml" visible="1">
+	<!--<npc template="level/npc/testator.xml" visible="1">
 		<orientation
 			x="0" y="4.5" z="0"
 			rx="1" ry="0" rz="0"
 			ux="0" uy="0" uz="1"
 			scale="0.015625" />
 		<script enabled="1" path="npc/testator.ini" />
-	</npc>
+	</npc>-->
 </level>

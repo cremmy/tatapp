@@ -39,6 +39,9 @@ namespace Game
 			float dialogCooldown;
 			Dialog dialog;
 
+			float stepTimer;
+			int stepCounter;
+
 			float orientationTargetPercent; // 0->1
 			float orientationTargetTime;   // Ile sekund do konca animacji
 			Engine::Math::Orientation orientationStart;

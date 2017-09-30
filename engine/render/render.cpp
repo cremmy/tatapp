@@ -600,6 +600,8 @@ bool Render::setFullscreen(FullScreenMode mode)
 		return false;
 		}
 
+	windowmode=mode;
+
 	return true;
 	}
 

@@ -8,10 +8,12 @@
 #include "player.h"
 
 #include <cmath>
+#include <cstdlib>
 #include <SDL2/SDL.h>
 
 #include "engine/debug/log.h"
 #include "engine/render/render.h"
+#include "engine/sound/soundplayer.h"
 #include "npc.h"
 
 using namespace Game;
@@ -21,7 +23,7 @@ using namespace Engine::Math::Geometry;
 const float DIALOG_COOLDOWN=0.5f;
 
 Player::Player(Engine::Core::Application* application): Engine::Core::AppEventListener(), lvl(nullptr), npcTarget(nullptr), eyeHeight(0.0f), dialogCooldown(0.0f),
-	orientationTargetPercent(1.0), orientationTargetTime(0.0f)
+	stepTimer(0.0f), stepCounter(0), orientationTargetPercent(1.0), orientationTargetTime(0.0f)
 	{
 	application->addListener(Engine::Core::AppEvent::Type::KEY_DOWN, *this);
 	application->addListener(Engine::Core::AppEvent::Type::KEY_UP, *this);
@@ -63,6 +65,25 @@ void Player::update(float dt)
 		dialogCooldown-=dt;
 		}
 
+	if(stepTimer>0.0f)
+		{
+		stepTimer-=dt;
+		}
+	else if(AVectorLengthSqr(speed).w || (!isMovementFinished() && AVectorLengthSqr(orientationStart.getPosition()-orientationTarget.getPosition()).w>0.0f))
+		{
+		stepTimer=0.6f+(rand()/(RAND_MAX+1.0f)*0.1f);
+		char path[32];
+
+		sprintf(path, "sound/krok_%02d.ogg", stepCounter++);
+
+		if(stepCounter>7)
+			{
+			stepCounter=0;
+			}
+
+		Engine::Sound::getInstance().play(path);
+		}
+
 	if(dialog.getMode()==Dialog::Mode::NONE)
 		{
 		if(npcTarget)
@@ -76,8 +97,13 @@ void Player::update(float dt)
 		}
 	else
 		{
-		npcTarget=nullptr;
+		//npcTarget=nullptr;
 		dialog.update(dt);
+
+		if(dialog.getMode()==Dialog::Mode::NONE)
+			{
+			npcTarget=lvl->findNPCByRay(Engine::Math::Geometry::Ray(getEyeOrientation().getPosition(), orientation.getForward()));
+			}
 		}
 
 	if(!isMovementFinished())
@@ -114,12 +140,12 @@ void Player::handleEvents()
 			}
 		else if(e.getType()==Engine::Core::AppEvent::Type::KEY_UP)
 			{
-			if(e.data.keyboard.key==SDLK_q)
+			/*if(e.data.keyboard.key==SDLK_q)
 				{
 				LOG_INFO("Player: [p %.2f %.2f] [d %.2f %.2f]",
 						orientation.getPosition().x, orientation.getPosition().y,
 						orientation.getPosition().x+orientation.getForward().x, orientation.getPosition().y+orientation.getForward().y);
-				}
+				}*/
 
 			if(dialog.getMode()!=Dialog::Mode::NONE)
 				{
@@ -268,6 +294,11 @@ void Player::handleEvents()
 		if(key[SDL_SCANCODE_S]) speed-=key[SDL_SCANCODE_S]*BASE_SPEED*nfwd;
 		if(key[SDL_SCANCODE_D]) speed+=key[SDL_SCANCODE_D]*BASE_SPEED*nrgt;
 		if(key[SDL_SCANCODE_A]) speed-=key[SDL_SCANCODE_A]*BASE_SPEED*nrgt;
+
+		if(AVectorLengthSqr(speed).w>0.0f)
+			{
+			npcTarget=lvl->findNPCByRay(Engine::Math::Geometry::Ray(getEyeOrientation().getPosition(), orientation.getForward()));
+			}
 		}
 	}
 
