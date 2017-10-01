@@ -174,11 +174,11 @@ bool Model::load(const std::string& path)
 				auto slpos=path.rfind('/');
 				if(slpos==path.npos)
 					{
-					tpath=pline[1];
+					tpath=pline.get().substr(7);
 					}
 				else
 					{
-					tpath=path.substr(0, slpos+1)+pline[1];
+					tpath=path.substr(0, slpos+1)+pline.get().substr(7);
 					}
 
 				texDiffuse=TexturePtr(tpath);
@@ -198,11 +198,11 @@ bool Model::load(const std::string& path)
 				auto slpos=path.rfind('/');
 				if(slpos==path.npos)
 					{
-					tpath=pline[1];
+					tpath=pline.get().substr(9);
 					}
 				else
 					{
-					tpath=path.substr(0, slpos+1)+pline[1];
+					tpath=path.substr(0, slpos+1)+pline.get().substr(9);
 					}
 
 				texNormal=TexturePtr(tpath);

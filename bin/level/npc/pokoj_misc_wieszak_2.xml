@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<npc name="wieszak z prawej" type="model">
+<npc name="wieszak pojedynczy" type="model">
 	<!--<collider z="0.25" w="0.5" d="0.5" h="0.5" />-->
-	<model>model/wieszak z prawej.obj</model>
+	<model>model/wieszak pojedynczy.obj</model>
 </npc>

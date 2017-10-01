@@ -1,14 +1,12 @@
 # Blender MTL File: 'pokoj scalone sprzety.blend'
 # Material Count: 1
 
-newmtl Material.001
-Ns 96.078431
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-map_Kd stol_Base_Color.png
-map_Bump stol_Normal_OpenGL.png
+newmtl None
+Ns 90
+Ka 0.8 0.8 0.8
+Kd 0.6 0.6 0.6
+Ks 0.3 0.3 0.3
+d 1
 illum 2
+map_Kd stol/diffuse.png
+map_Bump stol/normal.png

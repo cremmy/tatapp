@@ -1,11 +1,12 @@
-# Blender MTL File: 'drzwi.obj'
+# Blender MTL File: 'pokoj scalone sprzety.blend'
 # Material Count: 1
 
 newmtl None
-Ns 0.000000
-Ka 0.300000 0.300000 0.300000
-Kd 0.5 0.5 0.5
-Ks 0.2 0.2 0.2
-Ni 1.000000
-d 1.000000
+Ns 90
+Ka 0.8 0.8 0.8
+Kd 0.6 0.6 0.6
+Ks 0.3 0.3 0.3
+d 1
 illum 2
+map_Kd drzwi/diffuse.png
+map_Bump drzwi/normal.png

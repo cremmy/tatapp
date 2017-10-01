@@ -113,7 +113,7 @@ TexturePtr TextureManager::get(const std::string& path)
 		return TexturePtr(nullptr);
 		}
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);	// Przy pomniejszaniu - linear
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);	// Przy pomniejszaniu - linear
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);	// Przy powiekszaniu - nearest - chce PIKSELEEEAAAAA
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);		// Tylko jesli wspolrzedne sa wieksze od 1 -> profit!... chyba.
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);		// Zobaczymy jak bedzie juz cos widac.

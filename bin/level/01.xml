@@ -37,6 +37,20 @@
 			scale="1" />
 		<script enabled="1" path="npc/zasuwka.ini" />
 	</npc>
+	<npc template="level/npc/pokoj_drzwi_zasuwka_podstawa_1.xml" visible="1">
+		<orientation
+			x="0" y="0" z="0"
+			rx="1" ry="0" rz="0"
+			ux="0" uy="0" uz="1"
+			scale="1" />
+	</npc>
+	<npc template="level/npc/pokoj_drzwi_zasuwka_podstawa_2.xml" visible="1">
+		<orientation
+			x="-3.23" y="4.2956" z="0"
+			rx="1" ry="0" rz="0"
+			ux="0" uy="0" uz="1"
+			scale="1" />
+	</npc>
 	<npc template="level/npc/pokoj_krzeslo_1.xml" visible="1">
 		<orientation
 			x="0" y="0" z="0"
@@ -80,13 +94,13 @@
 			ux="0" uy="0" uz="1"
 			scale="1" />
 	</npc>
-	<!--<npc template="level/npc/pokoj_lozko_poduszka_2.xml" visible="1">
+	<npc template="level/npc/pokoj_lozko_poduszka_2.xml" visible="1">
 		<orientation
 			x="0" y="0" z="0"
 			rx="1" ry="0" rz="0"
 			ux="0" uy="0" uz="1"
 			scale="1" />
-	</npc>-->
+	</npc>
 	<npc template="level/npc/pokoj_lozko_posciel.xml" visible="1">
 		<orientation
 			x="0" y="0" z="0"
@@ -102,6 +116,76 @@
 			scale="1" />
 		<script enabled="1" path="npc/lustro.ini" />
 	</npc>
+	<npc template="level/npc/pokoj_misc_chusta_1.xml" visible="1">
+		<orientation
+			x="0" y="0" z="0"
+			rx="1" ry="0" rz="0"
+			ux="0" uy="0" uz="1"
+			scale="1" />
+	</npc>
+	<npc template="level/npc/pokoj_misc_chusta_2.xml" visible="1">
+		<orientation
+			x="0" y="0" z="0"
+			rx="1" ry="0" rz="0"
+			ux="0" uy="0" uz="1"
+			scale="1" />
+	</npc>
+	<npc template="level/npc/pokoj_misc_chusta_3.xml" visible="1">
+		<orientation
+			x="0" y="0" z="0"
+			rx="1" ry="0" rz="0"
+			ux="0" uy="0" uz="1"
+			scale="1" />
+	</npc>
+	<npc template="level/npc/pokoj_misc_gwozdz.xml" visible="1">
+		<orientation
+			x="0" y="0" z="0"
+			rx="1" ry="0" rz="0"
+			ux="0" uy="0" uz="1"
+			scale="1" />
+	</npc>
+	<npc template="level/npc/pokoj_misc_gwozdz_1.xml" visible="1">
+		<orientation
+			x="0" y="0" z="0"
+			rx="1" ry="0" rz="0"
+			ux="0" uy="0" uz="1"
+			scale="1" />
+	</npc>
+	<npc template="level/npc/pokoj_misc_gwozdz_2.xml" visible="1">
+		<orientation
+			x="0" y="0" z="0"
+			rx="1" ry="0" rz="0"
+			ux="0" uy="0" uz="1"
+			scale="1" />
+	</npc>
+	<npc template="level/npc/pokoj_misc_gwozdz_3.xml" visible="1">
+		<orientation
+			x="0" y="0" z="0"
+			rx="1" ry="0" rz="0"
+			ux="0" uy="0" uz="1"
+			scale="1" />
+	</npc>
+	<npc template="level/npc/pokoj_misc_gwozdz_4.xml" visible="1">
+		<orientation
+			x="0" y="0" z="0"
+			rx="1" ry="0" rz="0"
+			ux="0" uy="0" uz="1"
+			scale="1" />
+	</npc>
+	<npc template="level/npc/pokoj_misc_gwozdz_5.xml" visible="1">
+		<orientation
+			x="0" y="0" z="0"
+			rx="1" ry="0" rz="0"
+			ux="0" uy="0" uz="1"
+			scale="1" />
+	</npc>
+	<npc template="level/npc/pokoj_misc_gwozdz_6.xml" visible="1">
+		<orientation
+			x="0" y="0" z="0"
+			rx="1" ry="0" rz="0"
+			ux="0" uy="0" uz="1"
+			scale="1" />
+	</npc>
 	<npc template="level/npc/pokoj_misc_kapelusz.xml" visible="1">
 		<orientation
 			x="0" y="0" z="0"
@@ -109,28 +193,14 @@
 			ux="0" uy="0" uz="1"
 			scale="1" />
 	</npc>
-	<npc template="level/npc/pokoj_misc_material_1.xml" visible="1">
+	<npc template="level/npc/pokoj_misc_recznik.xml" visible="1">
 		<orientation
 			x="0" y="0" z="0"
 			rx="1" ry="0" rz="0"
 			ux="0" uy="0" uz="1"
 			scale="1" />
 	</npc>
-	<npc template="level/npc/pokoj_misc_material_2.xml" visible="1">
-		<orientation
-			x="0" y="0" z="0"
-			rx="1" ry="0" rz="0"
-			ux="0" uy="0" uz="1"
-			scale="1" />
-	</npc>
-	<npc template="level/npc/pokoj_misc_material_3.xml" visible="1">
-		<orientation
-			x="0" y="0" z="0"
-			rx="1" ry="0" rz="0"
-			ux="0" uy="0" uz="1"
-			scale="1" />
-	</npc>
-	<npc template="level/npc/pokoj_misc_material_4.xml" visible="1">
+	<npc template="level/npc/pokoj_misc_sznurki.xml" visible="1">
 		<orientation
 			x="0" y="0" z="0"
 			rx="1" ry="0" rz="0"
@@ -151,7 +221,7 @@
 			ux="0" uy="0" uz="1"
 			scale="1" />
 	</npc>
-	<npc template="level/npc/pokoj_obraz_1.xml" visible="1">
+	<npc template="level/npc/pokoj_obraz_1.xml" visible="1" collidable="0">
 		<orientation
 			x="0" y="0" z="0"
 			rx="1" ry="0" rz="0"
@@ -159,7 +229,7 @@
 			scale="1" />
 		<script enabled="1" path="npc/obraz_1.ini" />
 	</npc>
-	<npc template="level/npc/pokoj_obraz_2.xml" visible="1">
+	<npc template="level/npc/pokoj_obraz_2.xml" visible="1" collidable="0">
 		<orientation
 			x="0" y="0" z="0"
 			rx="1" ry="0" rz="0"
@@ -167,7 +237,7 @@
 			scale="1" />
 		<script enabled="1" path="npc/obraz_2.ini" />
 	</npc>
-	<npc template="level/npc/pokoj_obraz_3.xml" visible="1">
+	<npc template="level/npc/pokoj_obraz_3.xml" visible="1" collidable="0">
 		<orientation
 			x="0" y="0" z="0"
 			rx="1" ry="0" rz="0"
@@ -175,7 +245,7 @@
 			scale="1" />
 		<script enabled="1" path="npc/obraz_3.ini" />
 	</npc>
-	<npc template="level/npc/pokoj_obraz_4.xml" visible="1">
+	<npc template="level/npc/pokoj_obraz_4.xml" visible="1" collidable="0">
 		<orientation
 			x="0" y="0" z="0"
 			rx="1" ry="0" rz="0"
@@ -183,7 +253,7 @@
 			scale="1" />
 		<script enabled="1" path="npc/obraz_4.ini" />
 	</npc>
-	<npc template="level/npc/pokoj_obraz_5.xml" visible="1">
+	<npc template="level/npc/pokoj_obraz_5.xml" visible="1" collidable="0">
 		<orientation
 			x="0" y="0" z="0"
 			rx="1" ry="0" rz="0"
@@ -191,14 +261,21 @@
 			scale="1" />
 		<script enabled="1" path="npc/obraz_5.ini" />
 	</npc>
-	<npc template="level/npc/pokoj_okno.xml" visible="1">
+	<npc template="level/npc/pokoj_okno_rama_1.xml" visible="1">
 		<orientation
 			x="0" y="0" z="0"
 			rx="1" ry="0" rz="0"
 			ux="0" uy="0" uz="1"
 			scale="1" />
 	</npc>
-	<npc template="level/npc/pokoj_okno_widok.xml" visible="1">
+	<npc template="level/npc/pokoj_okno_rama_2.xml" visible="1">
+		<orientation
+			x="0" y="0" z="0"
+			rx="1" ry="0" rz="0"
+			ux="0" uy="0" uz="1"
+			scale="1" />
+	</npc>
+	<npc template="level/npc/pokoj_okno_rama_3.xml" visible="1">
 		<orientation
 			x="0" y="0" z="0"
 			rx="1" ry="0" rz="0"
@@ -219,7 +296,7 @@
 			ux="0" uy="0" uz="1"
 			scale="1" />
 	</npc>
-	<npc template="level/npc/pokoj_stolik_butelka_1.xml" visible="1">
+	<npc template="level/npc/pokoj_stolik_butelka_1.xml" visible="1" collidable="0">
 		<orientation
 			x="0" y="0" z="0"
 			rx="1" ry="0" rz="0"
@@ -227,7 +304,7 @@
 			scale="1" />
 		<script enabled="1" path="npc/butelka_1.ini" />
 	</npc>
-	<npc template="level/npc/pokoj_stolik_butelka_2.xml" visible="1">
+	<npc template="level/npc/pokoj_stolik_butelka_2.xml" visible="1" collidable="0">
 		<orientation
 			x="0" y="0" z="0"
 			rx="1" ry="0" rz="0"
@@ -235,7 +312,7 @@
 			scale="1" />
 		<script enabled="1" path="npc/butelka_2.ini" />
 	</npc>
-	<npc template="level/npc/pokoj_stolik_dzbanek.xml" visible="1">
+	<npc template="level/npc/pokoj_stolik_dzbanek.xml" visible="1" collidable="0">
 		<orientation
 			x="0" y="0" z="0"
 			rx="1" ry="0" rz="0"
@@ -243,7 +320,7 @@
 			scale="1" />
 		<script enabled="1" path="npc/dzbanek.ini" />
 	</npc>
-	<npc template="level/npc/pokoj_stolik_kubek.xml" visible="1">
+	<npc template="level/npc/pokoj_stolik_kubek.xml" visible="1" collidable="0">
 		<orientation
 			x="0" y="0" z="0"
 			rx="1" ry="0" rz="0"
@@ -251,14 +328,14 @@
 			scale="1" />
 		<script enabled="1" path="npc/kubek.ini" />
 	</npc>
-	<npc template="level/npc/pokoj_stolik_miska.xml" visible="1">
+	<npc template="level/npc/pokoj_stolik_miska.xml" visible="1" collidable="0">
 		<orientation
 			x="0" y="0" z="0"
 			rx="1" ry="0" rz="0"
 			ux="0" uy="0" uz="1"
 			scale="1" />
 	</npc>
-	<npc template="level/npc/pokoj_stolik_szczotka.xml" visible="1">
+	<npc template="level/npc/pokoj_stolik_szczotka.xml" visible="1" collidable="0">
 		<orientation
 			x="0" y="0" z="0"
 			rx="1" ry="0" rz="0"
@@ -266,14 +343,14 @@
 			scale="1" />
 		<script enabled="1" path="npc/szczotka.ini" />
 	</npc>
-	<npc template="level/npc/pokoj_stolik_tacka.xml" visible="1">
+	<npc template="level/npc/pokoj_stolik_tacka.xml" visible="1" collidable="0">
 		<orientation
-			x="0" y="0" z="0"
+			x="0" y="0" z="0.01"
 			rx="1" ry="0" rz="0"
 			ux="0" uy="0" uz="1"
 			scale="1" />
 	</npc>
-	<npc template="level/npc/pokoj_stolik_talerzyk.xml" visible="1">
+	<npc template="level/npc/pokoj_stolik_talerzyk.xml" visible="1" collidable="0">
 		<orientation
 			x="0" y="0" z="0"
 			rx="1" ry="0" rz="0"
@@ -287,6 +364,48 @@
 			ux="0" uy="0" uz="1"
 			scale="1" />
 		<script enabled="1" path="npc/wazon.ini" />
+	</npc>
+	<npc template="level/npc/widok.xml" visible="1">
+		<orientation
+			x="-2.9" y="0" z="0"
+			rx="1" ry="0" rz="0"
+			ux="0" uy="0" uz="1"
+			scale="1" />
+	</npc>
+	<npc template="level/npc/widownia_1.xml" visible="1">
+		<orientation
+			x="0" y="0" z="0"
+			rx="1" ry="0" rz="0"
+			ux="0" uy="0" uz="1"
+			scale="1" />
+	</npc>
+	<npc template="level/npc/widownia_2.xml" visible="1">
+		<orientation
+			x="0" y="0" z="0"
+			rx="1" ry="0" rz="0"
+			ux="0" uy="0" uz="1"
+			scale="1" />
+	</npc>
+	<npc template="level/npc/widownia_3.xml" visible="1">
+		<orientation
+			x="0" y="0" z="0"
+			rx="1" ry="0" rz="0"
+			ux="0" uy="0" uz="1"
+			scale="1" />
+	</npc>
+	<npc template="level/npc/widownia_4.xml" visible="1">
+		<orientation
+			x="0" y="0" z="0"
+			rx="1" ry="0" rz="0"
+			ux="0" uy="0" uz="1"
+			scale="1" />
+	</npc>
+	<npc template="level/npc/widownia_5.xml" visible="1">
+		<orientation
+			x="0" y="0" z="0"
+			rx="1" ry="0" rz="0"
+			ux="0" uy="0" uz="1"
+			scale="1" />
 	</npc>
 	
 	<!-- NPC -->

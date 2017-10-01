@@ -180,8 +180,13 @@ bool TATAPP::update(float dt)
 		else
 			uiCrosshairAlpha=0.0f;
 
-		if(player->getDialog().getMessage().length()<=1 && uiDialogAlpha>0.0f)
-			uiDialogAlpha-=dt;
+		if(player->getDialog().getMessage().length()<=1)
+			{
+			if(uiDialogAlpha>0.0f)
+				uiDialogAlpha-=dt;
+			else
+				uiDialogAlpha=0.0f;
+			}
 		else if(uiDialogAlpha<1.0f)
 			uiDialogAlpha+=dt*2.0f;
 		else

@@ -1,5 +1,5 @@
 <?php
-die('nope');
+//die('nope');
 
 $dir=scandir('..\\model');
 

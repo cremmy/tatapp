@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<npc name="obraz_3" type="model">
+<npc name="obraz3" type="model" collidable="0">
 	<collider x="-3.31" y="1.7" z="2.05" w="0.25" d="0.55" h="0.4" />
-	<model>model/obraz nad lozkiem3.obj</model>
+	<model>model/obraz3.obj</model>
 </npc>

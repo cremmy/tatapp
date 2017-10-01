@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<npc name="material z prawej 1" type="model">
-	<!--<collider z="0.25" w="0.5" d="0.5" h="0.5" />-->
-	<model>model/material z prawej 1.obj</model>
-</npc>
