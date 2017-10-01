@@ -4,9 +4,7 @@
 newmtl None
 Ns 90
 Ka 0.8 0.8 0.8
-Kd 0.6 0.6 0.6
+Kd 0.021766 0.021766 0.021766
 Ks 0.3 0.3 0.3
 d 1
 illum 2
-map_Kd gwozdz/diffuse.png
-map_Bump gwozdz/normal.png

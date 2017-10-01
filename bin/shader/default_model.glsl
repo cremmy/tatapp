@@ -85,7 +85,7 @@ void main()
 	vec3 fLight=i.TBN*l.direction.xyz;
 
 	// Ambient
-	out_color=vec4(m.ambient.rgb, m.transparency)*baseColor;
+	out_color=vec4(m.ambient.rgb, m.transparency)*baseColor*vec4(l.color.rgb, 1);
 	// Diffuse
 	out_color.rgb+=baseColor.rgb*l.color.rgb*clamp(dot(fLight, fNormal), 0.0, 1.0);
 	// Specular

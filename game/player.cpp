@@ -334,6 +334,15 @@ void Player::print(float /*tinterp*/)
 		cpos-cu-cr+cf,
 		}, AVector(1, 0, 0, 1), AVector(1, 0, 0, 0.7));*/
 
+	// Fix na wypadek przeskoczenia update na korzysc printa (akumulatorowa petla glowna)
+	if(dialog.getMode()==Dialog::Mode::NONE)
+		{
+		if(npcTarget)
+			{
+			npcTarget->setTargeted();
+			}
+		}
+
 	fade.print();
 	}
 

@@ -16,7 +16,7 @@
 	</npc>
 	<npc template="level/npc/pokoj_drzwi.xml" visible="1">
 		<orientation
-			x="-3.23" y="4.2956" z="0"
+			x="-3.23" y="4.2956" z="0.035"
 			rx="1" ry="0" rz="0"
 			ux="0" uy="0" uz="1"
 			scale="1" />

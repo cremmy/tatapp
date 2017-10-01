@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<npc name="podstawka zasuwki2" type="model">
+<npc name="drzwi_zasuwka_podstawa_2" type="model">
 	<!--<collider z="0.25" w="0.5" d="0.5" h="0.5" />-->
 	<model>model/podstawka zasuwki2.obj</model>
 </npc>
