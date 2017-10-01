@@ -280,7 +280,7 @@
 			ux="0" uy="0" uz="1"
 			scale="1" />
 	</npc>
-	<npc template="level/npc/pokoj_stolik_wazon.xml" visible="1">
+	<npc template="level/npc/pokoj_stolik_wazon.xml" visible="1" collidable="0">
 		<orientation
 			x="0" y="0" z="0"
 			rx="1" ry="0" rz="0"
