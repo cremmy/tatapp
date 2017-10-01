@@ -27,7 +27,7 @@ const int UI_TEXT_MARGIN_V=24;
 
 Engine::Graphics::ImagePtr grid;
 
-TATAPP::TATAPP(): Engine::Base::ApplicationState(), lvl(nullptr), player(nullptr), uiDialogAlpha(0.0f)
+TATAPP::TATAPP(): Engine::Base::ApplicationState(), lvl(nullptr), player(nullptr), uiDialogAlpha(0.0f), uiCrosshairAlpha(0.0f)
 	{
 	cam.perspective(
 		Engine::Render::getInstance().getFrameBufferWidth(),
@@ -175,6 +175,11 @@ bool TATAPP::update(float dt)
 
 	if(player->getDialog().getMode()!=Dialog::Mode::NONE)
 		{
+		if(uiCrosshairAlpha>0.0f)
+			uiCrosshairAlpha-=dt;
+		else
+			uiCrosshairAlpha=0.0f;
+
 		if(player->getDialog().getMessage().length()<=1 && uiDialogAlpha>0.0f)
 			uiDialogAlpha-=dt;
 		else if(uiDialogAlpha<1.0f)
@@ -205,6 +210,11 @@ bool TATAPP::update(float dt)
 	else
 		{
 		uiDialog=uiDialogNone;
+
+		if(uiCrosshairAlpha<1.0f)
+			uiCrosshairAlpha+=2.0*dt;
+		else
+			uiCrosshairAlpha=1.0f;
 
 		if(uiDialogAlpha>0.0f)
 			uiDialogAlpha-=dt;
@@ -245,13 +255,16 @@ void TATAPP::print(float tinterp)
 		uiText.print(Orientation::GUI+UI_DIALOG_OFFSET+AVector(UI_TEXT_MARGIN_H, UI_TEXT_MARGIN_V, 0.1f));
 		}
 
-	Engine::Render::getInstance().setColor(AVector(1, 1, 1, 1-uiDialogAlpha));
+	if(uiCrosshairAlpha>0.0f)
+		{
+		Engine::Render::getInstance().setColor(AVector(1, 1, 1, uiCrosshairAlpha));
 
-	const AVector UI_CROSSHAIR_OFFSET(
-		(Engine::Render::getInstance().getFrameBufferWidth()+uiCrosshair->getW())*0.5f,
-		(Engine::Render::getInstance().getFrameBufferHeight()+uiCrosshair->getH())*0.5f);
+		const AVector UI_CROSSHAIR_OFFSET(
+			(Engine::Render::getInstance().getFrameBufferWidth()+uiCrosshair->getW())*0.5f,
+			(Engine::Render::getInstance().getFrameBufferHeight()+uiCrosshair->getH())*0.5f);
 
-	Engine::Render::getInstance().draw(Orientation::GUI+UI_CROSSHAIR_OFFSET+AVector(0, 0, 0.2f), uiCrosshair);
+		Engine::Render::getInstance().draw(Orientation::GUI+UI_CROSSHAIR_OFFSET+AVector(0, 0, 0.2f), uiCrosshair);
+		}
 	Engine::Render::getInstance().statePop();
 
 	//return false;

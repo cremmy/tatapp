@@ -43,8 +43,13 @@ bool IngameMenu::init(Engine::Core::Application *application)
 
 	menu.init(Engine::Render::getInstance().getFrameBufferWidth(), Engine::Render::getInstance().getFrameBufferHeight(), "font/dejavu.xml");
 	menu.getRootLayer()->addOption( new Menu::Option((int)Actions::RETURN, Menu::Type::RETURN, "Powr\xF3t") );
-	menu.getRootLayer()->addOption( new Menu::Option((int)Actions::HELP, Menu::Type::ACTION, "Pomoc") );
-	menu.getRootLayer()->addOption( new Menu::Option((int)Actions::CREDITS, Menu::Type::ACTION, "Autorzy") );
+	menu.getRootLayer()->addOption( new Menu::Option((int)Actions::HELP, Menu::Type::ENTER, "Pomoc") );
+	menu.getOptionByTag((int)Actions::HELP)->initSubLayer( new Menu::Layer());
+	menu.getOptionByTag((int)Actions::HELP)->getSubLayer()->addOption( new Menu::Option((int)Actions::NONE, Menu::Type::RETURN, "W/S/A/D - Chodzenie"));
+	menu.getOptionByTag((int)Actions::HELP)->getSubLayer()->addOption( new Menu::Option((int)Actions::NONE, Menu::Type::RETURN, "LPM - Akcja"));
+	menu.getOptionByTag((int)Actions::HELP)->getSubLayer()->addOption( new Menu::Option((int)Actions::NONE, Menu::Type::RETURN, "PPM - Poprzednie wiadomo\x9C""ci"));
+	menu.getOptionByTag((int)Actions::HELP)->getSubLayer()->addOption( new Menu::Option((int)Actions::NONE, Menu::Type::RETURN, "Alt+Enter - Pe\xB3ny ekran"));
+//	menu.getRootLayer()->addOption( new Menu::Option((int)Actions::CREDITS, Menu::Type::ACTION, "Autorzy") );
 //	menu.getRootLayer()->addOption( new Menu::Option((int)Actions::VOLUME_SOUND, Menu::Type::VALUE, "Dźwięk") );
 //		menu.getOptionByTag((int)Actions::VOLUME_SOUND)->initValue(0.0f, 100.0f, 1.0f);
 //		//menu.getOptionByTag((int)Actions::VOLUME_SOUND)->setVal(Sound::getGlobalSoundVolume()*100.0f);

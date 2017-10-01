@@ -30,6 +30,7 @@ namespace Game
 //				Engine::Render::Camera camUI;
 
 				float uiDialogAlpha;
+				float uiCrosshairAlpha;
 				Engine::Graphics::ImagePtr uiDialogNone;
 				Engine::Graphics::ImagePtr uiDialogNormal;
 				Engine::Graphics::ImagePtr uiDialogChoice;

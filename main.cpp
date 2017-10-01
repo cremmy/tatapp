@@ -18,6 +18,8 @@
 /* TODO
  *  + Dźwięk chodzenia gracza (float timeout na kolejny dźwięk?)
  *  + Dźwięk otwieranych drzwi
+ *  - Poprawic/usunac przezroczystosc kropek na tle dialogowym
+ *  + W trakcie dialogu celownik powinien byc niewidzialny
  */
 
 int main(int argc, char *argv[])
@@ -31,7 +33,7 @@ int main(int argc, char *argv[])
 	//Engine::Debug::Log::setPrintLocation(true);
 
 #ifdef BUILD_RELEASE
-	//Engine::Debug::Log::setOut(fopen("log.txt", "w"));
+	Engine::Debug::Log::setOut(fopen("log.txt", "w"));
 	Engine::Debug::Log::setLevel(Engine::Debug::Log::PRODUCTION);
 #endif
 

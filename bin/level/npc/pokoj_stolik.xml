@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <npc name="stolik" type="model">
 	<collider x="-0.64" y="0.68" z="0.4" w="0.7" d="0.7" h="0.8" />
-	<model>model/stolik.obj</model>
+	<model>model/stol.obj</model>
 </npc>
