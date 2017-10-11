@@ -81,7 +81,7 @@ void Player::update(float dt)
 			stepCounter=0;
 			}
 
-		Engine::Sound::getInstance().play(path);
+		Engine::Sound::getInstance().play(path, 32);
 		}
 
 	if(dialog.getMode()==Dialog::Mode::NONE)
